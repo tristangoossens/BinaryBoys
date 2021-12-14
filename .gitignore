@@ -1,2 +1,4 @@
+# Remove unnecessary files 
 /lib
 /bin
+/.vscode
