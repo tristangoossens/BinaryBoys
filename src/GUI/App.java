@@ -1,7 +1,17 @@
 package GUI;
 
-public class App {
-    public static void main(String[] args) throws Exception {
-        System.out.println("Hello, Binary Boys!!!!! 01101001100111011");
+import javafx.application.Application;
+import javafx.stage.Stage;
+
+public class App extends Application {
+
+    @Override
+    public void start(Stage window) {
+        window.setTitle("CodeCademy | Home");
+        window.show();
+    }
+
+    public static void main(String[] args) {
+        launch(App.class);
     }
 }
