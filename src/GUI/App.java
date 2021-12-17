@@ -1,8 +1,5 @@
 package GUI;
 
-import java.sql.SQLException;
-
-import Student.Students;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -26,8 +23,7 @@ public class App extends Application {
         window.show();
     }
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
         launch(App.class);
-        Students studentjes = new Students();
     }
 }
