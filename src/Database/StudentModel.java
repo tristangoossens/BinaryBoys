@@ -1,6 +1,8 @@
 package Database;
 
+import Domain.Student;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class StudentModel extends Conn {
     public StudentModel(){
@@ -8,21 +10,36 @@ public class StudentModel extends Conn {
         super();
     }
 
-    public ResultSet getStudents() {
+    public ArrayList<Student> getStudents() {
         // Set query to exectute
         String query = "SELECT * FROM Student";
         ResultSet rs = null;
+        
+        ArrayList<Student> students = new ArrayList<>();
 
         // Create a prepared statement for the SQL query
         try (PreparedStatement stmt = super.conn.prepareStatement(query)) {
             // Execute the prepared query
             rs = stmt.executeQuery();
+
+            while(rs.next()){
+                students.add(new Student(
+                    rs.getString("Email"),
+                    rs.getString("Name"),
+                    rs.getDate("Birthdate"),
+                    rs.getString("Gender"),
+                    rs.getString("Address"),
+                    rs.getString("City"),
+                    rs.getString("Country"))
+                );
+            }
+
+            return students;
         } catch (Exception e) {
-            // Catch any exeptions
             System.out.format("Error while getting students (getStudents): %s", e.toString());
         }
 
-        // Return
-        return rs;
+        // Return null when nothing is returned yet (error)
+        return null;
     }
 }
