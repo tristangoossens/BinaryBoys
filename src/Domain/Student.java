@@ -1,4 +1,4 @@
-package Student;
+package Domain;
 
 import java.util.Date;
 
