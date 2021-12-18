@@ -1,8 +1,11 @@
 package GUI.Student;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
-import Student.Students;
+import Database.StudentModel;
+import Domain.Student;
+
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -25,15 +28,15 @@ public class Index extends Application {
         layout.add(new Label("Geboortedatum"), 2, 0);
         layout.add(new Label("Geslacht"), 3, 0);
 
-        // int y = 1;
+        StudentModel sm = new StudentModel();
+        ArrayList<Student> students = sm.getStudents();
 
-        // for (Student student : students.getStudents().values()) {
-        //     layout.add(new Label(student.getEmail()), 0, y);
-        //     layout.add(new Label(student.getName()), 1, y);
-        //     layout.add(new Label(student.getBirthDate().toString()), 2, y);
-        //     layout.add(new Label(student.getGender()), 3, y);
-        //     y++;
-        // }
+        for (int y = 0; y < students.size(); y++) {
+            layout.add(new Label(students.get(y).getEmail()), 0, y+1);
+            layout.add(new Label(students.get(y).getName()), 1, y+1);
+            layout.add(new Label(students.get(y).getBirthDate().toString()), 2, y+1);
+            layout.add(new Label(students.get(y).getGender()), 3, y+1);
+        }
 
         VBox vbox = new VBox(layout);
         Scene scene = new Scene(vbox, 800, 500);
@@ -44,8 +47,6 @@ public class Index extends Application {
     }
 
     public static void main(String[] args) throws SQLException {
-        Students students = new Students();
-        System.out.println(students.toString());
         launch(Index.class);
     }
 }
