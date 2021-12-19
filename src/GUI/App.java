@@ -1,5 +1,8 @@
 package GUI;
 
+import java.sql.SQLException;
+
+import GUI.Student.Index;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -11,16 +14,30 @@ public class App extends Application {
 
     @Override
     public void start(Stage window) {
-        window.setTitle("CodeCademy | Home");
+        window.setScene(getView(window));
+        window.show();
+    }
+
+    public static Scene getView(Stage stage){
+        stage.setTitle("CodeCademy | Home");
 
         Button openStudentWindow = new Button("Studenten");
+        
+        Index students = new Index();
+        
+        openStudentWindow.setOnAction((event) -> {
+            try {
+                stage.setScene(students.getView(stage));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
 
         VBox vbox = new VBox(openStudentWindow);
         Scene scene = new Scene(vbox, 800, 500);
         vbox.setAlignment(Pos.CENTER);
 
-        window.setScene(scene);
-        window.show();
+        return scene;
     }
 
     public static void main(String[] args) {
