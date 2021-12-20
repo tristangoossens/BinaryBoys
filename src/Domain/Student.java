@@ -35,6 +35,8 @@ public class Student {
             "}";
     }
 
+    
+
     public String getEmail() {
         return this.email;
     }
