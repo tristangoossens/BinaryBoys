@@ -17,7 +17,7 @@ public class StudentModel extends Conn {
             // Set data in prepared statement
             stmt.setString(1, student.getEmail());
             stmt.setString(2, student.getName());
-            stmt.setDate(3, java.sql.Date.valueOf(student.getBirthDate().toString()));
+            stmt.setDate(3, new java.sql.Date(student.getBirthDate().getTime()));
             stmt.setString(4, student.getGender());
             stmt.setString(5, student.getAdress());
             stmt.setString(6, student.getCity());
@@ -36,12 +36,12 @@ public class StudentModel extends Conn {
         return false;
     }
 
-    public Student readStudent(Student student){
+    public Student readStudent(String email){
         // Create prepared statement
         String query = "SELECT * FROM Student WHERE Email = ?";
         try(PreparedStatement stmt = super.conn.prepareStatement(query)){
             // Set data in prepared statement
-            stmt.setString(1, student.getEmail());
+            stmt.setString(1, email);
 
             // Execute statement
             ResultSet rs = stmt.executeQuery();
@@ -60,7 +60,7 @@ public class StudentModel extends Conn {
             }
         }
         catch(Exception e){
-            System.out.format("Error while creating student (createStudent): %s", e.toString());
+            System.out.format("Error while retrieving student (readStudent): %s", e.toString());
         }
 
         // Return null on error
@@ -102,12 +102,12 @@ public class StudentModel extends Conn {
 
     public boolean updateStudent(Student student){
         // Set query to exectute
-        String query = "UPDATE Student SET (Email = ?, Name = ?, Birthdate = ?, Gender = ?, Address = ?, City = ?, Country = ? WHERE Email = ?";
+        String query = "UPDATE Student SET Email = ?, Name = ?, Birthdate = ?, Gender = ?, Address = ?, City = ?, Country = ? WHERE Email = ?";
         try(PreparedStatement stmt = super.conn.prepareStatement(query)){
             // Set data in prepared statement
             stmt.setString(1, student.getEmail());
             stmt.setString(2, student.getName());
-            stmt.setDate(3, java.sql.Date.valueOf(student.getBirthDate().toString()));
+            stmt.setDate(3, new java.sql.Date(student.getBirthDate().getTime()));
             stmt.setString(4, student.getGender());
             stmt.setString(5, student.getAdress());
             stmt.setString(6, student.getCity());
@@ -128,11 +128,11 @@ public class StudentModel extends Conn {
         return false;
     }
 
-    public boolean deleteStudent(Student student){
+    public boolean deleteStudent(String email){
         String query = "DELETE FROM Student WHERE Email = ?";
         try(PreparedStatement stmt = super.conn.prepareStatement(query)){
             // Set data in prepared statement
-            stmt.setString(1, student.getEmail());
+            stmt.setString(1, email);
 
             // Execute prepared statement
             stmt.executeUpdate();
