@@ -10,61 +10,74 @@ public class StudentModel extends Conn {
         super();
     }
 
-    public void createStudent(Student student){
+    public boolean createStudent(Student student){
+        // Create prepared statement
         String query = "INSERT INTO Student VALUES(?, ?, ? ,?, ?, ?, ?)";
-        try(PreparedStatement statement = conn.prepareStatement(query)) {
-            statement.setString(1, student.getEmail());
-            statement.setString(2, student.getName());
-            statement.setDate(3, java.sql.Date.valueOf(student.getBirthDate().toString()));
-            statement.setString(4, student.getGender());
-            statement.setString(5, student.getAdress());
-            statement.setString(6, student.getCity());
-            statement.setString(7, student.getCountry());
+        try(PreparedStatement stmt = super.conn.prepareStatement(query)) {
+            // Set data in prepared statement
+            stmt.setString(1, student.getEmail());
+            stmt.setString(2, student.getName());
+            stmt.setDate(3, java.sql.Date.valueOf(student.getBirthDate().toString()));
+            stmt.setString(4, student.getGender());
+            stmt.setString(5, student.getAdress());
+            stmt.setString(6, student.getCity());
+            stmt.setString(7, student.getCountry());
 
-            statement.executeQuery();
-            if(!statement.executeQuery().wasNull()){
-                System.out.println("Student created");
-            }
+            // Execute statement
+            stmt.executeUpdate();
+
+            // return true on success
+            return true;
         } catch(Exception e) {
             System.out.format("Error while creating student (createStudent): %s", e.toString());
         }
+
+        // return false on error (nothing is yet returned)
+        return false;
     }
 
     public Student readStudent(Student student){
-        StringBuilder sb = new StringBuilder();
-        sb.append("SELECT * FROM Student WHERE Email = ");
-        sb.append(student.getEmail());
-
-        System.out.println(sb.toString());
-
-        String query = sb.toString();
-
+        // Create prepared statement
+        String query = "SELECT * FROM Student WHERE Email = ?";
         try(PreparedStatement stmt = super.conn.prepareStatement(query)){
-            stmt.executeQuery();
-            if(!stmt.executeQuery().wasNull()){
-                System.out.println("Student created");
+            // Set data in prepared statement
+            stmt.setString(1, student.getEmail());
+
+            // Execute statement
+            ResultSet rs = stmt.executeQuery();
+
+            // Check if there is a result in the set
+            if(rs.next()){
+                return new Student(
+                    rs.getString("Email"),
+                    rs.getString("Name"),
+                    rs.getDate("Birthdate"),
+                    rs.getString("Gender"),
+                    rs.getString("Address"),
+                    rs.getString("City"),
+                    rs.getString("Country")
+                );
             }
         }
         catch(Exception e){
             System.out.format("Error while creating student (createStudent): %s", e.toString());
         }
 
-
+        // Return null on error
         return null;
     }
 
     public ArrayList<Student> getStudents() {
         // Set query to exectute
         String query = "SELECT * FROM Student";
-        ResultSet rs = null;
-
         ArrayList<Student> students = new ArrayList<>();
 
         // Create a prepared statement for the SQL query
         try (PreparedStatement stmt = super.conn.prepareStatement(query)) {
             // Execute the prepared query
-            rs = stmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
 
+            // For every stident in the result set
             while(rs.next()){
                 students.add(new Student(
                     rs.getString("Email"),
@@ -77,6 +90,7 @@ public class StudentModel extends Conn {
                 );
             }
 
+            // Return list of students
             return students;
         } catch (Exception e) {
             System.out.format("Error while getting students (getStudents): %s", e.toString());
@@ -86,65 +100,51 @@ public class StudentModel extends Conn {
         return null;
     }
 
-    public void updateStudent(Student student){
-        StringBuilder sb = new StringBuilder();
-        sb.append("UPDATE Students SET (");
-        sb.append("Email = ");
-        sb.append(student.getEmail());
-        sb.append(",");
-        sb.append("Name = ");
-        sb.append(student.getName());
-        sb.append(",");
-        sb.append("Birthdate = ");
-        sb.append(student.getBirthDate());
-        sb.append(",");
-        sb.append("Gender = ");
-        sb.append(student.getGender());
-        sb.append(",");
-        sb.append("Address = ");
-        sb.append(student.getAdress());
-        sb.append(",");
-        sb.append("City = ");
-        sb.append(student.getCity());
-        sb.append(",");
-        sb.append("Country = ");
-        sb.append(student.getCountry());
-        sb.append(" WHERE ");
-        sb.append("Email = ");
-        sb.append(student.getEmail());
-        sb.append(")");
-
-        System.out.println(sb.toString());
-
-        String query = sb.toString();
-
+    public boolean updateStudent(Student student){
+        // Set query to exectute
+        String query = "UPDATE Student SET (Email = ?, Name = ?, Birthdate = ?, Gender = ?, Address = ?, City = ?, Country = ? WHERE Email = ?";
         try(PreparedStatement stmt = super.conn.prepareStatement(query)){
-            stmt.executeQuery();
-            System.out.println("Student updated");
+            // Set data in prepared statement
+            stmt.setString(1, student.getEmail());
+            stmt.setString(2, student.getName());
+            stmt.setDate(3, java.sql.Date.valueOf(student.getBirthDate().toString()));
+            stmt.setString(4, student.getGender());
+            stmt.setString(5, student.getAdress());
+            stmt.setString(6, student.getCity());
+            stmt.setString(7, student.getCountry());
+            stmt.setString(8, student.getEmail());
+
+            // Execute update query
+            stmt.executeUpdate();
+
+            // return true on success
+            return true;
         }
         catch(Exception e){
             System.out.format("Error while updating student (updateStudent): %s", e.toString());
         }
+
+        // Return false on error
+        return false;
     }
 
-    public void deleteStudent(Student student){
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("DELETE FROM Student WHERE Email =");
-        sb.append(student.getEmail());
-
-        System.out.println(sb.toString());
-
-        String query = sb.toString();
-
+    public boolean deleteStudent(Student student){
+        String query = "DELETE FROM Student WHERE Email = ?";
         try(PreparedStatement stmt = super.conn.prepareStatement(query)){
-            stmt.executeQuery();
-            if(!stmt.executeQuery().wasNull()){
-                System.out.println("Student deleted");
-            }
+            // Set data in prepared statement
+            stmt.setString(1, student.getEmail());
+
+            // Execute prepared statement
+            stmt.executeUpdate();
+
+            // Return true on success
+            return true;
         }
         catch(Exception e){
             System.out.format("Error while deleting student (deleteStudent): %s", e.toString());
         }
+
+        // Return false on error
+        return false;
     }
 }
