@@ -35,8 +35,6 @@ public class Student {
             "}";
     }
 
-    
-
     public String getEmail() {
         return this.email;
     }
@@ -63,6 +61,30 @@ public class Student {
 
     public String getCountry() {
         return this.country;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setAdress(String adress) {
+        this.adress = adress;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
 }
