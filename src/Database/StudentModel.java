@@ -11,38 +11,23 @@ public class StudentModel extends Conn {
     }
 
     public void createStudent(Student student){
+        String query = "INSERT INTO Student VALUES(?, ?, ? ,?, ?, ?, ?)";
+        try(PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setString(1, student.getEmail());
+            statement.setString(2, student.getName());
+            statement.setDate(3, java.sql.Date.valueOf(student.getBirthDate().toString()));
+            statement.setString(4, student.getGender());
+            statement.setString(5, student.getAdress());
+            statement.setString(6, student.getCity());
+            statement.setString(7, student.getCountry());
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("INSERT INTO Students VALUES (");
-        sb.append(student.getEmail());
-        sb.append(",");
-        sb.append(student.getName());
-        sb.append(",");
-        sb.append(student.getBirthDate());
-        sb.append(",");
-        sb.append(student.getGender());
-        sb.append(",");
-        sb.append(student.getAdress());
-        sb.append(",");
-        sb.append(student.getCity());
-        sb.append(",");
-        sb.append(student.getCountry());
-        sb.append(")");
-
-        System.out.println(sb.toString());
-
-        String query = sb.toString();
-
-        try(PreparedStatement stmt = super.conn.prepareStatement(query)){
-            stmt.executeQuery();
-            if(!stmt.executeQuery().wasNull()){
+            statement.executeQuery();
+            if(!statement.executeQuery().wasNull()){
                 System.out.println("Student created");
             }
-        }
-        catch(Exception e){
+        } catch(Exception e) {
             System.out.format("Error while creating student (createStudent): %s", e.toString());
         }
-
     }
 
     public Student readStudent(Student student){
@@ -63,7 +48,42 @@ public class StudentModel extends Conn {
         catch(Exception e){
             System.out.format("Error while creating student (createStudent): %s", e.toString());
         }
-        return 
+
+
+        return null;
+    }
+
+    public ArrayList<Student> getStudents() {
+        // Set query to exectute
+        String query = "SELECT * FROM Student";
+        ResultSet rs = null;
+
+        ArrayList<Student> students = new ArrayList<>();
+
+        // Create a prepared statement for the SQL query
+        try (PreparedStatement stmt = super.conn.prepareStatement(query)) {
+            // Execute the prepared query
+            rs = stmt.executeQuery();
+
+            while(rs.next()){
+                students.add(new Student(
+                    rs.getString("Email"),
+                    rs.getString("Name"),
+                    rs.getDate("Birthdate"),
+                    rs.getString("Gender"),
+                    rs.getString("Address"),
+                    rs.getString("City"),
+                    rs.getString("Country"))
+                );
+            }
+
+            return students;
+        } catch (Exception e) {
+            System.out.format("Error while getting students (getStudents): %s", e.toString());
+        }
+
+        // Return null when nothing is returned yet (error)
+        return null;
     }
 
     public void updateStudent(Student student){
@@ -126,37 +146,5 @@ public class StudentModel extends Conn {
         catch(Exception e){
             System.out.format("Error while deleting student (deleteStudent): %s", e.toString());
         }
-
-    public ArrayList<Student> getStudents() {
-        // Set query to exectute
-        String query = "SELECT * FROM Student";
-        ResultSet rs = null;
-
-        ArrayList<Student> students = new ArrayList<>();
-
-        // Create a prepared statement for the SQL query
-        try (PreparedStatement stmt = super.conn.prepareStatement(query)) {
-            // Execute the prepared query
-            rs = stmt.executeQuery();
-
-            while(rs.next()){
-                students.add(new Student(
-                    rs.getString("Email"),
-                    rs.getString("Name"),
-                    rs.getDate("Birthdate"),
-                    rs.getString("Gender"),
-                    rs.getString("Address"),
-                    rs.getString("City"),
-                    rs.getString("Country"))
-                );
-            }
-
-            return students;
-        } catch (Exception e) {
-            System.out.format("Error while getting students (getStudents): %s", e.toString());
-        }
-
-        // Return null when nothing is returned yet (error)
-        return null;
     }
 }
