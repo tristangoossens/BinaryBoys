@@ -2,7 +2,7 @@ package GUI;
 
 import java.sql.SQLException;
 
-import GUI.Student.Index;
+import GUI.Student.IndexStudent;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -23,7 +23,7 @@ public class App extends Application {
 
         Button openStudentWindow = new Button("Studenten");
         
-        Index students = new Index();
+        IndexStudent students = new IndexStudent();
         
         openStudentWindow.setOnAction((event) -> {
             try {
