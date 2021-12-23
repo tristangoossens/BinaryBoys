@@ -34,7 +34,7 @@ public class App extends Application {
         });
 
         VBox vbox = new VBox(openStudentWindow);
-        Scene scene = new Scene(vbox, 800, 500);
+        Scene scene = new Scene(vbox, 1200, 500);
         vbox.setAlignment(Pos.CENTER);
 
         return scene;
