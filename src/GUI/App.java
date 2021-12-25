@@ -22,9 +22,7 @@ public class App extends Application {
         stage.setTitle("CodeCademy | Home");
 
         Button openStudentWindow = new Button("Studenten");
-        
-        IndexStudent students = new IndexStudent();
-        
+                
         openStudentWindow.setOnAction((event) -> {
             try {
                 stage.setScene(IndexStudent.getView(stage));

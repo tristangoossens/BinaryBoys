@@ -1,6 +1,7 @@
 package GUI.Student;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import Database.StudentModel;
@@ -43,7 +44,7 @@ public class IndexStudent {
         TableColumn<Student, String> column2 = new TableColumn<>("Voornaam");
         column2.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        TableColumn<Student, String> column3 = new TableColumn<>("Geboortedatum");
+        TableColumn<Student, LocalDate> column3 = new TableColumn<>("Geboortedatum");
         column3.setCellValueFactory(new PropertyValueFactory<>("birthDate"));
 
         TableColumn<Student, String> column4 = new TableColumn<>("Geslacht");

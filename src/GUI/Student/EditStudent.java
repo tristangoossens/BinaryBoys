@@ -1,5 +1,6 @@
 package GUI.Student;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -13,10 +14,12 @@ import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -28,6 +31,7 @@ import javafx.stage.Stage;
 public class EditStudent {
 
     public static Scene getView(Stage stage, Student student) throws SQLException {
+        
         // Setting stage title
         stage.setTitle("CodeCademy | " + student.getName() + " aanpassen");
 
@@ -62,10 +66,10 @@ public class EditStudent {
         Label birthdate = new Label("Geboortedatum:");
         formGrid.add(birthdate, 0, 3);
         DatePicker birthdateTextfield = new DatePicker();
+        
         // Converting student birthdate to localdate
         LocalDate localDate = Instant.ofEpochMilli(student.getBirthDate().getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
         birthdateTextfield.setValue(localDate);
-        System.out.println(localDate);
         formGrid.add(birthdateTextfield, 1, 3);
 
         // Gender
@@ -101,26 +105,43 @@ public class EditStudent {
         cancelButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white;");
         cancelButton.setOnAction((event) -> cancelButton(event, stage));
 
-        // Creating cancel button + setting event handler
+        // Creating save button
         Button saveButton = new Button("Opslaan");
         saveButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
-        saveButton.setOnAction((event) -> saveButton(event, stage, student));
+
+        // Setting event handler save button
+        saveButton.setOnAction((event) -> {
+            
+            // Updating student object
+            student.setName(nameTextfield.getText());
+            Date date = Date.valueOf(birthdateTextfield.getValue());
+            student.setBirthDate(date);
+            student.setGender(genderTextField.getText());
+            student.setAddress(addressTextField.getText());
+            student.setCity(cityTextField.getText());
+            student.setCountry(countryTextField.getText());
+            
+            // Calling the save method
+            saveButton(event, stage, student);
+        });
 
         // Creating HBox for buttons
         HBox buttonBox = new HBox(cancelButton, saveButton);
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setSpacing(10);
 
+        // Creating vBox with all components
         VBox vbox = new VBox(formGrid, buttonBox);
         vbox.setAlignment(Pos.CENTER);
         vbox.setSpacing(20);
-        
+
         // Returning scene
         Scene scene = new Scene(vbox, 1200, 500);
         return scene;
     }
 
-    public static void cancelButton(Event event, Stage stage){
+    public static void cancelButton(Event event, Stage stage) {
+        // Returning to student index
         try {
             stage.setScene(IndexStudent.getView(stage));
         } catch (SQLException e) {
@@ -128,14 +149,29 @@ public class EditStudent {
         }
     }
 
-    public static void saveButton(Event event, Stage stage, Student student){
+    public static void saveButton(Event event, Stage stage, Student student) {
+        
         // Creating student model
         StudentModel studentModel = new StudentModel();
-        studentModel.updateStudent(student);
-        try {
-            stage.setScene(IndexStudent.getView(stage));
-        } catch (SQLException e) {
-            e.printStackTrace();
+        
+        // Calling the student update method
+        if (studentModel.updateStudent(student)) {
+            // If succesvol show alert
+            Alert succesfullAlert = new Alert(AlertType.CONFIRMATION);
+            succesfullAlert.setContentText("Record is succesvol aangepast");
+            succesfullAlert.show();
+            // Going back to student index
+            try {
+                stage.setScene(IndexStudent.getView(stage));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            // If failed show alert
+            Alert succesfullAlert = new Alert(AlertType.WARNING);
+            succesfullAlert.setContentText("Er is iets fout gegaan bij het updaten :(");
+            succesfullAlert.show();
         }
+
     }
 }
