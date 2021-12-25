@@ -66,6 +66,7 @@ public class EditStudent {
         Label birthdate = new Label("Geboortedatum:");
         formGrid.add(birthdate, 0, 3);
         DatePicker birthdateTextfield = new DatePicker();
+        birthdateTextfield.getEditor().setDisable(true);
         
         // Converting student birthdate to localdate
         LocalDate localDate = Instant.ofEpochMilli(student.getBirthDate().getTime()).atZone(ZoneId.systemDefault()).toLocalDate();

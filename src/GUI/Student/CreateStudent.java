@@ -58,6 +58,7 @@ public class CreateStudent {
         Label birthdate = new Label("Geboortedatum:");
         formGrid.add(birthdate, 0, 3);
         DatePicker birthdateTextfield = new DatePicker();
+        birthdateTextfield.getEditor().setDisable(true);
         formGrid.add(birthdateTextfield, 1, 3);
 
         // Gender
@@ -96,7 +97,7 @@ public class CreateStudent {
         // Setting event handler save button
         saveButton.setOnAction((event) -> {
             
-            // Converting the localdate to date
+            // Converting the localdate to date (for SQL DB)
             Date date = Date.valueOf(birthdateTextfield.getValue());
 
             // Creating student obj
@@ -143,7 +144,7 @@ public class CreateStudent {
         // Creating student model
         StudentModel studentModel = new StudentModel();
         
-        // Calling the student update method
+        // Calling the student create method
         if (studentModel.createStudent(student)) {
             // If succesvol show alert
             Alert succesfullAlert = new Alert(AlertType.CONFIRMATION);
