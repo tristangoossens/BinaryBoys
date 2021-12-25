@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 
 public class CreateStudent {
 
-    public Scene getView(Stage stage) throws SQLException {
+    public static Scene getView(Stage stage) throws SQLException {
         // Creating student model
         StudentModel studentModel = new StudentModel();
 

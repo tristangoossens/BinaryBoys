@@ -27,7 +27,7 @@ public class App extends Application {
         
         openStudentWindow.setOnAction((event) -> {
             try {
-                stage.setScene(students.getView(stage));
+                stage.setScene(IndexStudent.getView(stage));
             } catch (SQLException e) {
                 e.printStackTrace();
             }

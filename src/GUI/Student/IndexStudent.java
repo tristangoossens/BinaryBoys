@@ -155,12 +155,12 @@ public class IndexStudent {
             // Retrieving student object from table
             Student selectedStudent = (Student) tableView.getSelectionModel().getSelectedItem();
 
-            // Create page
+            // Edit page
             EditStudent editStudent = new EditStudent();
 
             // Try to open new page
             try {
-                stage.setScene(editStudent.getView(stage));
+                stage.setScene(editStudent.getView(stage, selectedStudent));
             } catch (SQLException e) {
                 e.printStackTrace();
             }
