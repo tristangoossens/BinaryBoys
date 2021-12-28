@@ -147,4 +147,37 @@ public class StudentModel extends Conn {
         // Return false on error
         return false;
     }
+
+    public ArrayList<Student> getModuleProgress() {
+        // Set query to exectute
+        String query = "SELECT * FROM Student";
+        ArrayList<Student> students = new ArrayList<>();
+
+        // Create a prepared statement for the SQL query
+        try (PreparedStatement stmt = super.conn.prepareStatement(query)) {
+            // Execute the prepared query
+            ResultSet rs = stmt.executeQuery();
+
+            // For every stident in the result set
+            while(rs.next()){
+                students.add(new Student(
+                    rs.getString("Email"),
+                    rs.getString("Name"),
+                    rs.getDate("Birthdate"),
+                    rs.getString("Gender"),
+                    rs.getString("Address"),
+                    rs.getString("City"),
+                    rs.getString("Country"))
+                );
+            }
+
+            // Return list of students
+            return students;
+        } catch (Exception e) {
+            System.out.format("Error while getting students (getStudents): %s", e.toString());
+        }
+
+        // Return null when nothing is returned yet (error)
+        return null;
+    }
 }
