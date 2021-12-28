@@ -29,11 +29,6 @@ public class IndexStudent {
         // Settimg stage title
         stage.setTitle("CodeCademy | Studenten");
 
-        // Creating back button + setting event handler
-        Button backButton = new Button("Ga terug");
-        backButton.setStyle("-fx-background-color: #343a40; -fx-text-fill: white;");
-        backButton.setOnAction((event) -> stage.setScene(App.getView(stage)));
-
         // Creating table view
         TableView tableView = new TableView();
 
@@ -76,10 +71,15 @@ public class IndexStudent {
             tableView.getItems().add(student);
         }
 
-        // Creating delete button + setting event handler
-        Button deleteButton = new Button("Verwijder");
-        deleteButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white;");
-        deleteButton.setOnAction((event) -> deleteRowFromTable(event, tableView, studentModel));
+        // Creating back button + setting event handler
+        Button backButton = new Button("Ga terug");
+        backButton.setStyle("-fx-background-color: #343a40; -fx-text-fill: white;");
+        backButton.setOnAction((event) -> stage.setScene(App.getView(stage)));
+
+        // Creating index button + setting event handler
+        Button detailButton = new Button("Bekijken");
+        detailButton.setStyle("-fx-background-color: #17a2b8; -fx-text-fill: white;");
+        detailButton.setOnAction((event) -> viewStudent(event, tableView, studentModel, stage));
 
         // Creating edit button + setting event handler
         Button editButton = new Button("Aanpassen");
@@ -91,13 +91,18 @@ public class IndexStudent {
         createButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
         createButton.setOnAction((event) -> createStudent(event, stage));
 
+        // Creating delete button + setting event handler
+        Button deleteButton = new Button("Verwijder");
+        deleteButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white;");
+        deleteButton.setOnAction((event) -> deleteRowFromTable(event, tableView, studentModel));
+
         // Creating HBox for buttons
-        HBox buttonBox = new HBox(deleteButton, editButton, createButton);
+        HBox buttonBox = new HBox(backButton, detailButton, editButton, createButton, deleteButton);
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setSpacing(10);
 
         // Creatoing VBox for all components
-        VBox vbox = new VBox(backButton, tableView, buttonBox);
+        VBox vbox = new VBox(tableView, buttonBox);
         vbox.setAlignment(Pos.CENTER);
         vbox.setSpacing(20);
 
@@ -178,6 +183,32 @@ public class IndexStudent {
             stage.setScene(createStudent.getView(stage));
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void viewStudent(ActionEvent event, TableView tableView, StudentModel studentModel, Stage stage) {
+
+        // Check if row is selected
+        if (tableView.getSelectionModel().getSelectedItem() == null) {
+
+            // Send alert, no row selected
+            Alert warningAlert = new Alert(AlertType.WARNING);
+            warningAlert.setContentText("Selecteer een student die je wilt bekijken");
+            warningAlert.show();
+        } else {
+
+            // Retrieving student object from table
+            Student selectedStudent = (Student) tableView.getSelectionModel().getSelectedItem();
+
+            // Edit page
+            ViewStudent viewStudent = new ViewStudent();
+
+            // Try to open new page
+            try {
+                stage.setScene(viewStudent.getView(studentModel, selectedStudent, stage));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
