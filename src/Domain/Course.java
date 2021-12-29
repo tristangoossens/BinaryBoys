@@ -15,4 +15,46 @@ public class Course {
         this.contentItems = new ArrayList<ContentItem>();
         this.contentItems.add(contentItem);
     }
+
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSubject() {
+        return this.subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getIntroduction() {
+        return this.introduction;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
+    public String getLevel() {
+        return this.level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    public ArrayList<ContentItem> getContentItems() {
+        return this.contentItems;
+    }
+
+    public void setContentItems(ArrayList<ContentItem> contentItems) {
+        this.contentItems = contentItems;
+    }
+
 }

@@ -96,7 +96,7 @@ public class CreateStudent {
 
         // Setting event handler save button
         saveButton.setOnAction((event) -> {
-            
+
             // Converting the localdate to date (for SQL DB)
             Date date = Date.valueOf(birthdateTextfield.getValue());
 
@@ -110,7 +110,7 @@ public class CreateStudent {
                 cityTextField.getText(),
                 countryTextField.getText()
             );
-            
+
             // Calling the save method
             saveButton(event, stage, student);
         });
@@ -124,7 +124,7 @@ public class CreateStudent {
         VBox vbox = new VBox(formGrid, buttonBox);
         vbox.setAlignment(Pos.CENTER);
         vbox.setSpacing(20);
-        
+
         // Returning scene
         Scene scene = new Scene(vbox, 1200, 500);
         return scene;
@@ -140,10 +140,10 @@ public class CreateStudent {
     }
 
     public static void saveButton(Event event, Stage stage, Student student) {
-        
+
         // Creating student model
         StudentModel studentModel = new StudentModel();
-        
+
         // Calling the student create method
         if (studentModel.createStudent(student)) {
             // If succesvol show alert
