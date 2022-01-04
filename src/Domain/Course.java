@@ -9,9 +9,11 @@ public class Course {
     private String level;
     private ArrayList<ContentItem> contentItems;
 
-    public Course(String name, String subject, ContentItem contentItem){
+    public Course(String name, String subject, String introduction, String level, ContentItem contentItem){
         this.name = name;
         this.subject = subject;
+        this.introduction = introduction;
+        this.level = level;
         this.contentItems = new ArrayList<ContentItem>();
         this.contentItems.add(contentItem);
     }
