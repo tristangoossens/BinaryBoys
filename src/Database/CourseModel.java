@@ -4,7 +4,7 @@ import Domain.Course;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class CourseModel {
+public class CourseModel extends Conn {
     public CourseModel() {
         super();
     }
