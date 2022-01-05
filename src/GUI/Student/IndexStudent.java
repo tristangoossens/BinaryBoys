@@ -30,7 +30,7 @@ public class IndexStudent {
         stage.setTitle("CodeCademy | Studenten");
 
         // Creating table view
-        TableView tableView = new TableView();
+        TableView<Student> tableView = new TableView<>();
 
         // Setting data table view
         TableColumn<Student, String> column1 = new TableColumn<>("E-mail");
@@ -111,7 +111,7 @@ public class IndexStudent {
         return scene;
     }
 
-    private static void deleteRowFromTable(ActionEvent event, TableView tableView, StudentModel studentModel) {
+    private static void deleteRowFromTable(ActionEvent event, TableView<Student> tableView, StudentModel studentModel) {
 
         // Check if row is selected
         if (tableView.getSelectionModel().getSelectedItem() == null) {
@@ -147,7 +147,7 @@ public class IndexStudent {
         }
     }
 
-    private static void editRowFromTable(ActionEvent event, TableView tableView, Stage stage) {
+    private static void editRowFromTable(ActionEvent event, TableView<Student> tableView, Stage stage) {
 
         // Check if row is selected
         if (tableView.getSelectionModel().getSelectedItem() == null) {
@@ -186,7 +186,7 @@ public class IndexStudent {
         }
     }
 
-    private static void viewStudent(ActionEvent event, TableView tableView, StudentModel studentModel, Stage stage) {
+    private static void viewStudent(ActionEvent event, TableView<Student> tableView, StudentModel studentModel, Stage stage) {
 
         // Check if row is selected
         if (tableView.getSelectionModel().getSelectedItem() == null) {
