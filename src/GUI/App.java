@@ -3,6 +3,8 @@ package GUI;
 import java.sql.SQLException;
 
 import GUI.Student.IndexStudent;
+import GUI.ContentItem.IndexContentItem;
+
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -31,7 +33,17 @@ public class App extends Application {
             }
         });
 
-        VBox vbox = new VBox(openStudentWindow);
+        Button openContentItemWindow = new Button("Content-items");
+                
+        openContentItemWindow.setOnAction((event) -> {
+            try {
+                stage.setScene(IndexContentItem.getView(stage));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+
+        VBox vbox = new VBox(openStudentWindow, openContentItemWindow);
         Scene scene = new Scene(vbox, 1200, 500);
         vbox.setAlignment(Pos.CENTER);
 
