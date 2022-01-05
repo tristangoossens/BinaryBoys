@@ -30,7 +30,7 @@ import javafx.stage.Stage;
 
 public class EditStudent {
 
-    public static Scene getView(Stage stage, Student student) throws SQLException {
+    public Scene getView(Stage stage, Student student) throws SQLException {
         
         // Setting stage title
         stage.setTitle("CodeCademy | " + student.getName() + " aanpassen");

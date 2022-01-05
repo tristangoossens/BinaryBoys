@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 
 public class ViewStudent {
 
-    public static Scene getView(StudentModel studentModel, Student student, Stage stage) throws SQLException {
+    public Scene getView(StudentModel studentModel, Student student, Stage stage) throws SQLException {
 
         // Settimg stage title
         stage.setTitle("CodeCademy | " + student.getName() + " bekijken");
