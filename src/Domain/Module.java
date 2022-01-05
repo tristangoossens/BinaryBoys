@@ -1,11 +1,15 @@
 package Domain;
 
+import java.util.Date;
+
 public class Module extends ContentItem {   
-    private int version;
+    private double version;
     private int orderNumber;
     private String contactPerson;
 
-    public Module(int version, int orderNumber, String contactPerson){
+    public Module(int Content_item_ID, String title, Date publicationDate, String status, String description, double version, int orderNumber, String contactPerson){
+        super(Content_item_ID, title, publicationDate, status, description);
+
         this.setVersion(version);
         this.setOrderNumber(orderNumber);
         this.setContactPerson(contactPerson);
@@ -27,11 +31,11 @@ public class Module extends ContentItem {
         this.orderNumber = orderNumber;
     }
 
-    public int getVersion() {
+    public double getVersion() {
         return version;
     }
 
-    public void setVersion(int version) {
+    public void setVersion(double version) {
         this.version = version;
     }
 }
