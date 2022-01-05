@@ -1,15 +1,27 @@
 package GUI.Enrollment;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
-
+import java.util.Date;
+import Database.CourseModel;
+import Database.EnrollmentModel;
+import Database.StudentModel;
 import Domain.Course;
+import Domain.Enrollment;
+import Domain.Student;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -17,9 +29,9 @@ import javafx.stage.Stage;
 
 public class EditEnrollment {
 
-    public static Scene getView(Stage stage) throws SQLException {
+    public static Scene getView(Stage stage, Enrollment enrollment) throws SQLException {
 
-        stage.setTitle("CodeCademy | Enrollment aanmaken");
+        stage.setTitle("CodeCademy | Enrollment aanpassen");
 
         // Creating grid to put in form
         GridPane formGrid = new GridPane();
@@ -29,34 +41,33 @@ public class EditEnrollment {
         formGrid.setPadding(new Insets(25, 25, 25, 25));
 
         // Creating form
-        Text scenetitle = new Text("Enrollment aanmaken");
+        Text scenetitle = new Text("Enrollment aanpassen");
         scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         formGrid.add(scenetitle, 0, 0);
 
         // getting Courses
-        CourseModel course = new CourseModel();
-        ArrayList<Course> courses = CourseModel.getCourses();
+        CourseModel courseModel = new CourseModel();
+        ArrayList<Course> courses = courseModel.getCourses();
+
+        //getting Students
+        StudentModel studentmodel = new StudentModel();
+        ArrayList<Student> students = studentmodel.getStudents();
+
 
         // Course
         Label courseLabel = new Label("Course:");
         formGrid.add(courseLabel, 0, 1);
-        ObservableList<Course> courseOptions = FXCollections.observableArrayList(
+        ObservableList<Course> courseOptions = FXCollections.observableArrayList(courses);
+        ComboBox<Course> courseCombo = new ComboBox<Course>(courseOptions);
+        formGrid.add(courseCombo, 1, 1);
 
-        );
-        formGrid.add(courseOptions, 1, 1);
-
-        // getting students
-        StudentModel studentmodel = new StudentModel();
-        ArrayList<Student> students = studentmodel.getStudents();
 
         // Student
         Label studentLabel = new Label("Student:");
         formGrid.add(studentLabel, 0, 2);
-        ObservableList<Student> studentOptions = FXCollections.observableArrayList();
-        ComboBox<Student> studentCombo = new ComboBox<Student>();
-        for(Student student : students){
-            studentCombo.getItems().add(student);
-        }
+        ObservableList<Student> studentOptions = FXCollections.observableArrayList(students);
+        ComboBox<Student> studentCombo = new ComboBox<Student>(studentOptions);
+        formGrid.add(studentCombo, 1, 2);
 
 
         // Creating cancel button + setting event handler
@@ -71,16 +82,17 @@ public class EditEnrollment {
             // Setting event handler save button
         saveButton.setOnAction((event) -> {
 
+            Date dateNow = new Date();
 
             // Creating enrollment obj
-            Enrollment enrollment = new Enrollment(
-                enrollment.setCourse(courseOptions.getSelectionModel().getSelectedItem()),
-                enrollment.setStudent(studentOptions.getSelectionModel().getSelectedItem()),
-                enrollment.setDate(DateTime.now());
+            Enrollment enrollmentObj = new Enrollment(
+                studentCombo.getSelectionModel().getSelectedItem(),
+                courseCombo.getSelectionModel().getSelectedItem(),
+                dateNow
             );
 
             // Calling the save method
-            saveButton(event, stage, student);
+            saveButton(event, stage, enrollmentObj);
         });
 
         HBox buttonBox = new HBox(cancelButton, saveButton);
@@ -108,11 +120,10 @@ public class EditEnrollment {
 
     public static void saveButton(Event event, Stage stage, Enrollment enrollment) {
 
-        // Creating student model
-        StudentModel studentModel = new StudentModel();
+        EnrollmentModel enrollmentModel = new EnrollmentModel();
 
-        // Calling the student create method
-        if (EnrollmentModel.createEnrollment(enrollment)) {
+        // Calling the enrollment create method
+        if (enrollmentModel.createEnrollment(enrollment)) {
             // If succesvol show alert
             Alert succesfullAlert = new Alert(AlertType.CONFIRMATION);
             succesfullAlert.setContentText("Enrollment is succesvol toegevoegd");
