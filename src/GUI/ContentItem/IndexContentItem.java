@@ -9,6 +9,10 @@ import Domain.Course;
 import Domain.Module;
 import Domain.Webcast;
 import GUI.App;
+import GUI.Module.CreateModule;
+import GUI.Module.EditModule;
+import GUI.Webcast.CreateWebcast;
+import GUI.Webcast.EditWebcast;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -187,13 +191,18 @@ public class IndexContentItem {
         deleteButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white;");
         deleteButton.setOnAction((event) -> deleteContentItem(event, tableView, cim));
 
+        // Creating edit button + setting event handler
+        Button editButton = new Button("Aanpassen");
+        editButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white;");
+        editButton.setOnAction((event) -> editContentItem(event, stage, tableView, true));
+
         // Creating create button + setting event handler
         Button createButton = new Button("Aanmaken");
         createButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
-        createButton.setOnAction((event) -> System.out.println("test"));
+        createButton.setOnAction((event) -> createContentItem(event, stage, true));
 
         // Creating HBox for buttons
-        HBox buttonBox = new HBox(createButton, deleteButton);
+        HBox buttonBox = new HBox(createButton, editButton, deleteButton);
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setSpacing(10);
 
@@ -233,6 +242,52 @@ public class IndexContentItem {
                 succesfullAlert.show();
             }
 
+        }
+    }
+
+    private static void createContentItem(ActionEvent event, Stage stage, boolean isModule) {
+        Scene scene;
+
+        // Check if the content item to be made is a module
+        if(isModule){
+            CreateModule createModule = new CreateModule();
+            scene = createModule.getView(stage);
+        }else{
+            CreateWebcast createWebcast = new CreateWebcast();
+            scene = createWebcast.getView(stage);
+        }
+
+        // Open new page
+        stage.setScene(scene);
+    }
+
+    private static void editContentItem(ActionEvent event, Stage stage, TableView<ContentItem> tableView, boolean isModule) {
+        // Check if row is selected
+        if (tableView.getSelectionModel().getSelectedItem() == null) {
+
+            // Send alert, no row selected
+            Alert warningAlert = new Alert(AlertType.WARNING);
+            warningAlert.setContentText("Selecteer een record die je wilt aanpassen");
+            warningAlert.show();
+        } else {
+            Scene scene;
+
+            if(isModule){
+                // Retrieving module object from table
+                Module selectedModule = (Module) tableView.getSelectionModel().getSelectedItem();
+
+                // Edit page
+                EditModule editModule = new EditModule();
+
+                scene = editModule.getView(stage, selectedModule);
+            }else{
+                // Retrieving webcast object from table
+                Webcast selectedWebcast = (Webcast) tableView.getSelectionModel().getSelectedItem();
+                scene = EditWebcast.getView(stage, selectedWebcast);
+            }
+            
+            // Open new page
+            stage.setScene(scene); 
         }
     }
 }
