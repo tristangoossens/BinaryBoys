@@ -23,9 +23,9 @@ public class IndexCourse {
     public static Scene getView(Stage stage) throws SQLException {
         CourseModel coursemodel = new CourseModel();
 
-        stage.setTitle("CodeCademy | Studenten");
+        stage.setTitle("CodeCademy | Cursussen");
         
-        TableView tableView = new TableView();
+        TableView<Course> tableView = new TableView<Course>();
 
         TableColumn<Course, String> column1 = new TableColumn<>("Name");
         column1.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -95,7 +95,7 @@ public class IndexCourse {
     }       
 
     
-    private static void deleteRowFromTable(ActionEvent event, TableView tableView, CourseModel courseModel) {
+    private static void deleteRowFromTable(ActionEvent event, TableView<Course> tableView, CourseModel courseModel) {
 
         // Check if row is selected
         if (tableView.getSelectionModel().getSelectedItem() == null) {
@@ -110,7 +110,7 @@ public class IndexCourse {
             Course selectedCourse = (Course) tableView.getSelectionModel().getSelectedItem();
 
             // Deleting course from database
-            if (CourseModel.deleteCourse(selectedCourse.getName())) {
+            if (courseModel.deleteCourse(selectedCourse)) {
 
                 // If delete method returns true, delete row form table
                 tableView.getItems().removeAll(tableView.getSelectionModel().getSelectedItems());
@@ -131,7 +131,7 @@ public class IndexCourse {
         }
     }
 
-    private static void editRowFromTable(ActionEvent event, TableView tableView, Stage stage) {
+    private static void editRowFromTable(ActionEvent event, TableView<Course> tableView, Stage stage) {
 
         // Check if row is selected
         if (tableView.getSelectionModel().getSelectedItem() == null) {
@@ -170,7 +170,7 @@ public class IndexCourse {
         }
     }
 
-    private static void viewCourse(ActionEvent event, TableView tableView, CourseModel courseModel, Stage stage) {
+    private static void viewCourse(ActionEvent event, TableView<Course> tableView, CourseModel courseModel, Stage stage) {
 
         // Check if row is selected
         if (tableView.getSelectionModel().getSelectedItem() == null) {

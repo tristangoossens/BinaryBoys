@@ -29,8 +29,7 @@ import javafx.stage.Stage;
 
 public class CreateEnrollment{
 
-
-    public static Scene getView(Stage stage) throws SQLException {
+    public Scene getView(Stage stage) throws SQLException {
 
         // setting stage title
         stage.setTitle("CodeCademy | Enrollment aanmaken");
@@ -95,7 +94,6 @@ public class CreateEnrollment{
                 studentCombo.getSelectionModel().getSelectedItem(),
                 courseCombo.getSelectionModel().getSelectedItem(),
                 dateObj
-
             );
 
             // Calling the save method

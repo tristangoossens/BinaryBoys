@@ -29,7 +29,7 @@ import javafx.stage.Stage;
 
 public class EditEnrollment {
 
-    public static Scene getView(Stage stage, Enrollment enrollment) throws SQLException {
+    public Scene getView(Stage stage, Enrollment enrollment) throws SQLException {
 
         stage.setTitle("CodeCademy | Enrollment aanpassen");
 

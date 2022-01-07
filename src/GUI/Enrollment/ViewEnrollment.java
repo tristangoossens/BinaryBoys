@@ -4,7 +4,6 @@ import java.sql.SQLException;
 
 import Database.EnrollmentModel;
 import Domain.Enrollment;
-import GUI.Student.IndexStudent;
 import javafx.event.Event;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,7 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class ViewEnrollment {
-    public static Scene getView(EnrollmentModel enrollmentModel, Enrollment enrollment, Stage stage) throws SQLException {
+    public Scene getView(EnrollmentModel enrollmentModel, Enrollment enrollment, Stage stage) throws SQLException {
 
         // Settimg stage title
         stage.setTitle("CodeCademy | Enrollment bekijken");

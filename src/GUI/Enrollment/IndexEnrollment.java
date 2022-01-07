@@ -4,11 +4,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
-import Database.CourseModel;
 import Database.EnrollmentModel;
-import Database.StudentModel;
+
 import Domain.Enrollment;
+
 import GUI.App;
+
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -27,14 +28,12 @@ public class IndexEnrollment {
     public static Scene getView(Stage stage) throws SQLException {
         // Creating object models
         EnrollmentModel enrollmentModel = new EnrollmentModel();
-        StudentModel studentModel = new StudentModel();
-        CourseModel courseModel = new CourseModel();
 
         // Settimg stage title
         stage.setTitle("CodeCademy | Studenten");
 
         // Creating table view
-        TableView tableView = new TableView();
+        TableView<Enrollment> tableView = new TableView<Enrollment>();
 
         // Setting data table view
         TableColumn<Enrollment, String> column1 = new TableColumn<>("Student");
@@ -52,7 +51,7 @@ public class IndexEnrollment {
         tableView.getColumns().add(column3);
 
         // Retrieving all students
-        ArrayList<Enrollment> enrollments = enrollmentModel.getEnrollments(studentModel, courseModel);
+        ArrayList<Enrollment> enrollments = enrollmentModel.getEnrollments();
 
         // Looping through students + adding to table
         for (Enrollment enrollment : enrollments) {
@@ -99,7 +98,7 @@ public class IndexEnrollment {
         return scene;
     }
 
-    private static void deleteRowFromTable(ActionEvent event, TableView tableView, EnrollmentModel enrollmentModel) {
+    private static void deleteRowFromTable(ActionEvent event, TableView<Enrollment> tableView, EnrollmentModel enrollmentModel) {
 
         // Check if row is selected
         if (tableView.getSelectionModel().getSelectedItem() == null) {
@@ -135,7 +134,7 @@ public class IndexEnrollment {
         }
     }
 
-    private static void editRowFromTable(ActionEvent event, TableView tableView, Stage stage) {
+    private static void editRowFromTable(ActionEvent event, TableView<Enrollment> tableView, Stage stage) {
 
         // Check if row is selected
         if (tableView.getSelectionModel().getSelectedItem() == null) {
@@ -174,7 +173,7 @@ public class IndexEnrollment {
         }
     }
 
-    private static void viewEnrollment(ActionEvent event, TableView tableView, EnrollmentModel enrollmentModel, Stage stage) {
+    private static void viewEnrollment(ActionEvent event, TableView<Enrollment> tableView, EnrollmentModel enrollmentModel, Stage stage) {
 
         // Check if row is selected
         if (tableView.getSelectionModel().getSelectedItem() == null) {
