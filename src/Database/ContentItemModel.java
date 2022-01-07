@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import Domain.Module;
 import Domain.Webcast;
+import Domain.ContentItem;
 import Domain.Course;
 
 public class ContentItemModel extends Conn {
@@ -234,5 +235,34 @@ public class ContentItemModel extends Conn {
 
         // Return false on error
         return false;
+    }
+
+    public ContentItem getContentItem(int ID) {
+        // Create prepared statement
+        String query = "SELECT * FROM Content_Item WHERE ID = ?";
+        try(PreparedStatement stmt = super.conn.prepareStatement(query)){
+            // Set data in prepared statement
+            stmt.setInt(1, ID);
+
+            // Execute statement
+            ResultSet rs = stmt.executeQuery();
+
+            // Check if there is a result in the set
+            if(rs.next()){
+                return new ContentItem(
+                    rs.getInt("ID"),
+                    rs.getString("Title"),
+                    rs.getString("Status"),
+                    rs.getDate("Publication_Date"),
+                    rs.getString("Description")
+                );
+            }
+        }
+        catch(Exception e){
+            System.out.format("Error while retrieving content item (getContentItem): %s", e.toString());
+        }
+
+        // Return null on error
+        return null;
     }
 }

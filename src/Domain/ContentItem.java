@@ -9,11 +9,11 @@ public class ContentItem {
     private String status;
     private String description;
     
-    public ContentItem(int ID, String title, Date publicationDate, String status, String description){
+    public ContentItem(int ID, String title, String status, Date publicationDate, String description){
         this.setID(ID);
         this.setTitle(title);
-        this.setPublicationDate(publicationDate);
         this.setStatus(status);
+        this.setPublicationDate(publicationDate);
         this.setDescription(description);
     }
 
