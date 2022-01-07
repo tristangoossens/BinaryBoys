@@ -8,7 +8,7 @@ public class Module extends ContentItem {
     private String contactPerson;
 
     public Module(int Content_item_ID, String title, Date publicationDate, String status, String description, double version, int orderNumber, String contactPerson){
-        super(Content_item_ID, title, publicationDate, status, description);
+        super(Content_item_ID, title, status, publicationDate, description);
 
         this.setVersion(version);
         this.setOrderNumber(orderNumber);

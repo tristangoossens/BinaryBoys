@@ -6,15 +6,19 @@ import Domain.Student;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class EnrollmentModel extends Conn{
+public class EnrollmentModel extends Conn {
+
+    private StudentModel studentModel = new StudentModel();
+    private CourseModel courseModel = new CourseModel();
+
     public EnrollmentModel() {
         // Initialize super class conn
         super();
     }
 
-    public boolean createEnrollment(Enrollment enrollment){
+    public boolean createEnrollment(Enrollment enrollment) {
         String query = "INSERT INTO Enrollment VALUES(?, ?, ?)";
-        try(PreparedStatement stmt = super.conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = super.conn.prepareStatement(query)) {
             // Set data in prepared statement
             stmt.setString(1, enrollment.getCourse().getName());
             stmt.setString(2, enrollment.getStudent().getEmail());
@@ -25,7 +29,7 @@ public class EnrollmentModel extends Conn{
 
             // return true on success
             return true;
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.format("Error while creating enrollment (createEnrollment): %s", e.toString());
         }
 
@@ -33,10 +37,10 @@ public class EnrollmentModel extends Conn{
         return false;
     }
 
-    public Enrollment readEnrollment(Student student, Course course){
+    public Enrollment readEnrollment(Student student, Course course) {
         // Create prepared statement
         String query = "SELECT Enrollment.Enrollment_Date FROM Enrollment WHERE Course_Name = ? AND Student_Email = ?";
-        try(PreparedStatement stmt = super.conn.prepareStatement(query)){
+        try (PreparedStatement stmt = super.conn.prepareStatement(query)) {
             // Set data in prepared statement
             stmt.setString(1, course.getName());
             stmt.setString(2, student.getEmail());
@@ -45,15 +49,13 @@ public class EnrollmentModel extends Conn{
             ResultSet rs = stmt.executeQuery();
 
             // Check if there is a result in the set
-            if(rs.next()){
+            if (rs.next()) {
                 return new Enrollment(
-                    student,
-                    course,
-                    rs.getDate("Enrollment_Date")
-                );
+                        student,
+                        course,
+                        rs.getDate("Enrollment_Date"));
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.out.format("Error while retrieving enrollment (readEnrollment): %s", e.toString());
         }
 
@@ -61,7 +63,7 @@ public class EnrollmentModel extends Conn{
         return null;
     }
 
-    /*public ArrayList<Enrollment> getEnrollments(StudentModel studentmodel, CourseModel coursemodel) {
+    public ArrayList<Enrollment> getEnrollments() {
         // Set query to exectute
         String query = "SELECT * FROM Enrollment";
         ArrayList<Enrollment> enrollments = new ArrayList<>();
@@ -71,18 +73,12 @@ public class EnrollmentModel extends Conn{
             // Execute the prepared query
             ResultSet rs = stmt.executeQuery();
 
-            ArrayList<Student> students = studentmodel.getStudents();
-            ArrayList<Course> courses = coursemodel.getCourses();
-
-            int count = 0;
             // For every stident in the result set
-            while(rs.next()){
+            while (rs.next()) {
                 enrollments.add(new Enrollment(
-                    students.get(count),
-                    courses.get(count),
-                    rs.getDate("Enrollment_Date")
-                ));
-                count++;
+                        studentModel.readStudent(rs.getString("Student_Email")),
+                        courseModel.readCourse(rs.getString("Course_Name")),
+                        rs.getDate("Enrollment_Date")));
             }
 
             // Return list of enrollments
@@ -93,26 +89,24 @@ public class EnrollmentModel extends Conn{
 
         // Return null when nothing is returned yet (error)
         return null;
-    }*/
+    }
 
-    public boolean updateEnrollment(Enrollment enrollment){
+    public boolean updateEnrollment(Enrollment enrollment) {
         // Set query to exectute
-        String query = "UPDATE Enrollment SET Course_Name = ?, Student_Email = ?, Enrollment_Date = ? WHERE Course_Name = ? AND Student_Email = ?";
-        try(PreparedStatement stmt = super.conn.prepareStatement(query)){
+        String query = "UPDATE Enrollment SET Course_Name = ?, Student_Email = ?, Enrollment_Date = ? WHERE ID = ?";
+        try (PreparedStatement stmt = super.conn.prepareStatement(query)) {
             // Set data in prepared statement
             stmt.setString(1, enrollment.getCourse().getName());
             stmt.setString(2, enrollment.getStudent().getEmail());
             stmt.setDate(3, new java.sql.Date(enrollment.getDate().getTime()));
-            stmt.setString(4, enrollment.getCourse().getName());
-            stmt.setString(5, enrollment.getStudent().getEmail());
+            stmt.setInt(4, enrollment.getID());
 
             // Execute update query
             stmt.executeUpdate();
 
             // return true on success
             return true;
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.out.format("Error while updating enrollment (updateEnrollment): %s", e.toString());
         }
 
@@ -120,20 +114,17 @@ public class EnrollmentModel extends Conn{
         return false;
     }
 
-    public boolean deleteEnrollment(Enrollment enrollment){
-        String query = "DELETE FROM Enrollment WHERE Course_Name = ? AND Student_Email = ?";
-        try(PreparedStatement stmt = super.conn.prepareStatement(query)){
+    public boolean deleteEnrollment(Enrollment enrollment) {
+        String query = "DELETE FROM Enrollment WHERE ID = ?";
+        try (PreparedStatement stmt = super.conn.prepareStatement(query)) {
             // Set data in prepared statement
-            stmt.setString(1, enrollment.getCourse().getName());
-            stmt.setString(2, enrollment.getStudent().getEmail());
-
+            stmt.setInt(1, enrollment.getID());
             // Execute prepared statement
             stmt.executeUpdate();
 
             // Return true on success
             return true;
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.out.format("Error while deleting enrollment (deleteEnrollment): %s", e.toString());
         }
 

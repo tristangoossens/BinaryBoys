@@ -94,7 +94,7 @@ public class ContentItemModel extends Conn {
         return false;
     }
 
-    public ArrayList<Module> getModulesForCourse(Course course){
+    public ArrayList<Module> getModulesForCourse(String courseName){
         // Query to retrieve all content items for a course
         String query = "SELECT * FROM Content_Item AS CI INNER JOIN Module AS M ON CI.ID = M.Content_Item_ID INNER JOIN Module_Person AS MP ON M.Module_Person_Email = MP.Email WHERE CI.Course_Name = ?";
 
@@ -104,7 +104,7 @@ public class ContentItemModel extends Conn {
         // Create a prepared statement to prevent SQL injections
         try(PreparedStatement stmt = super.conn.prepareStatement(query)) {
             // Set query variable
-            stmt.setString(1, course.getName());
+            stmt.setString(1, courseName);
 
             // Execute query
             ResultSet rs = stmt.executeQuery();
@@ -131,7 +131,7 @@ public class ContentItemModel extends Conn {
         return null;
     }
 
-    public ArrayList<Webcast> getWebcastsForCourse(Course course){
+    public ArrayList<Webcast> getWebcastsForCourse(String courseName){
         // Query to retrieve all webcasts for a course
         String query = "SELECT * FROM Content_Item AS CI INNER JOIN Webcast AS W ON CI.ID = W.Content_Item_ID INNER JOIN Webcast_Speaker AS WS ON W.Webcast_Speaker_ID = WS.ID WHERE CI.Course_Name = ?";
 
@@ -141,7 +141,7 @@ public class ContentItemModel extends Conn {
         // Create a prepared statement to prevent SQL injections
         try(PreparedStatement stmt = super.conn.prepareStatement(query)) {
             // Set query variable
-            stmt.setString(1, course.getName());
+            stmt.setString(1, courseName);
 
             // Execute query
             ResultSet rs = stmt.executeQuery();
@@ -167,6 +167,14 @@ public class ContentItemModel extends Conn {
 
         // Return null on error (code reached catch block)
         return null;
+    }
+
+    public ArrayList<ContentItem> getContentItemsForCourse(String courseName){
+        ArrayList<ContentItem> cItems = new ArrayList<>();
+        cItems.addAll(getModulesForCourse(courseName));
+        cItems.addAll(getWebcastsForCourse(courseName));
+
+        return cItems;
     }
 
     public boolean updateModule(Module module){

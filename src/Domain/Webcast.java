@@ -9,8 +9,7 @@ public class Webcast extends ContentItem {
     private String url;
 
     public Webcast(int content_item_ID, String title, Date publicationDate, String status, String description, String speaker, String organisation, int duration, String url){
-        super(content_item_ID, title, publicationDate, status, description);
-
+        super(content_item_ID, title, status, publicationDate, description);
         this.setSpeaker(speaker);
         this.setOrganisation(organisation);
         this.setDuration(duration);

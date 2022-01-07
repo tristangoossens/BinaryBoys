@@ -1,13 +1,12 @@
 package Domain;
 
 import java.util.Date;
-import java.util.HashMap;
 
 public class Enrollment {
+    private int ID;
     private Student student;
     private Course course;
     private Date date;
-    private HashMap<ContentItem, Integer> progress = new HashMap<ContentItem, Integer>();
 
 
     public Enrollment(Student student, Course course, Date date) {
@@ -15,7 +14,6 @@ public class Enrollment {
         this.course = course;
         this.date = date;
     }
-
 
     public Student getStudent() {
         return this.student;
@@ -41,6 +39,9 @@ public class Enrollment {
         this.date = date;
     }
 
+    public int getID(){
+        return this.ID;
+    }
 
     @Override
     public String toString() {
