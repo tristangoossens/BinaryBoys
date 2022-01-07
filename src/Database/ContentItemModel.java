@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import Domain.Module;
 import Domain.Webcast;
 import Domain.ContentItem;
-import Domain.Course;
 
 public class ContentItemModel extends Conn {
     public ContentItemModel(){

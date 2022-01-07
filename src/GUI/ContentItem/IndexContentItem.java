@@ -117,7 +117,7 @@ public class IndexContentItem {
         tableView.getColumns().add(column8);
 
         // Retrieving all webcasts for the given course
-        ArrayList<Webcast> webcasts = cim.getWebcastsForCourse(course);
+        ArrayList<Webcast> webcasts = cim.getWebcastsForCourse(course.getName());
 
         // Looping through webcasts + adding to table
         for (Webcast webcast : webcasts) {
@@ -179,7 +179,7 @@ public class IndexContentItem {
 
 
         // Retrieving all modules for the given course
-        ArrayList<Module> modules = cim.getModulesForCourse(course);
+        ArrayList<Module> modules = cim.getModulesForCourse(course.getName());
 
         // Looping through webcasts + adding to table
         for (Module module : modules) {
