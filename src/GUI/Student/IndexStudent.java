@@ -79,7 +79,7 @@ public class IndexStudent {
         // Creating index button + setting event handler
         Button detailButton = new Button("Bekijken");
         detailButton.setStyle("-fx-background-color: #17a2b8; -fx-text-fill: white;");
-        detailButton.setOnAction((event) -> viewStudent(event, tableView, studentModel, stage));
+        detailButton.setOnAction((event) -> viewStudent(event, tableView, stage));
 
         // Creating edit button + setting event handler
         Button editButton = new Button("Aanpassen");
@@ -186,7 +186,7 @@ public class IndexStudent {
         }
     }
 
-    private static void viewStudent(ActionEvent event, TableView<Student> tableView, StudentModel studentModel, Stage stage) {
+    private static void viewStudent(ActionEvent event, TableView<Student> tableView, Stage stage) {
 
         // Check if row is selected
         if (tableView.getSelectionModel().getSelectedItem() == null) {
@@ -205,7 +205,7 @@ public class IndexStudent {
 
             // Try to open new page
             try {
-                stage.setScene(viewStudent.getView(studentModel, selectedStudent, stage));
+                stage.setScene(viewStudent.getView(selectedStudent, stage));
             } catch (SQLException e) {
                 e.printStackTrace();
             }

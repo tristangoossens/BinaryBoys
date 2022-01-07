@@ -4,6 +4,7 @@ import Domain.Progress;
 import Domain.Student;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class ProgressModel extends Conn{
     public ProgressModel(){
@@ -33,12 +34,14 @@ public class ProgressModel extends Conn{
         return false;
     }
 
-    public Progress readProgressStudent(Student student){
+    public ArrayList<Progress> readProgressStudent(Student student){
         // Query to retrieve all content items for a course
         String query = "SELECT * FROM Progress WHERE Student_Email = ?";
 
         // Creating content item model to retrieve content item
         ContentItemModel contentItemModel = new ContentItemModel();
+
+        ArrayList<Progress> progress = new ArrayList<>();
 
         // Create a prepared statement to prevent SQL injections
         try(PreparedStatement stmt = super.conn.prepareStatement(query)) {
@@ -48,13 +51,14 @@ public class ProgressModel extends Conn{
             // Execute query
             ResultSet rs = stmt.executeQuery();
 
-            if(rs.next()){
-                return new Progress(
+            while (rs.next()) {
+                progress.add(new Progress(
                     contentItemModel.getContentItem(rs.getInt("Content_Item_ID")),
                     student, 
-                    rs.getInt("Percentage")
-                );
+                    rs.getInt("Percentage")));
             }
+            // Return list of progress
+            return progress;
         } 
         catch(Exception e){
             System.out.format("Error while retrieving progress student (readProgressStudent): %s", e.toString());
