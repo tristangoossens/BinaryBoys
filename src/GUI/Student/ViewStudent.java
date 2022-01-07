@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import Database.ProgressModel;
-import Domain.ContentItem;
 import Domain.Progress;
 import Domain.Student;
 import javafx.event.Event;
@@ -26,18 +25,18 @@ public class ViewStudent {
         stage.setTitle("CodeCademy | " + student.getName() + " voortgang bekijken");
 
         // Creating table view
-        TableView tableView = new TableView<>();
+        TableView<Progress> tableView = new TableView<>();
 
         // Setting data table view
-        TableColumn<ContentItem, String> column1 = new TableColumn<>("Titel");
-        column1.setCellValueFactory(new PropertyValueFactory<>("title"));
+        // TableColumn<ContentItem, String> column1 = new TableColumn<>("Titel");
+        // column1.setCellValueFactory(new PropertyValueFactory<>("title"));
 
-        TableColumn<Progress, String> column2 = new TableColumn<>("Percentage");
-        column2.setCellValueFactory(new PropertyValueFactory<>("percentage"));
+        TableColumn<Progress, String> column1 = new TableColumn<>("Percentage");
+        column1.setCellValueFactory(new PropertyValueFactory<>("percentage"));
 
         // Setting columns for data table view
         tableView.getColumns().add(column1);
-        tableView.getColumns().add(column2);
+        // tableView.getColumns().add(column2);
 
         ProgressModel progressModel = new ProgressModel();
 
