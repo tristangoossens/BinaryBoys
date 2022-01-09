@@ -39,7 +39,9 @@ public class IndexContentItem {
         stage.setTitle("CodeCademy | Content for IT");
 
         // TO REMOVE: Create a dummy course
-        Course c = new Course("IT", "Boeie", "Into", "2", null);
+        ArrayList<ContentItem> list = new ArrayList<>();
+        list.addAll(contentItemModel.getModulesForCourse("IT"));
+        Course c = new Course("IT", "Boeie", "Into", "2", list);
 
         // Create a tabpane and create tabs for webcasts and modules
         TabPane tabPane = new TabPane();
