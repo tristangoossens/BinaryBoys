@@ -2,6 +2,8 @@ package Database;
 
 import Domain.Progress;
 import Domain.Student;
+import Domain.Webcast;
+import Domain.Module;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -34,12 +36,9 @@ public class ProgressModel extends Conn{
         return false;
     }
 
-    public ArrayList<Progress> readProgressStudent(Student student){
+    public ArrayList<Progress> readProgresModulesStudent(Student student){
         // Query to retrieve all content items for a course
         String query = "SELECT * FROM Progress WHERE Student_Email = ?";
-
-        // Creating content item model to retrieve content item
-        ContentItemModel contentItemModel = new ContentItemModel();
 
         ArrayList<Progress> progress = new ArrayList<>();
 
@@ -53,7 +52,38 @@ public class ProgressModel extends Conn{
 
             while (rs.next()) {
                 progress.add(new Progress(
-                    contentItemModel.getContentItem(rs.getInt("Content_Item_ID")),
+                    getModuleForProgress(rs.getInt("Content_Item_ID")),
+                    student, 
+                    rs.getInt("Percentage")));
+            }
+            // Return list of progress
+            return progress;
+        } 
+        catch(Exception e){
+            System.out.format("Error while retrieving progress student (readProgressStudent): %s", e.toString());
+        }
+
+        // Return null on error
+        return null;
+    }
+
+    public ArrayList<Progress> readProgresWebcastsStudent(Student student){
+        // Query to retrieve all content items for a course
+        String query = "SELECT * FROM Progress WHERE Student_Email = ?";
+
+        ArrayList<Progress> progress = new ArrayList<>();
+
+        // Create a prepared statement to prevent SQL injections
+        try(PreparedStatement stmt = super.conn.prepareStatement(query)) {
+            // Set query variable
+            stmt.setString(1, student.getEmail());
+
+            // Execute query
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                progress.add(new Progress(
+                    getWebcastForProgress(rs.getInt("Content_Item_ID")),
                     student, 
                     rs.getInt("Percentage")));
             }
@@ -109,5 +139,73 @@ public class ProgressModel extends Conn{
 
         // Return false on error
         return false;
+    }
+
+    public Webcast getWebcastForProgress(Integer content_Item_ID){
+        // Query to retrieve all webcasts for a course
+        String query = "SELECT * FROM Content_Item AS CI INNER JOIN Webcast AS W ON CI.ID = W.Content_Item_ID WHERE CI.ID = ?";
+
+        // Create a prepared statement to prevent SQL injections
+        try(PreparedStatement stmt = super.conn.prepareStatement(query)) {
+            // Set query variable
+            stmt.setInt(1, content_Item_ID);
+
+            // Execute query
+            ResultSet rs = stmt.executeQuery();
+
+            // Loop through the result set
+            if(rs.next()){
+               return new Webcast(
+                    rs.getInt("ID"),
+                    rs.getString("Title"),
+                    rs.getDate("Publication_Date"),
+                    rs.getString("Status"),
+                    rs.getString("Description"),
+                    rs.getString("Name"), 
+                    rs.getString("Organisation"), 
+                    rs.getInt("Duration"), 
+                    rs.getString("URL"));
+            }
+
+        } catch(Exception e) {
+            System.out.format("Error while retrieving webcasts for course (getWebcastsForProgress): %s", e.toString());
+        }
+
+        // Return null on error (code reached catch block)
+        return null;
+    }
+    
+
+    public Module getModuleForProgress(Integer content_Item_ID){
+        // Query to retrieve all content items for a course
+        String query = "SELECT * FROM Content_Item AS CI INNER JOIN Module AS M ON CI.ID = M.Content_Item_ID WHERE CI.ID = ?";
+
+        // Create a prepared statement to prevent SQL injections
+        try(PreparedStatement stmt = super.conn.prepareStatement(query)) {
+            // Set query variable
+            stmt.setInt(1, content_Item_ID);
+
+            // Execute query
+            ResultSet rs = stmt.executeQuery();
+
+            // Loop through the result set
+            if(rs.next()){
+                return new Module(
+                    rs.getInt("ID"),
+                    rs.getString("Title"),
+                    rs.getDate("Publication_Date"),
+                    rs.getString("Status"),
+                    rs.getString("Description"),
+                    rs.getDouble("Version"), 
+                    rs.getInt("Sequence_Number"), 
+                    rs.getString("Email"));
+            }
+
+        } catch(Exception e) {
+            System.out.format("Error while retrieving modules for course (getModulesForCourse): %s", e.toString());
+        }
+
+        // Return nothing on error (null)
+        return null;
     }
 }
