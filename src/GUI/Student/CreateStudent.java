@@ -3,8 +3,12 @@ package GUI.Student;
 import java.sql.Date;
 import java.sql.SQLException;
 
+// import Logic.validation.PostalCode;
+
 import Database.StudentModel;
+
 import Domain.Student;
+
 import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -140,6 +144,9 @@ public class CreateStudent {
     }
 
     public static void saveButton(Event event, Stage stage, Student student) {
+
+        // PostalCode.formatPostalCode("1234 AB");
+
 
         // Creating student model
         StudentModel studentModel = new StudentModel();
