@@ -3,7 +3,7 @@ package GUI.Student;
 import java.sql.Date;
 import java.sql.SQLException;
 
-// import Logic.validation.PostalCode;
+import Validation.PostalCode;
 
 import Database.StudentModel;
 
@@ -77,17 +77,23 @@ public class CreateStudent {
         TextField addressTextField = new TextField();
         formGrid.add(addressTextField, 1, 5);
 
+        // Postalcode
+        Label postalCode = new Label("Postcode:");
+        formGrid.add(postalCode, 0, 6);
+        TextField postalCodeTextField = new TextField();
+        formGrid.add(postalCodeTextField, 1, 6);
+
         // City
         Label city = new Label("Stad:");
-        formGrid.add(city, 0, 6);
+        formGrid.add(city, 0, 7);
         TextField cityTextField = new TextField();
-        formGrid.add(cityTextField, 1, 6);
+        formGrid.add(cityTextField, 1, 7);
 
         // Country
         Label country = new Label("Land:");
-        formGrid.add(country, 0, 7);
+        formGrid.add(country, 0, 8);
         TextField countryTextField = new TextField();
-        formGrid.add(countryTextField, 1, 7);
+        formGrid.add(countryTextField, 1, 8);
 
         // Creating cancel button + setting event handler
         Button cancelButton = new Button("Annuleren");
@@ -111,6 +117,7 @@ public class CreateStudent {
                 date,
                 genderTextField.getText(),
                 addressTextField.getText(),
+                postalCodeTextField.getText(),
                 cityTextField.getText(),
                 countryTextField.getText()
             );
@@ -144,8 +151,8 @@ public class CreateStudent {
     }
 
     public static void saveButton(Event event, Stage stage, Student student) {
-
-        // PostalCode.formatPostalCode("1234 AB");
+        // Validate postalcode
+        PostalCode.formatPostalCode(student.getPostalCode());
 
 
         // Creating student model

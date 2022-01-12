@@ -87,19 +87,26 @@ public class EditStudent {
         addressTextField.setText(student.getAddress());
         formGrid.add(addressTextField, 1, 5);
 
+        // Postalcode
+        Label postalCode = new Label("Postcode:");
+        formGrid.add(postalCode, 0, 6);
+        TextField postalCodeTextField = new TextField();
+        addressTextField.setText(student.getPostalCode());
+        formGrid.add(postalCodeTextField, 1, 6);
+
         // City
         Label city = new Label("Stad:");
-        formGrid.add(city, 0, 6);
+        formGrid.add(city, 0, 7);
         TextField cityTextField = new TextField();
         cityTextField.setText(student.getCity());
-        formGrid.add(cityTextField, 1, 6);
+        formGrid.add(cityTextField, 1, 7);
 
         // Country
         Label country = new Label("Land:");
-        formGrid.add(country, 0, 7);
+        formGrid.add(country, 0, 8);
         TextField countryTextField = new TextField();
         countryTextField.setText(student.getCountry());
-        formGrid.add(countryTextField, 1, 7);
+        formGrid.add(countryTextField, 1, 8);
 
         // Creating cancel button + setting event handler
         Button cancelButton = new Button("Annuleren");
@@ -119,6 +126,7 @@ public class EditStudent {
             student.setBirthDate(date);
             student.setGender(genderTextField.getText());
             student.setAddress(addressTextField.getText());
+            student.setPostalCode(postalCodeTextField.getText());
             student.setCity(cityTextField.getText());
             student.setCountry(countryTextField.getText());
             
