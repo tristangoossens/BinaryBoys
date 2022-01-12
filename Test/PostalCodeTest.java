@@ -1,10 +1,8 @@
-package Logic.Tests;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.Test;
 
-import Logic.Validation.PostalCode;
+import Validation.PostalCode;
 
 public class PostalCodeTest {
     // Test if passing null returns a nullpointerException
