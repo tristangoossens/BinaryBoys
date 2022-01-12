@@ -54,6 +54,7 @@ public class StudentModel extends Conn {
                     rs.getDate("Birthdate"),
                     rs.getString("Gender"),
                     rs.getString("Address"),
+                    rs.getString("PostalCode"),
                     rs.getString("City"),
                     rs.getString("Country")
                 );
@@ -85,6 +86,7 @@ public class StudentModel extends Conn {
                     rs.getDate("Birthdate"),
                     rs.getString("Gender"),
                     rs.getString("Address"),
+                    rs.getString("PostalCode"),
                     rs.getString("City"),
                     rs.getString("Country"))
                 );

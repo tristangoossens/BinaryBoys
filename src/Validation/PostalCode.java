@@ -1,4 +1,4 @@
-package Logic.Validation;
+package Validation;
 
 public class PostalCode {
 
