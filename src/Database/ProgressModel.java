@@ -36,7 +36,7 @@ public class ProgressModel extends Conn{
         return false;
     }
 
-    public ArrayList<Progress> readProgresModulesStudent(Student student){
+    public ArrayList<Progress> readProgresStudent(Student student, char webcastOrModule){
         // Query to retrieve all content items for a course
         String query = "SELECT * FROM Progress WHERE Student_Email = ?";
 
@@ -51,44 +51,20 @@ public class ProgressModel extends Conn{
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                if(getModuleForProgress(rs.getInt("Content_Item_ID")) != null){
-                    progress.add(new Progress(
-                        getModuleForProgress(rs.getInt("Content_Item_ID")),
-                        student, 
-                        rs.getInt("Percentage")));
-                }
-            }
-            // Return list of progress
-            return progress;
-        } 
-        catch(Exception e){
-            System.out.format("Error while retrieving progress student (readProgresModulesStudent): %s", e.toString());
-        }
-
-        // Return null on error
-        return null;
-    }
-
-    public ArrayList<Progress> readProgresWebcastsStudent(Student student){
-        // Query to retrieve all content items for a course
-        String query = "SELECT * FROM Progress WHERE Student_Email = ?";
-
-        ArrayList<Progress> progress = new ArrayList<>();
-
-        // Create a prepared statement to prevent SQL injections
-        try(PreparedStatement stmt = super.conn.prepareStatement(query)) {
-            // Set query variable
-            stmt.setString(1, student.getEmail());
-
-            // Execute query
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                if(getWebcastForProgress(rs.getInt("Content_Item_ID")) != null){
-                    progress.add(new Progress(
-                        getWebcastForProgress(rs.getInt("Content_Item_ID")),
-                        student, 
-                        rs.getInt("Percentage")));
+                if(webcastOrModule == 'w'){
+                    if(getWebcastForProgress(rs.getInt("Content_Item_ID")) != null){
+                        progress.add(new Progress(
+                            getWebcastForProgress(rs.getInt("Content_Item_ID")),
+                            student, 
+                            rs.getInt("Percentage")));
+                    }
+                } else{
+                    if(getModuleForProgress(rs.getInt("Content_Item_ID")) != null){
+                        progress.add(new Progress(
+                            getModuleForProgress(rs.getInt("Content_Item_ID")),
+                            student, 
+                            rs.getInt("Percentage")));
+                    }
                 }
             }
             // Return list of progress

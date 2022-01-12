@@ -80,7 +80,7 @@ public class ViewStudent {
         tableView.getColumns().add(column3);
 
         // Retrieving all webcasts from student
-        ArrayList<Progress> webcasts = progressModel.readProgresWebcastsStudent(student);
+        ArrayList<Progress> webcasts = progressModel.readProgresStudent(student, 'w');
 
         // Looping through webcasts and adding them to tableview
         for (Progress webcast : webcasts) {
@@ -114,7 +114,7 @@ public class ViewStudent {
         tableView.getColumns().add(column3);
 
         // Retrieving all modules from student
-        ArrayList<Progress> modules = progressModel.readProgresModulesStudent(student);
+        ArrayList<Progress> modules = progressModel.readProgresStudent(student, 'm');
 
         // Looping through all modules from student
         for (Progress module : modules) {
