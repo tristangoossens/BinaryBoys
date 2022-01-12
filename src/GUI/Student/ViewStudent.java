@@ -2,7 +2,6 @@ package GUI.Student;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import Database.ProgressModel;
 import Domain.ContentItem;
 import Domain.Progress;
