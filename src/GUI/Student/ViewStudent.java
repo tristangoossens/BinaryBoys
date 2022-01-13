@@ -6,6 +6,7 @@ import Database.ProgressModel;
 import Domain.ContentItem;
 import Domain.Progress;
 import Domain.Student;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.Event;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -96,32 +97,38 @@ public class ViewStudent {
 
     private HBox getModuleTabContent(ProgressModel progressModel, Student student, Stage stage) {
         // Creating table view
-        TableView<ContentItem> tableView = new TableView<>();
+        TableView<Progress> tableView = new TableView<>();
 
         // Setting data table view
-        TableColumn<ContentItem, String> column1 = new TableColumn<>("Titel");
-        column1.setCellValueFactory(new PropertyValueFactory<>("title"));
+        TableColumn<Progress, String> column1 = new TableColumn<>("Titel");
+        column1.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getContentItem().getTitle()));
 
-        TableColumn<ContentItem, String> column2 = new TableColumn<>("Status");
-        column2.setCellValueFactory(new PropertyValueFactory<>("status"));
+        TableColumn<Progress, String> column2 = new TableColumn<>("Status");
+        column2.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getContentItem().getStatus()));
 
-        TableColumn<ContentItem, String> column3 = new TableColumn<>("Beschrijving");
-        column3.setCellValueFactory(new PropertyValueFactory<>("description"));
+        TableColumn<Progress, String> column3 = new TableColumn<>("Beschrijving");
+        column3.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getContentItem().getDescription()));
+
+        TableColumn<Progress, String> column4 = new TableColumn<>("Percentage");
+        column4.setCellValueFactory(new PropertyValueFactory<>("percentage"));
+
 
         // Setting columns for data table view
         tableView.getColumns().add(column1);
         tableView.getColumns().add(column2);
         tableView.getColumns().add(column3);
+        tableView.getColumns().add(column4);
+
 
         // Retrieving all modules from student
         ArrayList<Progress> modules = progressModel.readProgresStudent(student, 'm');
 
         // Looping through all modules from student
         for (Progress module : modules) {
-            tableView.getItems().add(module.getContentItem());
+            tableView.getItems().add(module);
         }
 
-        HBox hbox = new HBox(tableView, getProgressContent(modules));
+        HBox hbox = new HBox(tableView);
         hbox.setAlignment(Pos.TOP_LEFT);
         hbox.setSpacing(10);
 
