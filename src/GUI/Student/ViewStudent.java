@@ -3,7 +3,6 @@ package GUI.Student;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import Database.ProgressModel;
-import Domain.ContentItem;
 import Domain.Progress;
 import Domain.Student;
 import javafx.beans.property.SimpleStringProperty;
@@ -29,16 +28,19 @@ public class ViewStudent {
         // Setting stage title
         stage.setTitle("CodeCademy | " + student.getName() + " bekijken");
 
-        // Create a tabpane and create tabs for webcasts and modules
+        // Create a tabpane
         TabPane tabPane = new TabPane();
-        Tab modulesTab = new Tab("Modules", getModuleTabContent(progressModel, student, stage));
+
+        // Create tab for modules + filling with tableview
+        Tab modulesTab = new Tab("Modules", getTabContent(progressModel, student, stage, 'm'));
         modulesTab.setClosable(false);
-        Tab webcastsTab = new Tab("Webcasts", getWebcastTabContent(progressModel, student));
+        
+        // Create tab for webcasts + filling with tableview
+        Tab webcastsTab = new Tab("Webcasts", getTabContent(progressModel, student, stage, 'w'));
         webcastsTab.setClosable(false);
 
         // Add tabs to tabpane children
         tabPane.getTabs().add(modulesTab);
-
         tabPane.getTabs().add(webcastsTab);
 
         // Creating back button + setting event handler
@@ -61,41 +63,7 @@ public class ViewStudent {
         return scene;
     }
 
-    private HBox getWebcastTabContent(ProgressModel progressModel, Student student) {
-        // Creating table view
-        TableView<ContentItem> tableView = new TableView<>();
-
-        // Setting data table view
-        TableColumn<ContentItem, String> column1 = new TableColumn<>("Titel");
-        column1.setCellValueFactory(new PropertyValueFactory<>("title"));
-
-        TableColumn<ContentItem, String> column2 = new TableColumn<>("Status");
-        column2.setCellValueFactory(new PropertyValueFactory<>("status"));
-
-        TableColumn<ContentItem, String> column3 = new TableColumn<>("Beschrijving");
-        column3.setCellValueFactory(new PropertyValueFactory<>("description"));
-
-        // Setting columns for data table view
-        tableView.getColumns().add(column1);
-        tableView.getColumns().add(column2);
-        tableView.getColumns().add(column3);
-
-        // Retrieving all webcasts from student
-        ArrayList<Progress> webcasts = progressModel.readProgresStudent(student, 'w');
-
-        // Looping through webcasts and adding them to tableview
-        for (Progress webcast : webcasts) {
-            tableView.getItems().add(webcast.getContentItem());
-        }
-
-        HBox hbox = new HBox(tableView, getProgressContent(webcasts));
-        hbox.setAlignment(Pos.TOP_LEFT);
-        hbox.setSpacing(10);
-
-        return hbox;
-    }
-
-    private HBox getModuleTabContent(ProgressModel progressModel, Student student, Stage stage) {
+    private VBox getTabContent(ProgressModel progressModel, Student student, Stage stage, char typeOfContent) {
         // Creating table view
         TableView<Progress> tableView = new TableView<>();
 
@@ -109,9 +77,8 @@ public class ViewStudent {
         TableColumn<Progress, String> column3 = new TableColumn<>("Beschrijving");
         column3.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getContentItem().getDescription()));
 
-        TableColumn<Progress, String> column4 = new TableColumn<>("Percentage");
+        TableColumn<Progress, String> column4 = new TableColumn<>("Percentage voltooid");
         column4.setCellValueFactory(new PropertyValueFactory<>("percentage"));
-
 
         // Setting columns for data table view
         tableView.getColumns().add(column1);
@@ -119,38 +86,30 @@ public class ViewStudent {
         tableView.getColumns().add(column3);
         tableView.getColumns().add(column4);
 
+        // Creating arrayList to store progress
+        ArrayList<Progress> progress = new ArrayList<>();
 
-        // Retrieving all modules from student
-        ArrayList<Progress> modules = progressModel.readProgresStudent(student, 'm');
-
-        // Looping through all modules from student
-        for (Progress module : modules) {
-            tableView.getItems().add(module);
+        // Retrieving all progress from student based on char given
+        if(typeOfContent == 'm'){
+            progress  = progressModel.readProgresStudent(student, typeOfContent);
+        } else if(typeOfContent == 'w'){
+            progress  = progressModel.readProgresStudent(student, typeOfContent);
+        } else{
+            System.out.format("Error while retrieving contentitems.");
+        }
+        
+        // Looping through all contentitems from student
+        for (Progress item : progress) {
+            tableView.getItems().add(item);
         }
 
-        HBox hbox = new HBox(tableView);
-        hbox.setAlignment(Pos.TOP_LEFT);
-        hbox.setSpacing(10);
+        // Creating Hbox with tableview
+        VBox vbox = new VBox(tableView);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setSpacing(10);
 
-        return hbox;
-    }
-
-    private TableView<Progress> getProgressContent(ArrayList<Progress> progressList) {
-        // Creating table view
-        TableView<Progress> tableView = new TableView<>();
-
-        // Setting data table view
-        TableColumn<Progress, String> column1 = new TableColumn<>("Percentage voltooid");
-        column1.setCellValueFactory(new PropertyValueFactory<>("percentage"));
-
-        // Setting columns for data table view
-        tableView.getColumns().add(column1);
-
-        for (Progress progress : progressList) {
-            tableView.getItems().add(progress);
-        }
-
-        return tableView;
+        // Returing HBox with tableview
+        return vbox;
     }
 
     private static void goBackToIndex(Event event, Stage stage) {
