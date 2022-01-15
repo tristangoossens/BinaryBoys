@@ -1,10 +1,12 @@
 package GUI.Course;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import Database.CourseModel;
 import Domain.Course;
 import GUI.App;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -36,12 +38,20 @@ public class IndexCourse {
         column3.setCellValueFactory(new PropertyValueFactory<>("introduction"));
 
         TableColumn<Course, String> column4 = new TableColumn<>("Niveau");
-        column4.setCellValueFactory(new PropertyValueFactory<>("level"));
+        column4.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getLevel().getValue()));
 
         tableView.getColumns().add(column1);
         tableView.getColumns().add(column2);
         tableView.getColumns().add(column3);
         tableView.getColumns().add(column4);
+
+        // Retrieving all students
+        ArrayList<Course> courses = coursemodel.getCourses();
+
+        // Looping through students + adding to table
+        for (Course course : courses) {
+            tableView.getItems().add(course);
+        }
 
          // Creating back button + setting event handler
          Button backButton = new Button("Ga terug");
