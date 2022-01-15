@@ -1,15 +1,20 @@
 package GUI.Course;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import Database.CourseModel;
+import Domain.ContentItem;
 import Domain.Course;
+import Domain.Level;
+import GUI.Module.CreateModule;
 import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -23,7 +28,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class CreateCourse {
-    
+
     public Scene getView(Stage stage) throws SQLException {
 
         // Creating grid to put in form
@@ -54,16 +59,17 @@ public class CreateCourse {
         Label introduction = new Label("Beschrijving:");
         formGrid.add(introduction, 0, 3);
         TextArea introductionTextArea = new TextArea();
-        introductionTextArea.setMinSize(400, 300);
+        introductionTextArea.setMinSize(300, 200);
         formGrid.add(introductionTextArea, 1, 3);
 
         // Course level
         Label level = new Label("Niveau:");
         formGrid.add(level, 0, 7);
-        TextField levelTextField = new TextField();
-        formGrid.add(levelTextField, 1, 7);
-
-        // Content item
+        ComboBox<String> levelCombobox = new ComboBox<>();
+        levelCombobox.getItems().add(Level.BEGINNER.getValue());
+        levelCombobox.getItems().add(Level.ADVANCED.getValue());
+        levelCombobox.getItems().add(Level.EXPERT.getValue());
+        formGrid.add(levelCombobox, 1, 7);
 
         // Creating cancel button + setting event handler
         Button cancelButton = new Button("Annuleren");
@@ -74,20 +80,22 @@ public class CreateCourse {
         Button saveButton = new Button("Opslaan");
         saveButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
 
-        // // Setting event handler save button
-        // saveButton.setOnAction((event) -> {
+        // Setting event handler save button
+        saveButton.setOnAction((event) -> {
 
-        //     // Creating student obj
-        //     Course course = new Course(
-        //         nameTextfield.getText(),
-        //         subjectTextField.getText(),
-        //         introductionTextArea.getText(),
-        //         levelTextField.getText()
-        //     );
+            ArrayList<ContentItem> contentItems = new ArrayList<ContentItem>();
 
-        //     // Calling the save method
-        //     saveButton(event, stage, course);
-        // });
+            // Creating course object
+            Course course = new Course(
+                    nameTextfield.getText(),
+                    subjectTextField.getText(),
+                    introductionTextArea.getText(),
+                    Level.convertToEnum(levelCombobox.getValue()),
+                    contentItems);
+
+            // Calling the save method
+            saveButton(event, stage, course);
+        });
 
         // Creating HBox for buttons
         HBox buttonBox = new HBox(cancelButton, saveButton);
@@ -121,14 +129,10 @@ public class CreateCourse {
         if (courseModel.createCourse(course)) {
             // If succesvol show alert
             Alert succesfullAlert = new Alert(AlertType.CONFIRMATION);
-            succesfullAlert.setContentText("Student is succesvol toegevoegd");
+            succesfullAlert.setContentText("Cursus is succesvol toegevoegd, maak nu meteen ook een module aan !");
             succesfullAlert.show();
-            // Going back to student index
-            try {
-                stage.setScene(IndexCourse.getView(stage));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            // Opening create module view
+            stage.setScene(CreateModule.getView(stage, course));
         } else {
             // If failed show alert
             Alert succesfullAlert = new Alert(AlertType.WARNING);

@@ -1,6 +1,7 @@
 package GUI.Module;
 
 import Database.ContentItemModel;
+import Domain.Course;
 import Domain.Module;
 import Domain.ModuleContactPerson;
 import GUI.App;
@@ -29,7 +30,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class EditModule {
-    public Scene getView(Stage stage, Module module){
+    public Scene getView(Stage stage, Module module, Course course){
         // Setting stage title
         stage.setTitle("CodeCademy | Module aanmaken");
 
@@ -115,7 +116,7 @@ public class EditModule {
             module.setContactPerson(cim.getContactPersonWithEmail(cbContactPerson.getValue()));
             
             // Calling the save method
-            updateModule(event, stage, module);
+            updateModule(event, stage, module, course);
         });
  
         // Creating HBox for buttons
@@ -133,7 +134,7 @@ public class EditModule {
         return scene;
     }
 
-    private void updateModule(Event event, Stage stage, Module module){
+    private void updateModule(Event event, Stage stage, Module module, Course course){
         // Initializing contentitem model
         ContentItemModel contentItemModel = new ContentItemModel();
 
@@ -146,7 +147,7 @@ public class EditModule {
 
             // Going back to overview page
             try {
-                stage.setScene(IndexContentItem.getView(stage));
+                stage.setScene(IndexContentItem.getView(stage, course));
             } catch(SQLException e){
                 e.printStackTrace();
             }

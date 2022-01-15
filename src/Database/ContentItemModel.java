@@ -8,6 +8,7 @@ import Domain.ModuleContactPerson;
 import Domain.Webcast;
 import Domain.WebcastSpeaker;
 import Domain.ContentItem;
+import Domain.Course;
 
 public class ContentItemModel extends Conn {
     public ContentItemModel(){
@@ -86,7 +87,7 @@ public class ContentItemModel extends Conn {
         return null;
     }
 
-    public boolean createModule(Module module, String courseName){
+    public boolean createModule(Module module, Course course){
         String contentItemQuery = "INSERT INTO Content_Item VALUES(?, ?, ? ,?, ?)";
         String moduleQuery = "INSERT INTO Module VALUES(?, ? ,?, ?)";
 
@@ -96,7 +97,7 @@ public class ContentItemModel extends Conn {
             conn.setAutoCommit(false);
             
             // Set data in prepared statement.
-            stmt.setString(1, courseName);
+            stmt.setString(1, course.getName());
             stmt.setString(2, module.getTitle());
             stmt.setString(3, module.getStatus());
             stmt.setDate(4, new java.sql.Date(module.getPublicationDate().getTime()));
