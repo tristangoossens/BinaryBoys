@@ -8,13 +8,14 @@ import Domain.ContentItem;
 import Domain.Course;
 import Domain.Module;
 import Domain.Webcast;
-import GUI.App;
+import GUI.Course.IndexCourse;
 import GUI.Module.CreateModule;
 import GUI.Module.EditModule;
 import GUI.Webcast.CreateWebcast;
-// import GUI.Webcast.EditWebcast;
+import GUI.Webcast.EditWebcast;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -37,7 +38,7 @@ public class IndexContentItem {
         ContentItemModel contentItemModel = new ContentItemModel();
 
         // Setting stage title
-        stage.setTitle("CodeCademy | Content for IT");
+        stage.setTitle("CodeCademy | content items " + course.getName());
 
         // Create a tabpane and create tabs for webcasts and modules
         TabPane tabPane = new TabPane();
@@ -55,7 +56,7 @@ public class IndexContentItem {
         // Creating back button + setting event handler
         Button backButton = new Button("Ga terug");
         backButton.setStyle("-fx-background-color: #343a40; -fx-text-fill: white;");
-        backButton.setOnAction((event) -> stage.setScene(App.getView(stage)));
+        backButton.setOnAction((event) -> cancelButton(event, stage));
 
         // Creating HBox the back button
         HBox buttonBox = new HBox(backButton);
@@ -141,13 +142,18 @@ public class IndexContentItem {
             } 
         });
 
+        // Creating edit button + setting event handler
+        Button editButton = new Button("Aanpassen");
+        editButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white;");
+        editButton.setOnAction((event) -> editWebcast(stage, tableView));
+
         // Creating create button + setting event handler
         Button createButton = new Button("Aanmaken");
         createButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
         createButton.setOnAction((event) -> createContentItem(stage, false, course));
 
         // Creating HBox for buttons
-        HBox buttonBox = new HBox(deleteButton, createButton);
+        HBox buttonBox = new HBox(createButton, editButton, deleteButton);
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setSpacing(10);
 
@@ -302,19 +308,28 @@ public class IndexContentItem {
         }
     }
 
-    // private static void editWebcast(Stage stage, TableView<Webcast> tableView){
-    //     // Check if row is selected
-    //     if (tableView.getSelectionModel().getSelectedItem() == null) {
+    public static void cancelButton(Event event, Stage stage) {
+        // Returning to student index
+        try {
+            stage.setScene(IndexCourse.getView(stage));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-    //         // Send alert, no row selected
-    //         Alert warningAlert = new Alert(AlertType.WARNING);
-    //         warningAlert.setContentText("Selecteer een record die je wilt aanpassen");
-    //         warningAlert.show();
-    //     } else {
-    //         // Retrieving webcast object from table
-    //         Webcast selectedWebcast = (Webcast) tableView.getSelectionModel().getSelectedItem();
-    //         Scene scene  = EditWebcast.getView(stage, selectedWebcast);
-    //         stage.setScene(scene); 
-    //     }
-    // }
+    private static void editWebcast(Stage stage, TableView<Webcast> tableView){
+        // Check if row is selected
+        if (tableView.getSelectionModel().getSelectedItem() == null) {
+
+            // Send alert, no row selected
+            Alert warningAlert = new Alert(AlertType.WARNING);
+            warningAlert.setContentText("Selecteer een record die je wilt aanpassen");
+            warningAlert.show();
+        } else {
+            // Retrieving webcast object from table
+            Webcast selectedWebcast = (Webcast) tableView.getSelectionModel().getSelectedItem();
+            Scene scene  = EditWebcast.getView(stage, selectedWebcast);
+            stage.setScene(scene); 
+        }
+    }
 }

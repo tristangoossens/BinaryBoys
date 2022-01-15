@@ -4,7 +4,6 @@ import Database.ContentItemModel;
 import Domain.Course;
 import Domain.Module;
 import Domain.ModuleContactPerson;
-import GUI.App;
 import GUI.ContentItem.IndexContentItem;
 
 
@@ -32,7 +31,7 @@ import javafx.stage.Stage;
 public class EditModule {
     public Scene getView(Stage stage, Module module, Course course){
         // Setting stage title
-        stage.setTitle("CodeCademy | Module aanmaken");
+        stage.setTitle("CodeCademy | " + module.getTitle() + " aanpassen");
 
         // Init contentitem model to retrieve contact person emails and submit a new record
         ContentItemModel cim = new ContentItemModel();
@@ -45,7 +44,7 @@ public class EditModule {
         formGrid.setPadding(new Insets(10, 10, 10, 10));
 
         // Creating form
-        Text scenetitle = new Text(String.format("Module aanpassen (ID : %d)", module.getID()));
+        Text scenetitle = new Text(module.getTitle() + " aanpassen");
         scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         formGrid.add(scenetitle, 0, 0);
  
@@ -99,7 +98,7 @@ public class EditModule {
         // Creating cancel button + setting event handler
         Button cancelButton = new Button("Annuleren");
         cancelButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white;");
-        cancelButton.setOnAction((event) -> stage.setScene(App.getView(stage)));
+        cancelButton.setOnAction((event) -> cancelButton(event, stage, course));
 
         // Creating save button
         Button saveButton = new Button("Opslaan");
@@ -157,6 +156,15 @@ public class EditModule {
             Alert succesfullAlert = new Alert(AlertType.WARNING);
             succesfullAlert.setContentText("Er is iets fout gegaan bij het aanpassen van de module :(");
             succesfullAlert.show();
+        }
+    }
+
+    public static void cancelButton(Event event, Stage stage, Course course) {
+        // Returning to student index
+        try {
+            stage.setScene(IndexContentItem.getView(stage, course));
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import Database.CourseModel;
 import Domain.Course;
 import GUI.App;
+import GUI.ContentItem.IndexContentItem;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
@@ -183,12 +184,9 @@ public class IndexCourse {
             // Retrieving course object from table
             Course selectedCourse = (Course) tableView.getSelectionModel().getSelectedItem();
 
-            // Edit page
-            ViewCourse viewCourse = new ViewCourse();
-
-            // Try to open new page
+            // Try to open page
             try {
-                stage.setScene(viewCourse.getView(courseModel, selectedCourse, stage));
+                stage.setScene(IndexContentItem.getView(stage, selectedCourse));
             } catch (SQLException e) {
                 e.printStackTrace();
             }

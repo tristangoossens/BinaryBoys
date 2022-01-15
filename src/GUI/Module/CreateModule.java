@@ -4,7 +4,6 @@ import Database.ContentItemModel;
 import Domain.Course;
 import Domain.Module;
 import Domain.ModuleContactPerson;
-import GUI.App;
 import GUI.ContentItem.IndexContentItem;
 
 import java.sql.SQLException;
@@ -46,7 +45,7 @@ public class CreateModule {
         formGrid.setPadding(new Insets(10, 10, 10, 10));
 
         // Creating form
-        Text scenetitle = new Text("Module aanmaken");
+        Text scenetitle = new Text("Module aanmaken voor " + course.getName());
         scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         formGrid.add(scenetitle, 0, 0);
  
@@ -94,7 +93,7 @@ public class CreateModule {
         // Creating cancel button + setting event handler
         Button cancelButton = new Button("Annuleren");
         cancelButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white;");
-        cancelButton.setOnAction((event) -> stage.setScene(App.getView(stage)));
+        cancelButton.setOnAction((event) -> cancelButton(event, stage, course));
 
         // Creating save button
         Button saveButton = new Button("Opslaan");
@@ -157,6 +156,15 @@ public class CreateModule {
             Alert succesfullAlert = new Alert(AlertType.WARNING);
             succesfullAlert.setContentText("Er is iets fout gegaan bij het aanmaken van de module :(");
             succesfullAlert.show();
+        }
+    }
+
+    public static void cancelButton(Event event, Stage stage, Course course) {
+        // Returning to student index
+        try {
+            stage.setScene(IndexContentItem.getView(stage, course));
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }
