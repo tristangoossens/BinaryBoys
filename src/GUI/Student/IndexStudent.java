@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import Database.StudentModel;
 import Domain.Student;
 import GUI.App;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -43,7 +44,7 @@ public class IndexStudent {
         column3.setCellValueFactory(new PropertyValueFactory<>("birthDate"));
 
         TableColumn<Student, String> column4 = new TableColumn<>("Geslacht");
-        column4.setCellValueFactory(new PropertyValueFactory<>("gender"));
+        column4.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getGender().getValue()));
 
         TableColumn<Student, String> column5 = new TableColumn<>("Adres");
         column5.setCellValueFactory(new PropertyValueFactory<>("address"));

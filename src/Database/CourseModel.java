@@ -12,7 +12,7 @@ public class CourseModel extends Conn {
         super();
     }
 
-    public boolean CreateCourse(Course course) {
+    public boolean createCourse(Course course) {
         // Create prepared statement
         String query = "INSERT INTO Course VALUES(?, ?, ? , ?, ?)";
         try (PreparedStatement stmt = super.conn.prepareStatement(query)) {

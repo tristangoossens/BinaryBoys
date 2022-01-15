@@ -29,36 +29,29 @@ public class ContentItem {
         return description;
     }
 
-
     public void setDescription(String description) {
         this.description = description;
     }
-
 
     public String getStatus() {
         return status;
     }
 
-
     public void setStatus(String status) {
         this.status = status;
     }
-
 
     public Date getPublicationDate() {
         return publicationDate;
     }
 
-
     public void setPublicationDate(Date publicationDate) {
         this.publicationDate = publicationDate;
     }
 
-
     public String getTitle() {
         return title;
     }
-
 
     public void setTitle(String title) {
         this.title = title;
