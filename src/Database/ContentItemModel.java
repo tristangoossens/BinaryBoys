@@ -332,6 +332,10 @@ public class ContentItemModel extends Conn {
         return false;
     }
 
+    public boolean updateWebcast(Webcast webcast){
+        return true;
+    }
+
     public boolean deleteContentItem(int ID) {
         // Creating contentitem model
         ProgressModel progressModel = new ProgressModel();

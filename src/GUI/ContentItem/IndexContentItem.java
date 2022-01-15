@@ -145,7 +145,7 @@ public class IndexContentItem {
         // Creating edit button + setting event handler
         Button editButton = new Button("Aanpassen");
         editButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white;");
-        editButton.setOnAction((event) -> editWebcast(stage, tableView));
+        editButton.setOnAction((event) -> editWebcast(stage, tableView, course));
 
         // Creating create button + setting event handler
         Button createButton = new Button("Aanmaken");
@@ -317,7 +317,7 @@ public class IndexContentItem {
         }
     }
 
-    private static void editWebcast(Stage stage, TableView<Webcast> tableView){
+    private static void editWebcast(Stage stage, TableView<Webcast> tableView, Course course){
         // Check if row is selected
         if (tableView.getSelectionModel().getSelectedItem() == null) {
 
@@ -328,7 +328,7 @@ public class IndexContentItem {
         } else {
             // Retrieving webcast object from table
             Webcast selectedWebcast = (Webcast) tableView.getSelectionModel().getSelectedItem();
-            Scene scene  = EditWebcast.getView(stage, selectedWebcast);
+            Scene scene  = EditWebcast.getView(stage, selectedWebcast, course);
             stage.setScene(scene); 
         }
     }

@@ -115,7 +115,7 @@ public class CreateWebcast {
 
         // Calling the save method
         saveWebcast(event, stage, webcast, course);
-    });
+        });
 
         // Creating HBox for buttons
         HBox buttonBox = new HBox(cancelButton, saveButton);

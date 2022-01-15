@@ -30,4 +30,8 @@ public class WebcastSpeaker {
     public Integer getID() {
         return ID;
     }
+
+    public String getSpeakerAndCompany(){
+        return "Spreker: " + this.name + " Bedrijf:" + this.organisation;
+    }
 }
