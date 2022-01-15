@@ -50,9 +50,12 @@ public class IndexStudent {
 
         TableColumn<Student, String> column6 = new TableColumn<>("Stad");
         column6.setCellValueFactory(new PropertyValueFactory<>("city"));
+        
+        TableColumn<Student, String> column7 = new TableColumn<>("Postcode");
+        column7.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
 
-        TableColumn<Student, String> column7 = new TableColumn<>("Land");
-        column7.setCellValueFactory(new PropertyValueFactory<>("country"));
+        TableColumn<Student, String> column8 = new TableColumn<>("Land");
+        column8.setCellValueFactory(new PropertyValueFactory<>("country"));
 
         // Setting columns for data table view
         tableView.getColumns().add(column1);
@@ -62,6 +65,7 @@ public class IndexStudent {
         tableView.getColumns().add(column5);
         tableView.getColumns().add(column6);
         tableView.getColumns().add(column7);
+        tableView.getColumns().add(column8);
 
         // Retrieving all students
         ArrayList<Student> students = studentModel.getStudents();
@@ -84,7 +88,7 @@ public class IndexStudent {
         // Creating edit button + setting event handler
         Button editButton = new Button("Aanpassen");
         editButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white;");
-        editButton.setOnAction((event) -> editRowFromTable(event, tableView, stage));
+        editButton.setOnAction((event) -> editStudent(event, tableView, stage));
 
         // Creating create button + setting event handler
         Button createButton = new Button("Aanmaken");
@@ -94,7 +98,7 @@ public class IndexStudent {
         // Creating delete button + setting event handler
         Button deleteButton = new Button("Verwijder");
         deleteButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white;");
-        deleteButton.setOnAction((event) -> deleteRowFromTable(event, tableView, studentModel));
+        deleteButton.setOnAction((event) -> deleteStudent(event, tableView, studentModel));
 
         // Creating HBox for buttons
         HBox buttonBox = new HBox(backButton, detailButton, editButton, createButton, deleteButton);
@@ -111,7 +115,7 @@ public class IndexStudent {
         return scene;
     }
 
-    private static void deleteRowFromTable(ActionEvent event, TableView<Student> tableView, StudentModel studentModel) {
+    private static void deleteStudent(ActionEvent event, TableView<Student> tableView, StudentModel studentModel) {
 
         // Check if row is selected
         if (tableView.getSelectionModel().getSelectedItem() == null) {
@@ -147,7 +151,7 @@ public class IndexStudent {
         }
     }
 
-    private static void editRowFromTable(ActionEvent event, TableView<Student> tableView, Stage stage) {
+    private static void editStudent(ActionEvent event, TableView<Student> tableView, Stage stage) {
 
         // Check if row is selected
         if (tableView.getSelectionModel().getSelectedItem() == null) {

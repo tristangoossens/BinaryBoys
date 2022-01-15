@@ -91,7 +91,7 @@ public class EditStudent {
         Label postalCode = new Label("Postcode:");
         formGrid.add(postalCode, 0, 6);
         TextField postalCodeTextField = new TextField();
-        addressTextField.setText(student.getPostalCode());
+        postalCodeTextField.setText(student.getPostalCode());
         formGrid.add(postalCodeTextField, 1, 6);
 
         // City
