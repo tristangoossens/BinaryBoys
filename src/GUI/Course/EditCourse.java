@@ -45,10 +45,11 @@ public class EditCourse {
         formGrid.add(scenetitle, 0, 0);
 
         // Name
-        Label name = new Label("Naam:");
+        Label name = new Label("Naam (niet aanpasbaar):");
         formGrid.add(name, 0, 1);
         TextField nameTextfield = new TextField();
-        nameTextfield.setText(course.getName());
+        nameTextfield.setDisable(true);
+        nameTextfield.setPromptText(course.getName());
         formGrid.add(nameTextfield, 1, 1);
 
         // Subject
@@ -89,7 +90,6 @@ public class EditCourse {
         saveButton.setOnAction((event) -> {
 
             // Creating course object
-            course.setName(nameTextfield.getText());
             course.setSubject(subjectTextField.getText());
             course.setIntroduction(introductionTextArea.getText());
             course.setLevel(Level.convertToEnum(levelCombobox.getValue()));
@@ -126,6 +126,8 @@ public class EditCourse {
         try{        
             // Creating student model
             CourseModel courseModel = new CourseModel();
+
+            System.out.println(course.getName());
 
             // Calling the student update method
             if (courseModel.updateCourse(course)) {
