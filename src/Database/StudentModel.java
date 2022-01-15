@@ -22,7 +22,7 @@ public class StudentModel extends Conn {
             stmt.setString(5, student.getAddress());
             stmt.setString(6, student.getCity());
             stmt.setString(7, student.getPostalCode());
-            stmt.setString(7, student.getCountry());
+            stmt.setString(8, student.getCountry());
 
             // Execute statement
             stmt.executeUpdate();
@@ -115,8 +115,8 @@ public class StudentModel extends Conn {
             stmt.setString(5, student.getAddress());
             stmt.setString(6, student.getCity());
             stmt.setString(7, student.getPostalCode());
-            stmt.setString(7, student.getCountry());
-            stmt.setString(8, student.getEmail());
+            stmt.setString(8, student.getCountry());
+            stmt.setString(9, student.getEmail());
 
             // Execute update query
             stmt.executeUpdate();
