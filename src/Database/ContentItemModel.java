@@ -5,13 +5,14 @@ import java.util.ArrayList;
 
 import Domain.Module;
 import Domain.ModuleContactPerson;
+import Domain.Progress;
 import Domain.Webcast;
 import Domain.WebcastSpeaker;
 import Domain.ContentItem;
 import Domain.Course;
 
 public class ContentItemModel extends Conn {
-    public ContentItemModel(){
+    public ContentItemModel() {
         // Initialize super class where database connection is made
         super();
     }
@@ -23,17 +24,17 @@ public class ContentItemModel extends Conn {
         // Create list for contact person emails
         ArrayList<ModuleContactPerson> persons = new ArrayList<>();
 
-        try(PreparedStatement stmt = super.conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = super.conn.prepareStatement(query)) {
             // Execute statement
             ResultSet rs = stmt.executeQuery();
 
-            while(rs.next()){
+            while (rs.next()) {
                 persons.add(new ModuleContactPerson(rs.getString("Name"), rs.getString("Email")));
             }
 
             // return list of names
             return persons;
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.format("Error while retrieving contact persons (getContactPersons): %s", e.toString());
         }
 
@@ -48,17 +49,18 @@ public class ContentItemModel extends Conn {
         // Create list for contact person emails
         ArrayList<String> speakers = new ArrayList<>();
 
-        try(PreparedStatement stmt = super.conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = super.conn.prepareStatement(query)) {
             // Execute statement
             ResultSet rs = stmt.executeQuery();
 
-            while(rs.next()){
-                speakers.add(String.format("%d:%s->%s",rs.getInt("ID"), rs.getString("Name"),rs.getString("Organisation")));
+            while (rs.next()) {
+                speakers.add(String.format("%d:%s->%s", rs.getInt("ID"), rs.getString("Name"),
+                        rs.getString("Organisation")));
             }
 
             // return list of names
             return speakers;
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.format("Error while retrieving webcast speakers (getWebcastSpeakers): %s", e.toString());
         }
 
@@ -70,16 +72,16 @@ public class ContentItemModel extends Conn {
         // Create prepared statement
         String query = "SELECT * FROM Module_Person WHERE Email = ?";
 
-        try(PreparedStatement stmt = super.conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = super.conn.prepareStatement(query)) {
             // Set variable data
             stmt.setString(1, email);
 
             // Execute statement
             ResultSet rs = stmt.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 return new ModuleContactPerson(rs.getString("Name"), rs.getString("Email"));
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.format("Error while retrieving contact person emails names (getCourseNames): %s", e.toString());
         }
 
@@ -87,15 +89,16 @@ public class ContentItemModel extends Conn {
         return null;
     }
 
-    public boolean createModule(Module module, Course course){
+    public boolean createModule(Module module, Course course) {
         String contentItemQuery = "INSERT INTO Content_Item VALUES(?, ?, ? ,?, ?)";
         String moduleQuery = "INSERT INTO Module VALUES(?, ? ,?, ?)";
 
         // Create a prepared statement to prevent SQL injections
-        try (PreparedStatement stmt = conn.prepareStatement(contentItemQuery, Statement.RETURN_GENERATED_KEYS); PreparedStatement moduleStmt = conn.prepareStatement(moduleQuery)) {
+        try (PreparedStatement stmt = conn.prepareStatement(contentItemQuery, Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement moduleStmt = conn.prepareStatement(moduleQuery)) {
             // Set auto commit off so the executed queries are executes in a transaction.
             conn.setAutoCommit(false);
-            
+
             // Set data in prepared statement.
             stmt.setString(1, course.getName());
             stmt.setString(2, module.getTitle());
@@ -108,8 +111,7 @@ public class ContentItemModel extends Conn {
 
             // Get the generated key and use it in the next insert
             ResultSet rs = stmt.getGeneratedKeys();
-            if(rs.next())
-            {
+            if (rs.next()) {
                 int insertedID = rs.getInt(1);
 
                 // Set data for second prepared statement
@@ -128,7 +130,7 @@ public class ContentItemModel extends Conn {
                 // Return true on success
                 return true;
             }
-        } catch(Exception e){
+        } catch (Exception e) {
             try {
                 // Error! Rolling the transaction
                 conn.rollback();
@@ -143,15 +145,16 @@ public class ContentItemModel extends Conn {
         return false;
     }
 
-    public boolean createWebcast(Webcast webcast, String courseName){
+    public boolean createWebcast(Webcast webcast, String courseName) {
         String contentItemQuery = "INSERT INTO Content_Item VALUES(?, ?, ? ,?, ?)";
         String moduleQuery = "INSERT INTO Webcast VALUES(?, ? ,?, ?)";
 
         // Create a prepared statement to prevent SQL injections
-        try (PreparedStatement stmt = conn.prepareStatement(contentItemQuery, Statement.RETURN_GENERATED_KEYS); PreparedStatement moduleStmt = conn.prepareStatement(moduleQuery)) {
+        try (PreparedStatement stmt = conn.prepareStatement(contentItemQuery, Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement moduleStmt = conn.prepareStatement(moduleQuery)) {
             // Set auto commit off so the executed queries are executes in a transaction.
             conn.setAutoCommit(false);
-            
+
             // Set data in prepared statement.
             stmt.setString(1, courseName);
             stmt.setString(2, webcast.getTitle());
@@ -164,8 +167,7 @@ public class ContentItemModel extends Conn {
 
             // Get the generated key and use it in the next insert
             ResultSet rs = stmt.getGeneratedKeys();
-            if(rs.next())
-            {
+            if (rs.next()) {
                 int insertedID = rs.getInt(1);
 
                 // Set data for second prepared statement
@@ -184,7 +186,7 @@ public class ContentItemModel extends Conn {
                 // Return true on success
                 return true;
             }
-        } catch(Exception e){
+        } catch (Exception e) {
             try {
                 // Error! Rolling the transaction
                 conn.rollback();
@@ -199,7 +201,7 @@ public class ContentItemModel extends Conn {
         return false;
     }
 
-    public ArrayList<Module> getModulesForCourse(String courseName){
+    public ArrayList<Module> getModulesForCourse(String courseName) {
         // Query to retrieve all content items for a course
         String query = "SELECT * FROM Content_Item AS CI INNER JOIN Module AS M ON CI.ID = M.Content_Item_ID INNER JOIN Module_Person AS MP ON M.Module_Person_Email = MP.Email WHERE CI.Course_Name = ?";
 
@@ -207,7 +209,7 @@ public class ContentItemModel extends Conn {
         ArrayList<Module> modules = new ArrayList<>();
 
         // Create a prepared statement to prevent SQL injections
-        try(PreparedStatement stmt = super.conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = super.conn.prepareStatement(query)) {
             // Set query variable
             stmt.setString(1, courseName);
 
@@ -215,20 +217,20 @@ public class ContentItemModel extends Conn {
             ResultSet rs = stmt.executeQuery();
 
             // Loop through the result set
-            while(rs.next()){
+            while (rs.next()) {
                 modules.add(new Module(
-                    rs.getInt("ID"),
-                    rs.getString("Title"),
-                    rs.getDate("Publication_Date"),
-                    rs.getString("Status"),
-                    rs.getString("Description"),
-                    rs.getDouble("Version"), 
-                    rs.getInt("Sequence_Number"), 
-                    new ModuleContactPerson(rs.getString("Name"), rs.getString("Email"))));
+                        rs.getInt("ID"),
+                        rs.getString("Title"),
+                        rs.getDate("Publication_Date"),
+                        rs.getString("Status"),
+                        rs.getString("Description"),
+                        rs.getDouble("Version"),
+                        rs.getInt("Sequence_Number"),
+                        new ModuleContactPerson(rs.getString("Name"), rs.getString("Email"))));
             }
 
             return modules;
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.format("Error while retrieving modules for course (getModulesForCourse): %s", e.toString());
         }
 
@@ -236,7 +238,7 @@ public class ContentItemModel extends Conn {
         return null;
     }
 
-    public ArrayList<Webcast> getWebcastsForCourse(String courseName){
+    public ArrayList<Webcast> getWebcastsForCourse(String courseName) {
         // Query to retrieve all webcasts for a course
         String query = "SELECT * FROM Content_Item AS CI INNER JOIN Webcast AS W ON CI.ID = W.Content_Item_ID INNER JOIN Webcast_Speaker AS WS ON W.Webcast_Speaker_ID = WS.ID WHERE CI.Course_Name = ?";
 
@@ -244,7 +246,7 @@ public class ContentItemModel extends Conn {
         ArrayList<Webcast> webcasts = new ArrayList<>();
 
         // Create a prepared statement to prevent SQL injections
-        try(PreparedStatement stmt = super.conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = super.conn.prepareStatement(query)) {
             // Set query variable
             stmt.setString(1, courseName);
 
@@ -252,20 +254,21 @@ public class ContentItemModel extends Conn {
             ResultSet rs = stmt.executeQuery();
 
             // Loop through the result set
-            while(rs.next()){
+            while (rs.next()) {
                 webcasts.add(new Webcast(
-                    rs.getInt("ID"),
-                    rs.getString("Title"),
-                    rs.getDate("Publication_Date"),
-                    rs.getString("Status"),
-                    rs.getString("Description"),
-                    new WebcastSpeaker(rs.getInt("Webcast_Speaker_ID"), rs.getString("Name"), rs.getString("Organisation")),
-                    rs.getInt("Duration"), 
-                    rs.getString("URL")));
+                        rs.getInt("ID"),
+                        rs.getString("Title"),
+                        rs.getDate("Publication_Date"),
+                        rs.getString("Status"),
+                        rs.getString("Description"),
+                        new WebcastSpeaker(rs.getInt("Webcast_Speaker_ID"), rs.getString("Name"),
+                                rs.getString("Organisation")),
+                        rs.getInt("Duration"),
+                        rs.getString("URL")));
             }
 
             return webcasts;
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.format("Error while retrieving webcasts for course (getWebcastsForCourse): %s", e.toString());
         }
 
@@ -273,7 +276,7 @@ public class ContentItemModel extends Conn {
         return null;
     }
 
-    public ArrayList<ContentItem> getContentItemsForCourse(String courseName){
+    public ArrayList<ContentItem> getContentItemsForCourse(String courseName) {
         ArrayList<ContentItem> cItems = new ArrayList<>();
         cItems.addAll(getModulesForCourse(courseName));
         cItems.addAll(getWebcastsForCourse(courseName));
@@ -281,15 +284,16 @@ public class ContentItemModel extends Conn {
         return cItems;
     }
 
-    public boolean updateModule(Module module){
+    public boolean updateModule(Module module) {
         String contentItemQuery = "UPDATE Content_Item SET Title = ?, Status = ?, Publication_Date = ?, Description = ? WHERE ID = ?";
         String moduleQuery = "UPDATE Module SET Module_Person_Email = ?, Sequence_Number = ?, Version = ? WHERE Content_Item_ID = ?";
 
         // Create a prepared statement to prevent SQL injections
-        try (PreparedStatement stmt = conn.prepareStatement(contentItemQuery); PreparedStatement moduleStmt = conn.prepareStatement(moduleQuery)) {
+        try (PreparedStatement stmt = conn.prepareStatement(contentItemQuery);
+                PreparedStatement moduleStmt = conn.prepareStatement(moduleQuery)) {
             // Set auto commit off so the executed queries are executes in a transaction.
             conn.setAutoCommit(false);
-            
+
             // Set data in prepared statement.
             stmt.setString(1, module.getTitle());
             stmt.setString(2, module.getStatus());
@@ -315,7 +319,7 @@ public class ContentItemModel extends Conn {
 
             // Return true on success
             return true;
-        } catch(Exception e){
+        } catch (Exception e) {
             try {
                 // Error! Rolling back the transaction
                 conn.rollback();
@@ -330,10 +334,15 @@ public class ContentItemModel extends Conn {
         return false;
     }
 
+    public boolean deleteContentItem(int ID) {
+        // Creating contentitem model
+        ProgressModel progressModel = new ProgressModel();
 
-    public boolean deleteContentItem(int ID){
+        // Deleting all progress 
+        progressModel.deleteProgressContentItem(ID);
+
         String query = "DELETE FROM Content_Item WHERE ID = ?";
-        try(PreparedStatement stmt = super.conn.prepareStatement(query)){
+        try (PreparedStatement stmt = super.conn.prepareStatement(query)) {
             // Set data in prepared statement
             stmt.setInt(1, ID);
 
@@ -342,8 +351,7 @@ public class ContentItemModel extends Conn {
 
             // Return true on success
             return true;
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.out.format("Error while deleting content item (deleteContentItem): %s", e.toString());
         }
 
@@ -354,7 +362,7 @@ public class ContentItemModel extends Conn {
     public ContentItem getContentItem(int ID) {
         // Create prepared statement
         String query = "SELECT * FROM Content_Item WHERE ID = ?";
-        try(PreparedStatement stmt = super.conn.prepareStatement(query)){
+        try (PreparedStatement stmt = super.conn.prepareStatement(query)) {
             // Set data in prepared statement
             stmt.setInt(1, ID);
 
@@ -362,17 +370,15 @@ public class ContentItemModel extends Conn {
             ResultSet rs = stmt.executeQuery();
 
             // Check if there is a result in the set
-            if(rs.next()){
+            if (rs.next()) {
                 return new ContentItem(
-                    rs.getInt("ID"),
-                    rs.getString("Title"),
-                    rs.getString("Status"),
-                    rs.getDate("Publication_Date"),
-                    rs.getString("Description")
-                );
+                        rs.getInt("ID"),
+                        rs.getString("Title"),
+                        rs.getString("Status"),
+                        rs.getDate("Publication_Date"),
+                        rs.getString("Description"));
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.out.format("Error while retrieving content item (getContentItem): %s", e.toString());
         }
 

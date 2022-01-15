@@ -59,17 +59,17 @@ public class CreateCourse {
         Label introduction = new Label("Beschrijving:");
         formGrid.add(introduction, 0, 3);
         TextArea introductionTextArea = new TextArea();
-        introductionTextArea.setMinSize(300, 200);
+        introductionTextArea.setMaxSize(300, 100);
         formGrid.add(introductionTextArea, 1, 3);
 
         // Course level
         Label level = new Label("Niveau:");
-        formGrid.add(level, 0, 7);
+        formGrid.add(level, 0, 4);
         ComboBox<String> levelCombobox = new ComboBox<>();
         levelCombobox.getItems().add(Level.BEGINNER.getValue());
         levelCombobox.getItems().add(Level.ADVANCED.getValue());
         levelCombobox.getItems().add(Level.EXPERT.getValue());
-        formGrid.add(levelCombobox, 1, 7);
+        formGrid.add(levelCombobox, 1, 4);
 
         // Creating cancel button + setting event handler
         Button cancelButton = new Button("Annuleren");
@@ -83,6 +83,7 @@ public class CreateCourse {
         // Setting event handler save button
         saveButton.setOnAction((event) -> {
 
+            // Creating arraylist with contentitems for course object
             ArrayList<ContentItem> contentItems = new ArrayList<ContentItem>();
 
             // Creating course object

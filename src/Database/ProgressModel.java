@@ -189,4 +189,24 @@ public class ProgressModel extends Conn{
         // Return nothing on error (null)
         return null;
     }
+
+    public boolean deleteProgressContentItem(Integer content_Item_ID){
+        String query = "DELETE FROM Progress WHERE Content_Item_ID = ?";
+        try(PreparedStatement stmt = super.conn.prepareStatement(query)){
+            // Set data in prepared statement
+            stmt.setInt(1, content_Item_ID);
+
+            // Execute prepared statement
+            stmt.executeUpdate();
+
+            // Return true on success
+            return true;
+        }
+        catch(Exception e){
+            System.out.format("Error while deleting progress contentitem (deleteProgressContentItem): %s", e.toString());
+        }
+
+        // Return false on error
+        return false;
+    }
 }
