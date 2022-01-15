@@ -141,6 +141,7 @@ public class ProgressModel extends Conn{
                     rs.getDate("Publication_Date"),
                     rs.getString("Status"),
                     rs.getString("Description"),
+                    rs.getInt("Webcast_Speaker_ID"),
                     rs.getString("Name"), 
                     rs.getString("Organisation"), 
                     rs.getInt("Duration"), 

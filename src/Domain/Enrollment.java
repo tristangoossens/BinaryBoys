@@ -43,12 +43,4 @@ public class Enrollment {
         return this.ID;
     }
 
-    @Override
-    public String toString() {
-        return "{" +
-            " student='" + getStudent() + "'" +
-            ", course='" + getCourse() + "'" +
-            ", date='" + getDate() + "'" +
-            "}";
-    }
 }

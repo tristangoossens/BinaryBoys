@@ -1,12 +1,15 @@
 package GUI.Student;
 
-import java.sql.Date;
+import java.util.Date;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import Validation.PostalCode;
 
 import Database.StudentModel;
-
+import Domain.Gender;
 import Domain.Student;
 
 import javafx.event.Event;
@@ -15,7 +18,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
@@ -61,15 +64,32 @@ public class CreateStudent {
         // Birthdate
         Label birthdate = new Label("Geboortedatum:");
         formGrid.add(birthdate, 0, 3);
-        DatePicker birthdateTextfield = new DatePicker();
-        birthdateTextfield.getEditor().setDisable(true);
-        formGrid.add(birthdateTextfield, 1, 3);
+
+        // Birtdate
+        Label dayLabel = new Label("DD:");
+        TextField dayTextField = new TextField();
+        dayTextField.setPrefWidth(30);
+        Label monthLabel = new Label("MM:");
+        TextField monthTextField = new TextField();
+        monthTextField.setPrefWidth(30);
+        Label yearLabel = new Label("JJJJ:");
+        TextField yearTextField = new TextField();
+        yearTextField.setPrefWidth(45);
+
+        // Creating Hbox for textfield + adding them
+        HBox dateBox = new HBox(dayLabel, dayTextField, monthLabel, monthTextField, yearLabel, yearTextField);
+        dateBox.setSpacing(5);
+
+        // Adding datebox to grid
+        formGrid.add(dateBox, 1, 3);
 
         // Gender
         Label gender = new Label("Geslacht:");
         formGrid.add(gender, 0, 4);
-        TextField genderTextField = new TextField();
-        formGrid.add(genderTextField, 1, 4);
+        ComboBox<String> genderComboBox = new ComboBox<>();
+        genderComboBox.getItems().add(Gender.MALE.getValue());
+        genderComboBox.getItems().add(Gender.FEMALE.getValue());
+        formGrid.add(genderComboBox, 1, 4);
 
         // Address
         Label address = new Label("Adres:");
@@ -107,20 +127,20 @@ public class CreateStudent {
         // Setting event handler save button
         saveButton.setOnAction((event) -> {
 
-            // Converting the localdate to date (for SQL DB)
-            Date date = Date.valueOf(birthdateTextfield.getValue());
+            // Converting and validating date
+            Date date = validateAndFormatDate(dayTextField.getText(), monthTextField.getText(),
+                    yearTextField.getText());
 
             // Creating student obj
             Student student = new Student(
-                emailTextfield.getText(),
-                nameTextfield.getText(),
-                date,
-                genderTextField.getText(),
-                addressTextField.getText(),
-                postalCodeTextField.getText(),
-                cityTextField.getText(),
-                countryTextField.getText()
-            );
+                    emailTextfield.getText(),
+                    nameTextfield.getText(),
+                    date,
+                    Gender.convertToEnum(genderComboBox.getValue()),
+                    addressTextField.getText(),
+                    postalCodeTextField.getText(),
+                    cityTextField.getText(),
+                    countryTextField.getText());
 
             // Calling the save method
             saveButton(event, stage, student);
@@ -151,30 +171,47 @@ public class CreateStudent {
     }
 
     public static void saveButton(Event event, Stage stage, Student student) {
-        // Validate postalcode
-        PostalCode.formatPostalCode(student.getPostalCode());
+        try{
+            // Validate postalcode
+            PostalCode.formatPostalCode(student.getPostalCode());
 
+            // Creating student model
+            StudentModel studentModel = new StudentModel();
 
-        // Creating student model
-        StudentModel studentModel = new StudentModel();
-
-        // Calling the student create method
-        if (studentModel.createStudent(student)) {
-            // If succesvol show alert
-            Alert succesfullAlert = new Alert(AlertType.CONFIRMATION);
-            succesfullAlert.setContentText("Student is succesvol toegevoegd");
-            succesfullAlert.show();
-            // Going back to student index
-            try {
-                stage.setScene(IndexStudent.getView(stage));
-            } catch (SQLException e) {
-                e.printStackTrace();
+            // Calling the student create method
+            if (studentModel.createStudent(student)) {
+                // If succesvol show alert
+                Alert succesfullAlert = new Alert(AlertType.CONFIRMATION);
+                succesfullAlert.setContentText("Student is succesvol toegevoegd");
+                succesfullAlert.show();
+                // Going back to student index
+                try {
+                    stage.setScene(IndexStudent.getView(stage));
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                // If failed show alert
+                Alert succesfullAlert = new Alert(AlertType.WARNING);
+                succesfullAlert.setContentText("Er is iets fout gegaan bij het aanmaken van de student :(");
+                succesfullAlert.show();
             }
-        } else {
+        } catch (Exception nullpointerException) {
             // If failed show alert
             Alert succesfullAlert = new Alert(AlertType.WARNING);
-            succesfullAlert.setContentText("Er is iets fout gegaan bij het aanmaken van de student :(");
+            succesfullAlert.setContentText("De postcode is niet geldig !");
             succesfullAlert.show();
+        }
+    }
+
+    public static Date validateAndFormatDate(String day, String month, String year) {
+        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        String str_date = String.format("%s-%s-%s", day, month, year);
+        try {
+            Date date = formatter.parse(str_date);
+            return date;
+        } catch (ParseException e) {
+            return null;
         }
 
     }

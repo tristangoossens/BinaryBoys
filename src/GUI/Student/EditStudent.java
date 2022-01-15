@@ -1,22 +1,21 @@
 package GUI.Student;
 
-import java.sql.Date;
+import java.util.Date;
 import java.sql.SQLException;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 
 import Database.StudentModel;
-
+import Domain.Gender;
 import Domain.Student;
-
+import Validation.PostalCode;
 import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
@@ -31,7 +30,7 @@ import javafx.stage.Stage;
 public class EditStudent {
 
     public Scene getView(Stage stage, Student student) throws SQLException {
-        
+
         // Setting stage title
         stage.setTitle("CodeCademy | " + student.getName() + " aanpassen");
 
@@ -62,23 +61,36 @@ public class EditStudent {
         nameTextfield.setText(student.getName());
         formGrid.add(nameTextfield, 1, 2);
 
-        // Birthdate
-        Label birthdate = new Label("Geboortedatum:");
-        formGrid.add(birthdate, 0, 3);
-        DatePicker birthdateTextfield = new DatePicker();
-        birthdateTextfield.getEditor().setDisable(true);
-        
-        // Converting student birthdate to localdate
-        LocalDate localDate = Instant.ofEpochMilli(student.getBirthDate().getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
-        birthdateTextfield.setValue(localDate);
-        formGrid.add(birthdateTextfield, 1, 3);
+        // Birtdate
+        String[] parts = splitDate(student.getBirthDate());
+        Label dayLabel = new Label("DD:");
+        TextField dayTextField = new TextField();
+        dayTextField.setText(parts[2]);
+        dayTextField.setPrefWidth(30);
+        Label monthLabel = new Label("MM:");
+        TextField monthTextField = new TextField();
+        monthTextField.setPrefWidth(30);
+        monthTextField.setText(parts[1]);
+        Label yearLabel = new Label("JJJJ:");
+        TextField yearTextField = new TextField();
+        yearTextField.setPrefWidth(45);
+        yearTextField.setText(parts[0]);
+
+        // Creating Hbox for textfield + adding them
+        HBox dateBox = new HBox(dayLabel, dayTextField, monthLabel, monthTextField, yearLabel, yearTextField);
+        dateBox.setSpacing(5);
+
+        // Adding datebox to grid
+        formGrid.add(dateBox, 1, 3);
 
         // Gender
         Label gender = new Label("Geslacht:");
         formGrid.add(gender, 0, 4);
-        TextField genderTextField = new TextField();
-        genderTextField.setText(student.getGender());
-        formGrid.add(genderTextField, 1, 4);
+        ComboBox<String> genderComboBox = new ComboBox<>();
+        genderComboBox.getItems().add(Gender.MALE.getValue());
+        genderComboBox.getItems().add(Gender.FEMALE.getValue());
+        genderComboBox.setValue(student.getGender().getValue());
+        formGrid.add(genderComboBox, 1, 4);
 
         // Address
         Label address = new Label("Adres:");
@@ -119,17 +131,20 @@ public class EditStudent {
 
         // Setting event handler save button
         saveButton.setOnAction((event) -> {
-            
+
+            // Converting and validating date
+            Date date = CreateStudent.validateAndFormatDate(dayTextField.getText(), monthTextField.getText(),
+                    yearTextField.getText());
+
             // Updating student object
             student.setName(nameTextfield.getText());
-            Date date = Date.valueOf(birthdateTextfield.getValue());
             student.setBirthDate(date);
-            student.setGender(genderTextField.getText());
+            student.setGender(Gender.convertToEnum(genderComboBox.getValue()));
             student.setAddress(addressTextField.getText());
             student.setPostalCode(postalCodeTextField.getText());
             student.setCity(cityTextField.getText());
             student.setCountry(countryTextField.getText());
-            
+
             // Calling the save method
             saveButton(event, stage, student);
         });
@@ -159,28 +174,43 @@ public class EditStudent {
     }
 
     public static void saveButton(Event event, Stage stage, Student student) {
-        
-        // Creating student model
-        StudentModel studentModel = new StudentModel();
-        
-        // Calling the student update method
-        if (studentModel.updateStudent(student)) {
-            // If succesvol show alert
-            Alert succesfullAlert = new Alert(AlertType.CONFIRMATION);
-            succesfullAlert.setContentText("Record is succesvol aangepast");
-            succesfullAlert.show();
-            // Going back to student index
-            try {
-                stage.setScene(IndexStudent.getView(stage));
-            } catch (SQLException e) {
-                e.printStackTrace();
+        try{
+            // Validate postalcode
+            PostalCode.formatPostalCode(student.getPostalCode());
+            
+            // Creating student model
+            StudentModel studentModel = new StudentModel();
+
+            // Calling the student update method
+            if (studentModel.updateStudent(student)) {
+                // If succesvol show alert
+                Alert succesfullAlert = new Alert(AlertType.CONFIRMATION);
+                succesfullAlert.setContentText("Record is succesvol aangepast");
+                succesfullAlert.show();
+                // Going back to student index
+                try {
+                    stage.setScene(IndexStudent.getView(stage));
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                // If failed show alert
+                Alert succesfullAlert = new Alert(AlertType.WARNING);
+                succesfullAlert.setContentText("Er is iets fout gegaan bij het updaten :(");
+                succesfullAlert.show();
             }
-        } else {
+        } catch (Exception nullpointerException) {
             // If failed show alert
             Alert succesfullAlert = new Alert(AlertType.WARNING);
-            succesfullAlert.setContentText("Er is iets fout gegaan bij het updaten :(");
+            succesfullAlert.setContentText("De postcode is niet geldig !");
             succesfullAlert.show();
         }
+    }
 
+    public String[] splitDate(Date date) {
+        Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String parsedDate = formatter.format(date);
+        String[] parts = parsedDate.split("-");
+        return parts;
     }
 }

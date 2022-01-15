@@ -1,7 +1,6 @@
 package GUI.Course;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import Database.CourseModel;
 import Domain.Course;
@@ -27,32 +26,22 @@ public class IndexCourse {
         
         TableView<Course> tableView = new TableView<Course>();
 
-        TableColumn<Course, String> column1 = new TableColumn<>("Name");
+        TableColumn<Course, String> column1 = new TableColumn<>("Naam");
         column1.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        TableColumn<Course, String> column2 = new TableColumn<>("Subject");
+        TableColumn<Course, String> column2 = new TableColumn<>("Onderwerp");
         column2.setCellValueFactory(new PropertyValueFactory<>("subject"));
 
-        TableColumn<Course, String> column3 = new TableColumn<>("Introduction");
+        TableColumn<Course, String> column3 = new TableColumn<>("Beschrijving");
         column3.setCellValueFactory(new PropertyValueFactory<>("introduction"));
 
-        TableColumn<Course, String> column4 = new TableColumn<>("Level");
+        TableColumn<Course, String> column4 = new TableColumn<>("Niveau");
         column4.setCellValueFactory(new PropertyValueFactory<>("level"));
-
-        TableColumn<Course, String> column5 = new TableColumn<>("Content Items");
-        column5.setCellValueFactory(new PropertyValueFactory<>("contentitems"));
 
         tableView.getColumns().add(column1);
         tableView.getColumns().add(column2);
         tableView.getColumns().add(column3);
         tableView.getColumns().add(column4);
-        tableView.getColumns().add(column5);
-
-        ArrayList<Course> course = coursemodel.getCourses();
-
-        for (Course c : course) {
-            tableView.getItems().add(c);
-        }
 
          // Creating back button + setting event handler
          Button backButton = new Button("Ga terug");

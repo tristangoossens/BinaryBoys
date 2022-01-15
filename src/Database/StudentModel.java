@@ -1,5 +1,6 @@
 package Database;
 
+import Domain.Gender;
 import Domain.Student;
 import java.sql.*;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class StudentModel extends Conn {
             stmt.setString(1, student.getEmail());
             stmt.setString(2, student.getName());
             stmt.setDate(3, new java.sql.Date(student.getBirthDate().getTime()));
-            stmt.setString(4, student.getGender());
+            stmt.setString(4, student.getGender().getValue());
             stmt.setString(5, student.getAddress());
             stmt.setString(6, student.getCity());
             stmt.setString(7, student.getPostalCode());
@@ -53,7 +54,7 @@ public class StudentModel extends Conn {
                     rs.getString("Email"),
                     rs.getString("Name"),
                     rs.getDate("Birthdate"),
-                    rs.getString("Gender"),
+                    Gender.convertToEnum((rs.getString("Gender"))),
                     rs.getString("Address"),
                     rs.getString("PostalCode"),
                     rs.getString("City"),
@@ -85,7 +86,7 @@ public class StudentModel extends Conn {
                     rs.getString("Email"),
                     rs.getString("Name"),
                     rs.getDate("Birthdate"),
-                    rs.getString("Gender"),
+                    Gender.convertToEnum((rs.getString("Gender"))),
                     rs.getString("Address"),
                     rs.getString("PostalCode"),
                     rs.getString("City"),
@@ -111,7 +112,7 @@ public class StudentModel extends Conn {
             stmt.setString(1, student.getEmail());
             stmt.setString(2, student.getName());
             stmt.setDate(3, new java.sql.Date(student.getBirthDate().getTime()));
-            stmt.setString(4, student.getGender());
+            stmt.setString(4, student.getGender().getValue());
             stmt.setString(5, student.getAddress());
             stmt.setString(6, student.getCity());
             stmt.setString(7, student.getPostalCode());
