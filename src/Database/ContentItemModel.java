@@ -53,8 +53,7 @@ public class ContentItemModel extends Conn {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                speakers.add(String.format("%d:%s->%s", rs.getInt("ID"), rs.getString("Name"),
-                        rs.getString("Organisation")));
+                speakers.add(String.format("Spreker: %s Bedrijf: %s", rs.getString("Name"), rs.getString("Organisation")));
             }
 
             // return list of names
