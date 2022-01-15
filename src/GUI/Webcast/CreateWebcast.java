@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import Database.ContentItemModel;
+import Domain.Course;
 import Domain.Webcast;
 import Domain.WebcastSpeaker;
 import GUI.App;
@@ -29,7 +30,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class CreateWebcast {
-    public Scene getView(Stage stage) {
+    public Scene getView(Stage stage, Course course) {
         // Setting stage title
         stage.setTitle("CodeCademy | Webcast aanmaken");
 
@@ -114,7 +115,7 @@ public class CreateWebcast {
         );
 
         // Calling the save method
-        saveWebcast(event, stage, webcast);
+        saveWebcast(event, stage, webcast, course);
     });
 
         // Creating HBox for buttons
@@ -132,7 +133,7 @@ public class CreateWebcast {
         return scene;
     }
 
-    private void saveWebcast(Event event, Stage stage, Webcast webcast){
+    private void saveWebcast(Event event, Stage stage, Webcast webcast, Course course){
         // Initializing contentitem model
         ContentItemModel contentItemModel = new ContentItemModel();
 
@@ -145,7 +146,7 @@ public class CreateWebcast {
 
             // Going back to overview page
             try {
-                stage.setScene(IndexContentItem.getView(stage));
+                stage.setScene(IndexContentItem.getView(stage, course));
             } catch(SQLException e){
                 e.printStackTrace();
             }

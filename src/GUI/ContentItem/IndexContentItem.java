@@ -32,23 +32,18 @@ import javafx.stage.Stage;
 
 public class IndexContentItem {
 
-    public static Scene getView(Stage stage) throws SQLException {
+    public static Scene getView(Stage stage, Course course) throws SQLException {
         // Creating contentItem model
         ContentItemModel contentItemModel = new ContentItemModel();
 
         // Setting stage title
         stage.setTitle("CodeCademy | Content for IT");
 
-        // TO REMOVE: Create a dummy course
-        ArrayList<ContentItem> list = new ArrayList<>();
-        list.addAll(contentItemModel.getModulesForCourse("IT"));
-        Course c = new Course("IT", "Boeie", "Into", "2", list);
-
         // Create a tabpane and create tabs for webcasts and modules
         TabPane tabPane = new TabPane();
-        Tab tab1 = new Tab("Modules", getModuleTabContent(contentItemModel, c, stage));
+        Tab tab1 = new Tab("Modules", getModuleTabContent(contentItemModel, course, stage));
         tab1.setClosable(false);
-        Tab tab2 = new Tab("Webcasts", getWebcastTabContent(contentItemModel, c, stage));
+        Tab tab2 = new Tab("Webcasts", getWebcastTabContent(contentItemModel, course, stage));
         tab2.setClosable(false);
 
         // Add tabs to tabpane children
@@ -149,7 +144,7 @@ public class IndexContentItem {
         // Creating create button + setting event handler
         Button createButton = new Button("Aanmaken");
         createButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
-        createButton.setOnAction((event) -> createContentItem(stage, false));
+        createButton.setOnAction((event) -> createContentItem(stage, false, course));
 
         // Creating HBox for buttons
         HBox buttonBox = new HBox(deleteButton, createButton);
@@ -233,12 +228,12 @@ public class IndexContentItem {
         // Creating edit button + setting event handler
         Button editButton = new Button("Aanpassen");
         editButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white;");
-        editButton.setOnAction((event) -> editModule(stage, tableView));
+        editButton.setOnAction((event) -> editModule(stage, tableView, course));
 
         // Creating create button + setting event handler
         Button createButton = new Button("Aanmaken");
         createButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
-        createButton.setOnAction((event) -> createContentItem(stage, true));
+        createButton.setOnAction((event) -> createContentItem(stage, true, course));
 
         // Creating HBox for buttons
         HBox buttonBox = new HBox(createButton, editButton, deleteButton);
@@ -273,23 +268,22 @@ public class IndexContentItem {
         return false;
     }
 
-    private static void createContentItem(Stage stage, boolean isModule) {
+    private static void createContentItem(Stage stage, boolean isModule, Course course) {
         Scene scene;
 
         // Check if the content item to be made is a module
         if(isModule){
-            CreateModule createModule = new CreateModule();
-            scene = createModule.getView(stage);
+            scene = CreateModule.getView(stage, course);
         }else{
             CreateWebcast createWebcast = new CreateWebcast();
-            scene = createWebcast.getView(stage);
+            scene = createWebcast.getView(stage, course);
         }
 
         // Open new page
         stage.setScene(scene);
     }
 
-    private static void editModule(Stage stage, TableView<Module> tableView){
+    private static void editModule(Stage stage, TableView<Module> tableView, Course course){
         // Check if row is selected
         if (tableView.getSelectionModel().getSelectedItem() == null) {
 
@@ -303,7 +297,7 @@ public class IndexContentItem {
             // Init Edit page
             EditModule editModule = new EditModule();
 
-            Scene scene = editModule.getView(stage, selectedModule);
+            Scene scene = editModule.getView(stage, selectedModule, course);
             stage.setScene(scene); 
         }
     }

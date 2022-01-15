@@ -17,15 +17,13 @@ public class CourseModel extends Conn {
 
     public boolean createCourse(Course course) {
         // Create prepared statement
-        String query = "INSERT INTO Course VALUES(?, ?, ? , ?, ?)";
+        String query = "INSERT INTO Course VALUES(?, ?, ?, ?)";
         try (PreparedStatement stmt = super.conn.prepareStatement(query)) {
             // Set data in prepared statement
             stmt.setString(1, course.getName());
             stmt.setString(2, course.getSubject());
             stmt.setString(3, course.getIntroduction());
             stmt.setString(4, course.getLevel().getValue());
-            stmt.setArray(5, (Array) course.getContentItems());
-
             // Execute statement
             stmt.executeUpdate();
 
@@ -109,9 +107,21 @@ public class CourseModel extends Conn {
     }
 
     public boolean deleteCourse(Course course) {
-        ArrayList<ContentItem> contentItems = ContentItemModel.getContentItemsForCourse(course.getName());
+        // Creating contentitem model 
+        ContentItemModel contentItemModel = new ContentItemModel();
+
+        // Retrieving all contentitems linked to the course
+        ArrayList<ContentItem> contentItems = contentItemModel.getContentItemsForCourse(course.getName());
+
+        // Deleting contentitem
+        for (ContentItem contentItem : contentItems) {
+            contentItemModel.deleteContentItem(contentItem.getID());
+        }
+
+        // Making query to delete course
         String query = "DELETE FROM Course WHERE Name = ?";
 
+        // Excecuting query
         try (PreparedStatement stmt = super.conn.prepareStatement(query)) {
             stmt.setString(1, course.getName());
             stmt.executeUpdate();
