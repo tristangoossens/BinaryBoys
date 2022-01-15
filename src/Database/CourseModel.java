@@ -1,6 +1,9 @@
 package Database;
 
+import Domain.ContentItem;
 import Domain.Course;
+import Domain.Level;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -20,7 +23,7 @@ public class CourseModel extends Conn {
             stmt.setString(1, course.getName());
             stmt.setString(2, course.getSubject());
             stmt.setString(3, course.getIntroduction());
-            stmt.setString(4, course.getLevel());
+            stmt.setString(4, course.getLevel().getValue());
             stmt.setArray(5, (Array) course.getContentItems());
 
             // Execute statement
@@ -51,7 +54,7 @@ public class CourseModel extends Conn {
                         rs.getString("Name"),
                         rs.getString("Subject"),
                         rs.getString("Introduction"),
-                        rs.getString("Level"),
+                        Level.convertToEnum(rs.getString("Course_Level")),
                         contentItemModel.getContentItemsForCourse(name)
                         );
             }
@@ -75,7 +78,7 @@ public class CourseModel extends Conn {
                     rs.getString("Name"),
                     rs.getString("Subject"),
                     rs.getString("Introduction"),
-                    rs.getString("Level"),
+                    Level.convertToEnum(rs.getString("Course_Level")),
                     contentItemModel.getContentItemsForCourse(rs.getString("Name"))
                 ));
             }
@@ -94,7 +97,7 @@ public class CourseModel extends Conn {
         try (PreparedStatement stmt = super.conn.prepareStatement(query)) {
             stmt.setString(1, course.getSubject());
             stmt.setString(2, course.getIntroduction());
-            stmt.setString(3, course.getLevel());
+            stmt.setString(3, course.getLevel().getValue());
             stmt.setString(4, course.getName());
             stmt.executeUpdate();
 
@@ -106,13 +109,12 @@ public class CourseModel extends Conn {
     }
 
     public boolean deleteCourse(Course course) {
-        String query = "DELETE FROM Course WHERE Email = ?";
+        ArrayList<ContentItem> contentItems = ContentItemModel.getContentItemsForCourse(course.getName());
+        String query = "DELETE FROM Course WHERE Name = ?";
 
         try (PreparedStatement stmt = super.conn.prepareStatement(query)) {
             stmt.setString(1, course.getName());
-
             stmt.executeUpdate();
-
             return true;
         } catch (Exception e) {
             System.out.format("Error while deleting course (deleteCourse): %s", e.toString());

@@ -6,10 +6,10 @@ public class Course {
     private String name;
     private String subject;
     private String introduction;
-    private String level;
+    private Level level;
     private ArrayList<ContentItem> contentItems;
 
-    public Course(String name, String subject, String introduction, String level, ArrayList<ContentItem> contentItems) {
+    public Course(String name, String subject, String introduction, Level level, ArrayList<ContentItem> contentItems) {
         this.name = name;
         this.subject = subject;
         this.introduction = introduction;
@@ -42,11 +42,11 @@ public class Course {
         this.introduction = introduction;
     }
 
-    public String getLevel() {
+    public Level getLevel() {
         return this.level;
     }
 
-    public void setLevel(String level) {
+    public void setLevel(Level level) {
         this.level = level;
     }
 
