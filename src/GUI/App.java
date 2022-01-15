@@ -27,7 +27,7 @@ public class App extends Application {
         stage.setTitle("CodeCademy | Home");
 
         Button openStudentWindow = new Button("😃 Bekijk studenten");
-        openStudentWindow.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size:20;");
+        openStudentWindow.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size:15;");
    
         openStudentWindow.setOnAction((event) -> {
             try {
@@ -38,7 +38,7 @@ public class App extends Application {
         });
 
         Button openCourseWindow = new Button("🎓 Bekijk cursussen");
-        openCourseWindow.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size:20;");
+        openCourseWindow.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size:15;");
 
         openCourseWindow.setOnAction((event) -> {
             try {
@@ -49,9 +49,31 @@ public class App extends Application {
         });
 
         Button openCertificates = new Button("✅ Bekijk certificaten");
-        openCertificates.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size:20;");
+        openCertificates.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size:15;");
 
         openCertificates.setOnAction((event) -> {
+            // try {
+            //     stage.setScene(IndexCourse.getView(stage));
+            // } catch (SQLException e) {
+            //     e.printStackTrace();
+            // }
+        });
+
+        Button openEnrollemnts = new Button("💻 Bekijk inschrijvingen");
+        openEnrollemnts.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size:15;");
+
+        openEnrollemnts.setOnAction((event) -> {
+            // try {
+            //     stage.setScene(IndexCourse.getView(stage));
+            // } catch (SQLException e) {
+            //     e.printStackTrace();
+            // }
+        });
+
+        Button openStatistics = new Button("📈 Bekijk overzichten");
+        openStatistics.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size:15;");
+
+        openStatistics.setOnAction((event) -> {
             // try {
             //     stage.setScene(IndexCourse.getView(stage));
             // } catch (SQLException e) {
@@ -63,7 +85,7 @@ public class App extends Application {
         Text homeScreenTitle = new Text("Welkom op het CodeCademy portaal");
         homeScreenTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 30));
 
-        HBox buttonBox = new HBox(openStudentWindow, openCourseWindow, openCertificates);
+        HBox buttonBox = new HBox(openStudentWindow, openCourseWindow, openCertificates, openEnrollemnts, openStatistics);
         buttonBox.setSpacing(40);
         buttonBox.setAlignment(Pos.CENTER);
 
