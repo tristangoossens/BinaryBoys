@@ -30,7 +30,8 @@ import javafx.stage.Stage;
 public class CreateCourse {
 
     public Scene getView(Stage stage) throws SQLException {
-
+        stage.setTitle("CodeCademy | Cursus aanmaken");
+        
         // Creating grid to put in form
         GridPane formGrid = new GridPane();
         formGrid.setAlignment(Pos.CENTER);

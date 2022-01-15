@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import Domain.Module;
 import Domain.ModuleContactPerson;
-import Domain.Progress;
 import Domain.Webcast;
 import Domain.WebcastSpeaker;
 import Domain.ContentItem;
