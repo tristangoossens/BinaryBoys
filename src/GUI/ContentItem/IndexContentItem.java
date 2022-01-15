@@ -186,8 +186,11 @@ public class IndexContentItem {
         TableColumn<Module, String> column6 = new TableColumn<>("Volgorde nummer");
         column6.setCellValueFactory(new PropertyValueFactory<>("orderNumber"));
 
-        TableColumn<Module, String> column7 = new TableColumn<>("Email contactpersoon");
-        column7.setCellValueFactory(new PropertyValueFactory<>("contactPerson"));
+        TableColumn<Module, String> column7 = new TableColumn<>("Naam contactpersoon");
+        column7.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getContactPerson().getName()));
+
+        TableColumn<Module, String> column8 = new TableColumn<>("Email contactpersoon");
+        column8.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getContactPerson().getEmail()));
 
         // Setting columns for data table view
         tableView.getColumns().add(column1);
@@ -197,6 +200,7 @@ public class IndexContentItem {
         tableView.getColumns().add(column5);
         tableView.getColumns().add(column6);
         tableView.getColumns().add(column7);
+        tableView.getColumns().add(column8);
 
 
         // Retrieving all modules for the given course

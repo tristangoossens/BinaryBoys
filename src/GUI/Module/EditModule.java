@@ -2,6 +2,7 @@ package GUI.Module;
 
 import Database.ContentItemModel;
 import Domain.Module;
+import Domain.ModuleContactPerson;
 import GUI.App;
 import GUI.ContentItem.IndexContentItem;
 
@@ -88,8 +89,10 @@ public class EditModule {
         Label contactPerson = new Label("Email contactpersoon:");
         formGrid.add(contactPerson, 0, 6);
         ComboBox<String> cbContactPerson = new ComboBox<>();
-        cbContactPerson.getItems().addAll(cim.getContactPersonEmails());
-        cbContactPerson.setValue(module.getContactPerson());
+        for(ModuleContactPerson person : cim.getContactPersons()){
+            cbContactPerson.getItems().add(person.getEmail());
+        }
+        cbContactPerson.setValue(module.getContactPerson().getEmail());
         formGrid.add(cbContactPerson, 1, 6);
  
         // Creating cancel button + setting event handler
@@ -106,10 +109,10 @@ public class EditModule {
             // Updating module object
             module.setTitle(nameTextfield.getText());
             module.setStatus(statusTextField.getText());
-            module.setDescription(description.getText());
+            module.setDescription(descriptionTextArea.getText());
             module.setOrderNumber(Integer.parseInt(sequenceNumberTextField.getText()));
             module.setVersion(Double.parseDouble(versionTextField.getText()));
-            module.setContactPerson(cbContactPerson.getValue());
+            module.setContactPerson(cim.getContactPersonWithEmail(cbContactPerson.getValue()));
             
             // Calling the save method
             updateModule(event, stage, module);

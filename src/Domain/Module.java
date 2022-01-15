@@ -5,20 +5,20 @@ import java.util.Date;
 public class Module extends ContentItem {   
     private double version;
     private int orderNumber;
-    private String contactPerson;
+    private ModuleContactPerson contactPerson;
 
-    public Module(int Content_item_ID, String title, Date publicationDate, String status, String description, double version, int orderNumber, String contactPerson){
+    public Module(int Content_item_ID, String title, Date publicationDate, String status, String description, double version, int orderNumber, ModuleContactPerson contactPerson){
         super(Content_item_ID, title, status, publicationDate, description);
         this.setVersion(version);
         this.setOrderNumber(orderNumber);
         this.setContactPerson(contactPerson);
     }
 
-    public String getContactPerson() {
+    public ModuleContactPerson getContactPerson() {
         return contactPerson;
     }
 
-    public void setContactPerson(String contactPerson) {
+    public void setContactPerson(ModuleContactPerson contactPerson) {
         this.contactPerson = contactPerson;
     }
 

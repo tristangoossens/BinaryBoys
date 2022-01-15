@@ -5,6 +5,7 @@ import Domain.Student;
 import Domain.Webcast;
 import Domain.WebcastSpeaker;
 import Domain.Module;
+import Domain.ModuleContactPerson;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -158,7 +159,7 @@ public class ProgressModel extends Conn{
 
     public Module getModuleForProgress(Integer content_Item_ID){
         // Query to retrieve all content items for a course
-        String query = "SELECT * FROM Content_Item AS CI INNER JOIN Module AS M ON CI.ID = M.Content_Item_ID WHERE CI.ID = ?";
+        String query = "SELECT * FROM Content_Item AS CI INNER JOIN Module AS M ON CI.ID = M.Content_Item_ID INNER JOIN Module_Person AS MP ON M.Module_Person_Email = MP.Email WHERE CI.ID = ?";
 
         // Create a prepared statement to prevent SQL injections
         try(PreparedStatement stmt = super.conn.prepareStatement(query)) {
@@ -178,7 +179,7 @@ public class ProgressModel extends Conn{
                     rs.getString("Description"),
                     rs.getDouble("Version"), 
                     rs.getInt("Sequence_Number"), 
-                    rs.getString("Module_Person_Email"));
+                    new ModuleContactPerson(rs.getString("Name"), rs.getString("Email")));
             }
 
         } catch(Exception e) {

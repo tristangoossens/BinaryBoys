@@ -2,6 +2,7 @@ package GUI.Module;
 
 import Database.ContentItemModel;
 import Domain.Module;
+import Domain.ModuleContactPerson;
 import GUI.App;
 import GUI.ContentItem.IndexContentItem;
 
@@ -84,7 +85,9 @@ public class CreateModule {
         Label contactPerson = new Label("Email contactpersoon:");
         formGrid.add(contactPerson, 0, 6);
         ComboBox<String> cbContactPerson = new ComboBox<>();
-        cbContactPerson.getItems().addAll(cim.getContactPersonEmails());
+        for(ModuleContactPerson person : cim.getContactPersons()){
+            cbContactPerson.getItems().add(person.getEmail());
+        }
         formGrid.add(cbContactPerson, 1, 6);
  
         // Creating cancel button + setting event handler
@@ -108,7 +111,7 @@ public class CreateModule {
                 descriptionTextArea.getText(),
                 Double.parseDouble(versionTextField.getText()),
                 Integer.parseInt(sequenceNumberTextField.getText()),
-                cbContactPerson.getValue()
+                cim.getContactPersonWithEmail(cbContactPerson.getValue())
             );
 
             // Calling the save method
