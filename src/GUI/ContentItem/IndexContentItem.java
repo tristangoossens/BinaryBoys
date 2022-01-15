@@ -302,19 +302,19 @@ public class IndexContentItem {
         }
     }
 
-    private static void editWebcast(Stage stage, TableView<Webcast> tableView){
-        // Check if row is selected
-        if (tableView.getSelectionModel().getSelectedItem() == null) {
+    // private static void editWebcast(Stage stage, TableView<Webcast> tableView){
+    //     // Check if row is selected
+    //     if (tableView.getSelectionModel().getSelectedItem() == null) {
 
-            // Send alert, no row selected
-            Alert warningAlert = new Alert(AlertType.WARNING);
-            warningAlert.setContentText("Selecteer een record die je wilt aanpassen");
-            warningAlert.show();
-        } else {
-            // Retrieving webcast object from table
-            Webcast selectedWebcast = (Webcast) tableView.getSelectionModel().getSelectedItem();
-            Scene scene  = EditWebcast.getView(stage, selectedWebcast);
-            stage.setScene(scene); 
-        }
-    }
+    //         // Send alert, no row selected
+    //         Alert warningAlert = new Alert(AlertType.WARNING);
+    //         warningAlert.setContentText("Selecteer een record die je wilt aanpassen");
+    //         warningAlert.show();
+    //     } else {
+    //         // Retrieving webcast object from table
+    //         Webcast selectedWebcast = (Webcast) tableView.getSelectionModel().getSelectedItem();
+    //         Scene scene  = EditWebcast.getView(stage, selectedWebcast);
+    //         stage.setScene(scene); 
+    //     }
+    // }
 }
