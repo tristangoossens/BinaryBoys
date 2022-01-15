@@ -47,7 +47,7 @@ public class IndexContentItem {
         TabPane tabPane = new TabPane();
         Tab tab1 = new Tab("Modules", getModuleTabContent(contentItemModel, c, stage));
         tab1.setClosable(false);
-        Tab tab2 = new Tab("Webcasts", getWebcastTabContent(contentItemModel, c));
+        Tab tab2 = new Tab("Webcasts", getWebcastTabContent(contentItemModel, c, stage));
         tab2.setClosable(false);
 
         // Add tabs to tabpane children
@@ -78,7 +78,7 @@ public class IndexContentItem {
         return scene;
     }
 
-    private static VBox getWebcastTabContent(ContentItemModel cim, Course course){
+    private static VBox getWebcastTabContent(ContentItemModel cim, Course course, Stage stage){
         // Creating table view
         TableView<ContentItem> tableView = new TableView<>();
 
@@ -131,8 +131,13 @@ public class IndexContentItem {
         deleteButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white;");
         deleteButton.setOnAction((event) -> deleteContentItem(event, tableView, cim));
 
+        // Creating create button + setting event handler
+        Button createButton = new Button("Aanmaken");
+        createButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
+        createButton.setOnAction((event) -> createContentItem(event, stage, false));
+
         // Creating HBox for buttons
-        HBox buttonBox = new HBox(deleteButton);
+        HBox buttonBox = new HBox(deleteButton, createButton);
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setSpacing(10);
 
@@ -159,7 +164,6 @@ public class IndexContentItem {
 
         TableColumn<ContentItem, String> column4 = new TableColumn<>("Publicatie datum");
         column4.setCellValueFactory(new PropertyValueFactory<>("publicationDate"));
-
 
         TableColumn<ContentItem, String> column5 = new TableColumn<>("Versie");
         column5.setCellValueFactory(new PropertyValueFactory<>("version"));
