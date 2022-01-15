@@ -12,7 +12,7 @@ public class StudentModel extends Conn {
 
     public boolean createStudent(Student student){
         // Create prepared statement
-        String query = "INSERT INTO Student VALUES(?, ?, ? ,?, ?, ?, ?)";
+        String query = "INSERT INTO Student VALUES(?, ?, ? ,?, ?, ?, ?, ?)";
         try(PreparedStatement stmt = super.conn.prepareStatement(query)) {
             // Set data in prepared statement
             stmt.setString(1, student.getEmail());
@@ -21,6 +21,7 @@ public class StudentModel extends Conn {
             stmt.setString(4, student.getGender());
             stmt.setString(5, student.getAddress());
             stmt.setString(6, student.getCity());
+            stmt.setString(7, student.getPostalCode());
             stmt.setString(7, student.getCountry());
 
             // Execute statement
@@ -104,7 +105,7 @@ public class StudentModel extends Conn {
 
     public boolean updateStudent(Student student){
         // Set query to exectute
-        String query = "UPDATE Student SET Email = ?, Name = ?, Birthdate = ?, Gender = ?, Address = ?, City = ?, Country = ? WHERE Email = ?";
+        String query = "UPDATE Student SET Email = ?, Name = ?, Birthdate = ?, Gender = ?, Address = ?, City = ?, PostalCode = ?, Country = ? WHERE Email = ?";
         try(PreparedStatement stmt = super.conn.prepareStatement(query)){
             // Set data in prepared statement
             stmt.setString(1, student.getEmail());
@@ -113,6 +114,7 @@ public class StudentModel extends Conn {
             stmt.setString(4, student.getGender());
             stmt.setString(5, student.getAddress());
             stmt.setString(6, student.getCity());
+            stmt.setString(7, student.getPostalCode());
             stmt.setString(7, student.getCountry());
             stmt.setString(8, student.getEmail());
 

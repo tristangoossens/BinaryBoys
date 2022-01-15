@@ -99,7 +99,7 @@ public class EnrollmentModel extends Conn {
             stmt.setString(1, enrollment.getCourse().getName());
             stmt.setString(2, enrollment.getStudent().getEmail());
             stmt.setDate(3, new java.sql.Date(enrollment.getDate().getTime()));
-            stmt.setInt(4, enrollment.getId());
+            stmt.setInt(4, enrollment.getID());
 
             // Execute update query
             stmt.executeUpdate();
@@ -118,7 +118,7 @@ public class EnrollmentModel extends Conn {
         String query = "DELETE FROM Enrollment WHERE ID = ?";
         try (PreparedStatement stmt = super.conn.prepareStatement(query)) {
             // Set data in prepared statement
-            stmt.setInt(1, enrollment.getId());
+            stmt.setInt(1, enrollment.getID());
             // Execute prepared statement
             stmt.executeUpdate();
 
