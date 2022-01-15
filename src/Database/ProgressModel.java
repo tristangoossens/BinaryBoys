@@ -3,6 +3,7 @@ package Database;
 import Domain.Progress;
 import Domain.Student;
 import Domain.Webcast;
+import Domain.WebcastSpeaker;
 import Domain.Module;
 
 import java.sql.*;
@@ -141,9 +142,7 @@ public class ProgressModel extends Conn{
                     rs.getDate("Publication_Date"),
                     rs.getString("Status"),
                     rs.getString("Description"),
-                    rs.getInt("Webcast_Speaker_ID"),
-                    rs.getString("Name"), 
-                    rs.getString("Organisation"), 
+                    new WebcastSpeaker(rs.getInt("Webcast_Speaker_ID"), rs.getString("Name"), rs.getString("Organisation")),
                     rs.getInt("Duration"), 
                     rs.getString("URL"));
             }

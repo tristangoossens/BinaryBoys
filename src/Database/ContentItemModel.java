@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import Domain.Module;
 import Domain.Webcast;
+import Domain.WebcastSpeaker;
 import Domain.ContentItem;
 
 public class ContentItemModel extends Conn {
@@ -146,7 +147,7 @@ public class ContentItemModel extends Conn {
 
                 // Set data for second prepared statement
                 moduleStmt.setInt(1, insertedID);
-                moduleStmt.setInt(2, webcast.getSpeakerID());
+                moduleStmt.setInt(2, webcast.getSpeaker().getID());
                 moduleStmt.setString(3, webcast.getUrl());
                 moduleStmt.setInt(4, webcast.getDuration());
 
@@ -235,9 +236,7 @@ public class ContentItemModel extends Conn {
                     rs.getDate("Publication_Date"),
                     rs.getString("Status"),
                     rs.getString("Description"),
-                    rs.getInt("Webcast_Speaker_ID"),
-                    rs.getString("Name"), 
-                    rs.getString("Organisation"), 
+                    new WebcastSpeaker(rs.getInt("Webcast_Speaker_ID"), rs.getString("Name"), rs.getString("Organisation")),
                     rs.getInt("Duration"), 
                     rs.getString("URL")));
             }

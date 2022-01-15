@@ -5,6 +5,7 @@ import java.util.Date;
 
 import Database.ContentItemModel;
 import Domain.Webcast;
+import Domain.WebcastSpeaker;
 import GUI.App;
 import GUI.ContentItem.IndexContentItem;
 
@@ -107,9 +108,7 @@ public class CreateWebcast {
             new Date(),
             statusTextField.getText(),
             descriptionTextField.getText(),
-            webcastSpeakerID, 
-            webcastSpeakerName, 
-            webcastSpeakerOrg,
+            new WebcastSpeaker(webcastSpeakerID, webcastSpeakerName, webcastSpeakerOrg),
             Integer.parseInt(durationTextfield.getText()),
             urlTextField.getText()
         );
