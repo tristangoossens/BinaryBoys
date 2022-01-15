@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import Domain.Module;
+import Domain.ModuleContactPerson;
 import Domain.Webcast;
 import Domain.WebcastSpeaker;
 import Domain.ContentItem;
@@ -14,25 +15,25 @@ public class ContentItemModel extends Conn {
         super();
     }
 
-    public ArrayList<String> getContactPersonEmails() {
+    public ArrayList<ModuleContactPerson> getContactPersons() {
         // Create prepared statement
-        String query = "SELECT Email FROM Module_Person";
+        String query = "SELECT * FROM Module_Person";
 
         // Create list for contact person emails
-        ArrayList<String> emails = new ArrayList<>();
+        ArrayList<ModuleContactPerson> persons = new ArrayList<>();
 
         try(PreparedStatement stmt = super.conn.prepareStatement(query)) {
             // Execute statement
             ResultSet rs = stmt.executeQuery();
 
             while(rs.next()){
-                emails.add(rs.getString("Email"));
+                persons.add(new ModuleContactPerson(rs.getString("Name"), rs.getString("Email")));
             }
 
             // return list of names
-            return emails;
+            return persons;
         } catch(Exception e) {
-            System.out.format("Error while retrieving contact person emails names (getCourseNames): %s", e.toString());
+            System.out.format("Error while retrieving contact persons (getContactPersons): %s", e.toString());
         }
 
         // return false on error (nothing is yet returned)
@@ -56,6 +57,27 @@ public class ContentItemModel extends Conn {
 
             // return list of names
             return speakers;
+        } catch(Exception e) {
+            System.out.format("Error while retrieving webcast speakers (getWebcastSpeakers): %s", e.toString());
+        }
+
+        // return false on error (nothing is yet returned)
+        return null;
+    }
+
+    public ModuleContactPerson getContactPersonWithEmail(String email) {
+        // Create prepared statement
+        String query = "SELECT * FROM Module_Person WHERE Email = ?";
+
+        try(PreparedStatement stmt = super.conn.prepareStatement(query)) {
+            // Set variable data
+            stmt.setString(1, email);
+
+            // Execute statement
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()){
+                return new ModuleContactPerson(rs.getString("Name"), rs.getString("Email"));
+            }
         } catch(Exception e) {
             System.out.format("Error while retrieving contact person emails names (getCourseNames): %s", e.toString());
         }
@@ -91,7 +113,7 @@ public class ContentItemModel extends Conn {
 
                 // Set data for second prepared statement
                 moduleStmt.setInt(1, insertedID);
-                moduleStmt.setString(2, module.getContactPerson());
+                moduleStmt.setString(2, module.getContactPerson().getEmail());
                 moduleStmt.setInt(3, module.getOrderNumber());
                 moduleStmt.setDouble(4, module.getVersion());
 
@@ -201,7 +223,7 @@ public class ContentItemModel extends Conn {
                     rs.getString("Description"),
                     rs.getDouble("Version"), 
                     rs.getInt("Sequence_Number"), 
-                    rs.getString("Email")));
+                    new ModuleContactPerson(rs.getString("Name"), rs.getString("Email"))));
             }
 
             return modules;
@@ -259,8 +281,8 @@ public class ContentItemModel extends Conn {
     }
 
     public boolean updateModule(Module module){
-        String contentItemQuery = "UPDATE Content_Item SET Title = ?, Status = ?, Publication_Date = ?, Description = ?";
-        String moduleQuery = "UPDATE Module SET Module_Person_Email = ?, Sequence_Number = ?, Version = ?";
+        String contentItemQuery = "UPDATE Content_Item SET Title = ?, Status = ?, Publication_Date = ?, Description = ? WHERE ID = ?";
+        String moduleQuery = "UPDATE Module SET Module_Person_Email = ?, Sequence_Number = ?, Version = ? WHERE Content_Item_ID = ?";
 
         // Create a prepared statement to prevent SQL injections
         try (PreparedStatement stmt = conn.prepareStatement(contentItemQuery); PreparedStatement moduleStmt = conn.prepareStatement(moduleQuery)) {
@@ -272,14 +294,16 @@ public class ContentItemModel extends Conn {
             stmt.setString(2, module.getStatus());
             stmt.setDate(3, new java.sql.Date(module.getPublicationDate().getTime()));
             stmt.setString(4, module.getDescription());
+            stmt.setInt(5, module.getID());
 
             // Execute first prepared statement
             stmt.executeUpdate();
 
             // Set data for second prepared statement
-            moduleStmt.setString(1, module.getContactPerson());
+            moduleStmt.setString(1, module.getContactPerson().getEmail());
             moduleStmt.setInt(2, module.getOrderNumber());
             moduleStmt.setDouble(3, module.getVersion());
+            moduleStmt.setInt(4, module.getID());
 
             // Execute the prepared query
             moduleStmt.executeUpdate();
