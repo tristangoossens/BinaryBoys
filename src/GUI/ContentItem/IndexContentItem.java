@@ -13,6 +13,7 @@ import GUI.Module.CreateModule;
 import GUI.Module.EditModule;
 import GUI.Webcast.CreateWebcast;
 import GUI.Webcast.EditWebcast;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -47,7 +48,7 @@ public class IndexContentItem {
         TabPane tabPane = new TabPane();
         Tab tab1 = new Tab("Modules", getModuleTabContent(contentItemModel, c, stage));
         tab1.setClosable(false);
-        Tab tab2 = new Tab("Webcasts", getWebcastTabContent(contentItemModel, c));
+        Tab tab2 = new Tab("Webcasts", getWebcastTabContent(contentItemModel, c, stage));
         tab2.setClosable(false);
 
         // Add tabs to tabpane children
@@ -78,35 +79,35 @@ public class IndexContentItem {
         return scene;
     }
 
-    private static VBox getWebcastTabContent(ContentItemModel cim, Course course){
+    private static VBox getWebcastTabContent(ContentItemModel cim, Course course, Stage stage){
         // Creating table view
-        TableView<ContentItem> tableView = new TableView<>();
+        TableView<Webcast> tableView = new TableView<>();
 
         // Setting data table view
-        TableColumn<ContentItem, String> column1 = new TableColumn<>("Titel");
+        TableColumn<Webcast, String> column1 = new TableColumn<>("Titel");
         column1.setCellValueFactory(new PropertyValueFactory<>("title"));
 
-        TableColumn<ContentItem, String> column2 = new TableColumn<>("Status");
+        TableColumn<Webcast, String> column2 = new TableColumn<>("Status");
         column2.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        TableColumn<ContentItem, String> column3 = new TableColumn<>("Beschrijving");
+        TableColumn<Webcast, String> column3 = new TableColumn<>("Beschrijving");
         column3.setCellValueFactory(new PropertyValueFactory<>("description"));
 
-        TableColumn<ContentItem, String> column4 = new TableColumn<>("Publicatie datum");
+        TableColumn<Webcast, String> column4 = new TableColumn<>("Publicatie datum");
         column4.setCellValueFactory(new PropertyValueFactory<>("publicationDate"));
 
 
-        TableColumn<ContentItem, String> column5 = new TableColumn<>("URL");
+        TableColumn<Webcast, String> column5 = new TableColumn<>("URL");
         column5.setCellValueFactory(new PropertyValueFactory<>("url"));
 
-        TableColumn<ContentItem, String> column6 = new TableColumn<>("Duur webcast");
+        TableColumn<Webcast, String> column6 = new TableColumn<>("Duur webcast");
         column6.setCellValueFactory(new PropertyValueFactory<>("duration"));
 
-        TableColumn<ContentItem, String> column7 = new TableColumn<>("Naam spreker");
-        column7.setCellValueFactory(new PropertyValueFactory<>("speaker"));
+        TableColumn<Webcast, String> column7 = new TableColumn<>("Naam spreker");
+        column7.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getSpeaker().getName()));
 
-        TableColumn<ContentItem, String> column8 = new TableColumn<>("Organisatie spreker");
-        column8.setCellValueFactory(new PropertyValueFactory<>("organisation"));
+        TableColumn<Webcast, String> column8 = new TableColumn<>("Organisatie spreker");
+        column8.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getSpeaker().getOrganisation()));
 
         // Setting columns for data table view
         tableView.getColumns().add(column1);
@@ -129,10 +130,29 @@ public class IndexContentItem {
         // Creating delete button + setting event handler
         Button deleteButton = new Button("Verwijder");
         deleteButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white;");
-        deleteButton.setOnAction((event) -> deleteContentItem(event, tableView, cim));
+        deleteButton.setOnAction((event) -> {
+            if (tableView.getSelectionModel().getSelectedItem() == null) {
+                // Send alert, no row selected
+                Alert warningAlert = new Alert(AlertType.WARNING);
+                warningAlert.setContentText("Selecteer een record die je wilt verwijderen");
+                warningAlert.show();
+
+            }else{
+                ContentItem contentItem = (ContentItem) tableView.getSelectionModel().getSelectedItem();
+                if(deleteContentItem(event, contentItem.getID(), cim)){
+                    // If delete method returns true, delete row form table
+                    tableView.getItems().removeAll(tableView.getSelectionModel().getSelectedItems());
+                }
+            } 
+        });
+
+        // Creating create button + setting event handler
+        Button createButton = new Button("Aanmaken");
+        createButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
+        createButton.setOnAction((event) -> createContentItem(stage, false));
 
         // Creating HBox for buttons
-        HBox buttonBox = new HBox(deleteButton);
+        HBox buttonBox = new HBox(deleteButton, createButton);
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setSpacing(10);
 
@@ -145,29 +165,28 @@ public class IndexContentItem {
 
     private static VBox getModuleTabContent(ContentItemModel cim, Course course, Stage stage){
         // Creating table view
-        TableView<ContentItem> tableView = new TableView<>();
+        TableView<Module> tableView = new TableView<>();
 
         // Setting data table view
-        TableColumn<ContentItem, String> column1 = new TableColumn<>("Titel");
+        TableColumn<Module, String> column1 = new TableColumn<>("Titel");
         column1.setCellValueFactory(new PropertyValueFactory<>("title"));
 
-        TableColumn<ContentItem, String> column2 = new TableColumn<>("Status");
+        TableColumn<Module, String> column2 = new TableColumn<>("Status");
         column2.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        TableColumn<ContentItem, String> column3 = new TableColumn<>("Beschrijving");
+        TableColumn<Module, String> column3 = new TableColumn<>("Beschrijving");
         column3.setCellValueFactory(new PropertyValueFactory<>("description"));
 
-        TableColumn<ContentItem, String> column4 = new TableColumn<>("Publicatie datum");
+        TableColumn<Module, String> column4 = new TableColumn<>("Publicatie datum");
         column4.setCellValueFactory(new PropertyValueFactory<>("publicationDate"));
 
-
-        TableColumn<ContentItem, String> column5 = new TableColumn<>("Versie");
+        TableColumn<Module, String> column5 = new TableColumn<>("Versie");
         column5.setCellValueFactory(new PropertyValueFactory<>("version"));
 
-        TableColumn<ContentItem, String> column6 = new TableColumn<>("Volgorde nummer");
+        TableColumn<Module, String> column6 = new TableColumn<>("Volgorde nummer");
         column6.setCellValueFactory(new PropertyValueFactory<>("orderNumber"));
 
-        TableColumn<ContentItem, String> column7 = new TableColumn<>("Email contactpersoon");
+        TableColumn<Module, String> column7 = new TableColumn<>("Email contactpersoon");
         column7.setCellValueFactory(new PropertyValueFactory<>("contactPerson"));
 
         // Setting columns for data table view
@@ -191,17 +210,31 @@ public class IndexContentItem {
         // Creating delete button + setting event handler
         Button deleteButton = new Button("Verwijder");
         deleteButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white;");
-        deleteButton.setOnAction((event) -> deleteContentItem(event, tableView, cim));
+        deleteButton.setOnAction((event) -> {
+            if (tableView.getSelectionModel().getSelectedItem() == null) {
+                // Send alert, no row selected
+                Alert warningAlert = new Alert(AlertType.WARNING);
+                warningAlert.setContentText("Selecteer een record die je wilt verwijderen");
+                warningAlert.show();
+
+            }else{
+                ContentItem contentItem = (ContentItem) tableView.getSelectionModel().getSelectedItem();
+                if(deleteContentItem(event, contentItem.getID(), cim)){
+                    // If delete method returns true, delete row form table
+                    tableView.getItems().removeAll(tableView.getSelectionModel().getSelectedItems());
+                }
+            } 
+        });
 
         // Creating edit button + setting event handler
         Button editButton = new Button("Aanpassen");
         editButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white;");
-        editButton.setOnAction((event) -> editContentItem(event, stage, tableView, true));
+        editButton.setOnAction((event) -> editModule(stage, tableView));
 
         // Creating create button + setting event handler
         Button createButton = new Button("Aanmaken");
         createButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
-        createButton.setOnAction((event) -> createContentItem(event, stage, true));
+        createButton.setOnAction((event) -> createContentItem(stage, true));
 
         // Creating HBox for buttons
         HBox buttonBox = new HBox(createButton, editButton, deleteButton);
@@ -215,39 +248,28 @@ public class IndexContentItem {
         return vbox;
     }
 
-    private static void deleteContentItem(ActionEvent event, TableView<ContentItem> tableView, ContentItemModel contentItemModel) {
-        // Check if row is selected
-        if (tableView.getSelectionModel().getSelectedItem() == null) {
-            // Send alert, no row selected
-            Alert warningAlert = new Alert(AlertType.WARNING);
-            warningAlert.setContentText("Selecteer een record die je wilt verwijderen");
-            warningAlert.show();
+    private static boolean deleteContentItem(ActionEvent event, Integer id, ContentItemModel contentItemModel) {
+        // Deleting student from database
+        if (contentItemModel.deleteContentItem(id)) {
+            // Succes message
+            Alert succesfullAlert = new Alert(AlertType.CONFIRMATION);
+            succesfullAlert.setContentText("Record is succesvol verwijderd");
+            succesfullAlert.show();
+
+            return true;
+
         } else {
-
-            // Retrieving selected content item object
-            ContentItem selectedContentItem = (ContentItem) tableView.getSelectionModel().getSelectedItem();
-
-            // Deleting student from database
-            if (contentItemModel.deleteContentItem(selectedContentItem.getID())) {
-                // If delete method returns true, delete row form table
-                tableView.getItems().removeAll(tableView.getSelectionModel().getSelectedItems());
-
-                // Succes message
-                Alert succesfullAlert = new Alert(AlertType.CONFIRMATION);
-                succesfullAlert.setContentText("Record is succesvol verwijderd");
-                succesfullAlert.show();
-
-            } else {
-                // If delete method returns false, alert to user
-                Alert succesfullAlert = new Alert(AlertType.WARNING);
-                succesfullAlert.setContentText("Er is iets fout gegaan bij het verwijderen :(");
-                succesfullAlert.show();
-            }
-
+            // If delete method returns false, alert to user
+            Alert succesfullAlert = new Alert(AlertType.WARNING);
+            succesfullAlert.setContentText("Er is iets fout gegaan bij het verwijderen :(");
+            succesfullAlert.show();
+            
         }
+
+        return false;
     }
 
-    private static void createContentItem(ActionEvent event, Stage stage, boolean isModule) {
+    private static void createContentItem(Stage stage, boolean isModule) {
         Scene scene;
 
         // Check if the content item to be made is a module
@@ -263,7 +285,7 @@ public class IndexContentItem {
         stage.setScene(scene);
     }
 
-    private static void editContentItem(ActionEvent event, Stage stage, TableView<ContentItem> tableView, boolean isModule) {
+    private static void editModule(Stage stage, TableView<Module> tableView){
         // Check if row is selected
         if (tableView.getSelectionModel().getSelectedItem() == null) {
 
@@ -272,23 +294,28 @@ public class IndexContentItem {
             warningAlert.setContentText("Selecteer een record die je wilt aanpassen");
             warningAlert.show();
         } else {
-            Scene scene;
+            // Retrieving module object from table
+            Module selectedModule = (Module) tableView.getSelectionModel().getSelectedItem();
+            // Init Edit page
+            EditModule editModule = new EditModule();
 
-            if(isModule){
-                // Retrieving module object from table
-                Module selectedModule = (Module) tableView.getSelectionModel().getSelectedItem();
+            Scene scene = editModule.getView(stage, selectedModule);
+            stage.setScene(scene); 
+        }
+    }
 
-                // Edit page
-                EditModule editModule = new EditModule();
+    private static void editWebcast(Stage stage, TableView<Webcast> tableView){
+        // Check if row is selected
+        if (tableView.getSelectionModel().getSelectedItem() == null) {
 
-                scene = editModule.getView(stage, selectedModule);
-            }else{
-                // Retrieving webcast object from table
-                Webcast selectedWebcast = (Webcast) tableView.getSelectionModel().getSelectedItem();
-                scene = EditWebcast.getView(stage, selectedWebcast);
-            }
-            
-            // Open new page
+            // Send alert, no row selected
+            Alert warningAlert = new Alert(AlertType.WARNING);
+            warningAlert.setContentText("Selecteer een record die je wilt aanpassen");
+            warningAlert.show();
+        } else {
+            // Retrieving webcast object from table
+            Webcast selectedWebcast = (Webcast) tableView.getSelectionModel().getSelectedItem();
+            Scene scene  = EditWebcast.getView(stage, selectedWebcast);
             stage.setScene(scene); 
         }
     }

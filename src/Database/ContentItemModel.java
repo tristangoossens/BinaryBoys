@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import Domain.Module;
 import Domain.Webcast;
+import Domain.WebcastSpeaker;
 import Domain.ContentItem;
 
 public class ContentItemModel extends Conn {
@@ -38,8 +39,33 @@ public class ContentItemModel extends Conn {
         return null;
     }
 
-    public boolean createModule(Module module){
-        String contentItemQuery = "INSERT INTO Content_Item VALUES(NULL, ?, ? ,?, ?)";
+    public ArrayList<String> getWebcastSpeakers() {
+        // Create statement
+        String query = "SELECT * FROM Webcast_Speaker";
+
+        // Create list for contact person emails
+        ArrayList<String> speakers = new ArrayList<>();
+
+        try(PreparedStatement stmt = super.conn.prepareStatement(query)) {
+            // Execute statement
+            ResultSet rs = stmt.executeQuery();
+
+            while(rs.next()){
+                speakers.add(String.format("%d:%s->%s",rs.getInt("ID"), rs.getString("Name"),rs.getString("Organisation")));
+            }
+
+            // return list of names
+            return speakers;
+        } catch(Exception e) {
+            System.out.format("Error while retrieving contact person emails names (getCourseNames): %s", e.toString());
+        }
+
+        // return false on error (nothing is yet returned)
+        return null;
+    }
+
+    public boolean createModule(Module module, String courseName){
+        String contentItemQuery = "INSERT INTO Content_Item VALUES(?, ?, ? ,?, ?)";
         String moduleQuery = "INSERT INTO Module VALUES(?, ? ,?, ?)";
 
         // Create a prepared statement to prevent SQL injections
@@ -48,10 +74,11 @@ public class ContentItemModel extends Conn {
             conn.setAutoCommit(false);
             
             // Set data in prepared statement.
-            stmt.setString(1, module.getTitle());
-            stmt.setString(2, module.getStatus());
-            stmt.setDate(3, new java.sql.Date(module.getPublicationDate().getTime()));
-            stmt.setString(4, module.getDescription());
+            stmt.setString(1, courseName);
+            stmt.setString(2, module.getTitle());
+            stmt.setString(3, module.getStatus());
+            stmt.setDate(4, new java.sql.Date(module.getPublicationDate().getTime()));
+            stmt.setString(5, module.getDescription());
 
             // Execute first prepared statement
             stmt.executeUpdate();
@@ -87,6 +114,62 @@ public class ContentItemModel extends Conn {
             }
 
             System.out.format("Error while inserting module (createModule): %s", e.toString());
+        }
+
+        // Return false on error (nothing is returned)
+        return false;
+    }
+
+    public boolean createWebcast(Webcast webcast, String courseName){
+        String contentItemQuery = "INSERT INTO Content_Item VALUES(?, ?, ? ,?, ?)";
+        String moduleQuery = "INSERT INTO Webcast VALUES(?, ? ,?, ?)";
+
+        // Create a prepared statement to prevent SQL injections
+        try (PreparedStatement stmt = conn.prepareStatement(contentItemQuery, Statement.RETURN_GENERATED_KEYS); PreparedStatement moduleStmt = conn.prepareStatement(moduleQuery)) {
+            // Set auto commit off so the executed queries are executes in a transaction.
+            conn.setAutoCommit(false);
+            
+            // Set data in prepared statement.
+            stmt.setString(1, courseName);
+            stmt.setString(2, webcast.getTitle());
+            stmt.setString(3, webcast.getStatus());
+            stmt.setDate(4, new java.sql.Date(webcast.getPublicationDate().getTime()));
+            stmt.setString(5, webcast.getDescription());
+
+            // Execute first prepared statement
+            stmt.executeUpdate();
+
+            // Get the generated key and use it in the next insert
+            ResultSet rs = stmt.getGeneratedKeys();
+            if(rs.next())
+            {
+                int insertedID = rs.getInt(1);
+
+                // Set data for second prepared statement
+                moduleStmt.setInt(1, insertedID);
+                moduleStmt.setInt(2, webcast.getSpeaker().getID());
+                moduleStmt.setString(3, webcast.getUrl());
+                moduleStmt.setInt(4, webcast.getDuration());
+
+                // Execute the prepared query
+                moduleStmt.executeUpdate();
+
+                // Commit changes on success
+                conn.commit();
+                conn.setAutoCommit(true);
+
+                // Return true on success
+                return true;
+            }
+        } catch(Exception e){
+            try {
+                // Error! Rolling the transaction
+                conn.rollback();
+            } catch (SQLException sqlException) {
+                sqlException.printStackTrace();
+            }
+
+            System.out.format("Error while inserting webcast (createWebcast): %s", e.toString());
         }
 
         // Return false on error (nothing is returned)
@@ -153,8 +236,7 @@ public class ContentItemModel extends Conn {
                     rs.getDate("Publication_Date"),
                     rs.getString("Status"),
                     rs.getString("Description"),
-                    rs.getString("Name"), 
-                    rs.getString("Organisation"), 
+                    new WebcastSpeaker(rs.getInt("Webcast_Speaker_ID"), rs.getString("Name"), rs.getString("Organisation")),
                     rs.getInt("Duration"), 
                     rs.getString("URL")));
             }

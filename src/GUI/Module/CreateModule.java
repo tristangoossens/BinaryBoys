@@ -68,13 +68,13 @@ public class CreateModule {
         descriptionTextArea.setPrefColumnCount(9);
         formGrid.add(descriptionTextArea, 1, 3);
 
-        // Description module
+        // Sequence number module
         Label sequenceNumber = new Label("Volgorde nummer:");
         formGrid.add(sequenceNumber, 0, 4);
         TextField sequenceNumberTextField = new TextField();
         formGrid.add(sequenceNumberTextField, 1, 4);
 
-        // Description module
+        // Version module
         Label version = new Label("Versie:");
         formGrid.add(version, 0, 5);
         TextField versionTextField = new TextField();
@@ -135,7 +135,7 @@ public class CreateModule {
         ContentItemModel contentItemModel = new ContentItemModel();
 
         // Calling the insert method for a module
-        if (contentItemModel.createModule(module)) {
+        if (contentItemModel.createModule(module, "IT")) {
             // If succesvol show alert
             Alert succesfullAlert = new Alert(AlertType.CONFIRMATION);
             succesfullAlert.setContentText("Module is succesvol toegevoegd");
