@@ -3,17 +3,23 @@ package Domain;
 import java.util.Date;
 
 public class Webcast extends ContentItem {
+    private Integer speakerID;
     private String speaker;
     private String organisation;
     private int duration;
     private String url;
 
-    public Webcast(int content_item_ID, String title, Date publicationDate, String status, String description, String speaker, String organisation, int duration, String url){
+    public Webcast(int content_item_ID, String title, Date publicationDate, String status, String description, Integer speakerID, String speaker,  String organisation, int duration, String url){
         super(content_item_ID, title, status, publicationDate, description);
+        this.speakerID = speakerID;
         this.setSpeaker(speaker);
         this.setOrganisation(organisation);
         this.setDuration(duration);
         this.setUrl(url);
+    }
+
+    public Integer getSpeakerID() {
+        return speakerID;
     }
 
     public String getUrl() {
