@@ -20,7 +20,7 @@ public class CertificateModel extends Conn{
 
     // Retrieve a list of enrollments that are ready to receive a certificate
     public ArrayList<Enrollment> getCertifiableEnrollments(){
-        String certifiableEnrollmentsQuery = "SELECT E.ID, E.Student_Email, E.Course_Name, E.Enrollment_Date FROM Enrollment AS E  INNER JOIN Course AS C ON E.Course_Name = C.Name INNER JOIN Content_Item AS CI ON C.Name = CI.Course_Name INNER JOIN Progress AS P ON CI.ID = P.Content_Item_ID WHERE E.Student_Email IN ( SELECT Student_Email FROM Progress AS PR INNER JOIN Content_Item AS CIT ON CIT.ID = PR.Content_Item_ID WHERE CIT.Course_Name = E.Course_Name AND PR.Percentage = 100) AND E.ID NOT IN (SELECT EN.ID FROM Enrollment AS EN) GROUP BY E.ID, E.Student_Email, E.Course_Name, E.Enrollment_Date";
+        String certifiableEnrollmentsQuery = "SELECT E.ID, E.Student_Email, E.Course_Name, E.Enrollment_Date FROM Enrollment AS E  INNER JOIN Course AS C ON E.Course_Name = C.Name INNER JOIN Content_Item AS CI ON C.Name = CI.Course_Name INNER JOIN Progress AS P ON CI.ID = P.Content_Item_ID WHERE E.Student_Email NOT IN ( SELECT Student_Email FROM Progress AS PR INNER JOIN Content_Item AS CIT ON CIT.ID = PR.Content_Item_ID WHERE CIT.Course_Name = E.Course_Name AND PR.Percentage < 100) AND E.ID NOT IN (SELECT CT.Enrollment_ID FROM Certificate AS CT) GROUP BY E.ID, E.Student_Email, E.Course_Name, E.Enrollment_Date";
 
         StudentModel studentModel = new StudentModel();
         CourseModel courseModel = new CourseModel();
