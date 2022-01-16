@@ -5,6 +5,7 @@ import java.util.Date;
 
 import Database.ContentItemModel;
 import Domain.Course;
+import Domain.Status;
 import Domain.Webcast;
 import Domain.WebcastSpeaker;
 import GUI.ContentItem.IndexContentItem;
@@ -57,8 +58,12 @@ public class CreateWebcast {
         // Status webcast
         Label status = new Label("Status:");
         formGrid.add(status, 0, 2);
-        TextField statusTextField = new TextField();
-        formGrid.add(statusTextField, 1, 2);
+        ComboBox<String> cbStatus = new ComboBox<>();
+        cbStatus.getItems().add(Status.CONCEPT.getValue());
+        cbStatus.getItems().add(Status.ACTIVE.getValue());
+        cbStatus.getItems().add(Status.ARCHIVED.getValue());
+        formGrid.add(cbStatus, 1, 2);
+
 
         // Description webcast
         Label description = new Label("Beschrijving:");
@@ -106,7 +111,7 @@ public class CreateWebcast {
             -1,
             nameTextfield.getText(),
             new Date(),
-            statusTextField.getText(),
+            Status.convertToEnum(cbStatus.getValue()),
             descriptionTextField.getText(),
             new WebcastSpeaker(webcastSpeakerID, webcastSpeakerName, webcastSpeakerOrg),
             Integer.parseInt(durationTextfield.getText()),
@@ -137,7 +142,7 @@ public class CreateWebcast {
         ContentItemModel contentItemModel = new ContentItemModel();
 
         // Calling the insert method for a module
-        if (contentItemModel.createWebcast(webcast, "IT")) {
+        if (contentItemModel.createWebcast(webcast, course.getName())) {
             // If succesvol show alert
             Alert succesfullAlert = new Alert(AlertType.CONFIRMATION);
             succesfullAlert.setContentText("Webcast is succesvol toegevoegd");

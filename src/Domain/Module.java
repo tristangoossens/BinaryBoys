@@ -7,7 +7,7 @@ public class Module extends ContentItem {
     private int orderNumber;
     private ModuleContactPerson contactPerson;
 
-    public Module(int Content_item_ID, String title, Date publicationDate, String status, String description, double version, int orderNumber, ModuleContactPerson contactPerson){
+    public Module(int Content_item_ID, String title, Date publicationDate, Status status, String description, double version, int orderNumber, ModuleContactPerson contactPerson){
         super(Content_item_ID, title, status, publicationDate, description);
         this.setVersion(version);
         this.setOrderNumber(orderNumber);

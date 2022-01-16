@@ -6,10 +6,10 @@ public class ContentItem {
     private int ID;
     private String title;
     private Date publicationDate;
-    private String status;
+    private Status status;
     private String description;
     
-    public ContentItem(int ID, String title, String status, Date publicationDate, String description){
+    public ContentItem(int ID, String title, Status status, Date publicationDate, String description){
         this.setID(ID);
         this.setTitle(title);
         this.setStatus(status);
@@ -33,11 +33,11 @@ public class ContentItem {
         this.description = description;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

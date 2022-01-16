@@ -4,6 +4,7 @@ import Database.ContentItemModel;
 import Domain.Course;
 import Domain.Module;
 import Domain.ModuleContactPerson;
+import Domain.Status;
 import GUI.ContentItem.IndexContentItem;
 
 
@@ -58,9 +59,12 @@ public class EditModule {
         // Status module
         Label status = new Label("Status:");
         formGrid.add(status, 0, 2);
-        TextField statusTextField = new TextField();
-        statusTextField.setText(module.getStatus());
-        formGrid.add(statusTextField, 1, 2);
+        ComboBox<String> cbStatus = new ComboBox<>();
+        cbStatus.getItems().add(Status.CONCEPT.getValue());
+        cbStatus.getItems().add(Status.ACTIVE.getValue());
+        cbStatus.getItems().add(Status.ARCHIVED.getValue());
+        formGrid.add(cbStatus, 1, 2);
+
 
         // Description module
         Label description = new Label("Beschrijving:");
@@ -108,7 +112,7 @@ public class EditModule {
         saveButton.setOnAction((event) -> {
             // Updating module object
             module.setTitle(nameTextfield.getText());
-            module.setStatus(statusTextField.getText());
+            module.setStatus(Status.convertToEnum(cbStatus.getValue()));
             module.setDescription(descriptionTextArea.getText());
             module.setOrderNumber(Integer.parseInt(sequenceNumberTextField.getText()));
             module.setVersion(Double.parseDouble(versionTextField.getText()));

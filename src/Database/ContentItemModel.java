@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import Domain.Module;
 import Domain.ModuleContactPerson;
+import Domain.Status;
 import Domain.Webcast;
 import Domain.WebcastSpeaker;
 import Domain.ContentItem;
@@ -100,7 +101,7 @@ public class ContentItemModel extends Conn {
             // Set data in prepared statement.
             stmt.setString(1, course.getName());
             stmt.setString(2, module.getTitle());
-            stmt.setString(3, module.getStatus());
+            stmt.setString(3, module.getStatus().getValue());
             stmt.setDate(4, new java.sql.Date(module.getPublicationDate().getTime()));
             stmt.setString(5, module.getDescription());
 
@@ -156,7 +157,7 @@ public class ContentItemModel extends Conn {
             // Set data in prepared statement.
             stmt.setString(1, courseName);
             stmt.setString(2, webcast.getTitle());
-            stmt.setString(3, webcast.getStatus());
+            stmt.setString(3, webcast.getStatus().getValue());
             stmt.setDate(4, new java.sql.Date(webcast.getPublicationDate().getTime()));
             stmt.setString(5, webcast.getDescription());
 
@@ -220,7 +221,7 @@ public class ContentItemModel extends Conn {
                         rs.getInt("ID"),
                         rs.getString("Title"),
                         rs.getDate("Publication_Date"),
-                        rs.getString("Status"),
+                        Status.convertToEnum(rs.getString("Status")),
                         rs.getString("Description"),
                         rs.getDouble("Version"),
                         rs.getInt("Sequence_Number"),
@@ -257,10 +258,10 @@ public class ContentItemModel extends Conn {
                         rs.getInt("ID"),
                         rs.getString("Title"),
                         rs.getDate("Publication_Date"),
-                        rs.getString("Status"),
+                        Status.convertToEnum(rs.getString("Status")),
                         rs.getString("Description"),
                         new WebcastSpeaker(rs.getInt("Webcast_Speaker_ID"), rs.getString("Name"),
-                                rs.getString("Organisation")),
+                        rs.getString("Organisation")),
                         rs.getInt("Duration"),
                         rs.getString("URL")));
             }
@@ -294,7 +295,7 @@ public class ContentItemModel extends Conn {
 
             // Set data in prepared statement.
             stmt.setString(1, module.getTitle());
-            stmt.setString(2, module.getStatus());
+            stmt.setString(2, module.getStatus().getValue());
             stmt.setDate(3, new java.sql.Date(module.getPublicationDate().getTime()));
             stmt.setString(4, module.getDescription());
             stmt.setInt(5, module.getID());
@@ -344,7 +345,7 @@ public class ContentItemModel extends Conn {
 
             // Set data in prepared statement.
             stmt.setString(1, webcast.getTitle());
-            stmt.setString(2, webcast.getStatus());
+            stmt.setString(2, webcast.getStatus().getValue());
             stmt.setDate(3, new java.sql.Date(webcast.getPublicationDate().getTime()));
             stmt.setString(4, webcast.getDescription());
             stmt.setInt(5, webcast.getID());
@@ -422,7 +423,7 @@ public class ContentItemModel extends Conn {
                 return new ContentItem(
                         rs.getInt("ID"),
                         rs.getString("Title"),
-                        rs.getString("Status"),
+                        Status.convertToEnum(rs.getString("Status")),
                         rs.getDate("Publication_Date"),
                         rs.getString("Description"));
             }

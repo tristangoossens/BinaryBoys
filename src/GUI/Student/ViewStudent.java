@@ -72,7 +72,7 @@ public class ViewStudent {
         column1.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getContentItem().getTitle()));
 
         TableColumn<Progress, String> column2 = new TableColumn<>("Status");
-        column2.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getContentItem().getStatus()));
+        column2.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getContentItem().getStatus().getValue()));
 
         TableColumn<Progress, String> column3 = new TableColumn<>("Beschrijving");
         column3.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getContentItem().getDescription()));
