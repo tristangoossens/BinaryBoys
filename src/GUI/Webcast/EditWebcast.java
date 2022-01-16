@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import Database.ContentItemModel;
 import Domain.Course;
+import Domain.Status;
 import Domain.Webcast;
 import Domain.WebcastSpeaker;
 import GUI.ContentItem.IndexContentItem;
@@ -56,9 +57,12 @@ public class EditWebcast {
         // Status webcast
         Label status = new Label("Status:");
         formGrid.add(status, 0, 2);
-        TextField statusTextField = new TextField();
-        statusTextField.setText(webcast.getStatus());
-        formGrid.add(statusTextField, 1, 2);
+        ComboBox<String> cbStatus = new ComboBox<>();
+        cbStatus.getItems().add(Status.CONCEPT.getValue());
+        cbStatus.getItems().add(Status.ACTIVE.getValue());
+        cbStatus.getItems().add(Status.ARCHIVED.getValue());
+        formGrid.add(cbStatus, 1, 2);
+
 
         // Description webcast
         Label description = new Label("Beschrijving:");
@@ -108,7 +112,7 @@ public class EditWebcast {
         // Updating object
         webcast.setTitle(nameTextfield.getText()); 
         webcast.setPublicationDate(new Date()); 
-        webcast.setStatus(statusTextField.getText()); 
+        webcast.setStatus(Status.convertToEnum(cbSpeaker.getValue())); 
         webcast.setDescription(descriptionTextField.getText()); 
         webcast.setSpeaker(new WebcastSpeaker(webcastSpeakerID, webcastSpeakerName, webcastSpeakerOrg));
         webcast.setDuration(Integer.parseInt(durationTextfield.getText())); 
