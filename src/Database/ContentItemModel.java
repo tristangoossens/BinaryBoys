@@ -53,7 +53,7 @@ public class ContentItemModel extends Conn {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                speakers.add(String.format("Spreker: %s Bedrijf: %s", rs.getString("Name"), rs.getString("Organisation")));
+                speakers.add(String.format("%d: %s->%s",rs.getInt("ID"), rs.getString("Name"), rs.getString("Organisation")));
             }
 
             // return list of names
@@ -145,11 +145,11 @@ public class ContentItemModel extends Conn {
 
     public boolean createWebcast(Webcast webcast, String courseName) {
         String contentItemQuery = "INSERT INTO Content_Item VALUES(?, ?, ? ,?, ?)";
-        String moduleQuery = "INSERT INTO Webcast VALUES(?, ? ,?, ?)";
+        String webcastQuery = "INSERT INTO Webcast VALUES(?, ? ,?, ?)";
 
         // Create a prepared statement to prevent SQL injections
         try (PreparedStatement stmt = conn.prepareStatement(contentItemQuery, Statement.RETURN_GENERATED_KEYS);
-                PreparedStatement moduleStmt = conn.prepareStatement(moduleQuery)) {
+                PreparedStatement webcastStmt = conn.prepareStatement(webcastQuery)) {
             // Set auto commit off so the executed queries are executes in a transaction.
             conn.setAutoCommit(false);
 
@@ -169,13 +169,13 @@ public class ContentItemModel extends Conn {
                 int insertedID = rs.getInt(1);
 
                 // Set data for second prepared statement
-                moduleStmt.setInt(1, insertedID);
-                moduleStmt.setInt(2, webcast.getSpeaker().getID());
-                moduleStmt.setString(3, webcast.getUrl());
-                moduleStmt.setInt(4, webcast.getDuration());
+                webcastStmt.setInt(1, insertedID);
+                webcastStmt.setInt(2, webcast.getSpeaker().getID());
+                webcastStmt.setString(3, webcast.getUrl());
+                webcastStmt.setInt(4, webcast.getDuration());
 
                 // Execute the prepared query
-                moduleStmt.executeUpdate();
+                webcastStmt.executeUpdate();
 
                 // Commit changes on success
                 conn.commit();
@@ -333,7 +333,53 @@ public class ContentItemModel extends Conn {
     }
 
     public boolean updateWebcast(Webcast webcast){
-        return true;
+        String contentItemQuery = "UPDATE Content_Item SET Title = ?, Status = ?, Publication_Date = ?, Description = ? WHERE ID = ?";
+        String webcastQuery = "UPDATE Webcast SET Webcast_Speaker_ID = ?, URL = ?, Duration = ? WHERE Content_Item_ID = ?";
+
+        // Create a prepared statements to prevent SQL injections
+        try (PreparedStatement stmt = conn.prepareStatement(contentItemQuery);
+                PreparedStatement webcastStmt = conn.prepareStatement(webcastQuery)) {
+            // Set auto commit off so the executed queries are executes in a transaction.
+            conn.setAutoCommit(false);
+
+            // Set data in prepared statement.
+            stmt.setString(1, webcast.getTitle());
+            stmt.setString(2, webcast.getStatus());
+            stmt.setDate(3, new java.sql.Date(webcast.getPublicationDate().getTime()));
+            stmt.setString(4, webcast.getDescription());
+            stmt.setInt(5, webcast.getID());
+
+            // Execute first prepared statement
+            stmt.executeUpdate();
+
+            // Set data for second prepared statement
+            webcastStmt.setInt(1, webcast.getSpeaker().getID());
+            webcastStmt.setString(2, webcast.getUrl());
+            webcastStmt.setInt(3, webcast.getDuration());
+            webcastStmt.setInt(4, webcast.getID());
+
+            // Execute the prepared query
+            webcastStmt.executeUpdate();
+
+            // Commit changes on success
+            conn.commit();
+            conn.setAutoCommit(true);
+
+            // Return true on success
+            return true;
+        } catch (Exception e) {
+            try {
+                // Error! Rolling back the transaction
+                conn.rollback();
+            } catch (SQLException sqlException) {
+                sqlException.printStackTrace();
+            }
+
+            System.out.format("Error while updating webcast (updateWebcast): %s", e.toString());
+        }
+
+        // Return false on error (nothing is returned)
+        return false;
     }
 
     public boolean deleteContentItem(int ID) {
