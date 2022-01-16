@@ -4,6 +4,7 @@ import Database.CertificateModel;
 import Domain.Certificate;
 import Domain.Employee;
 import Domain.Enrollment;
+import Validation.GradeValidation;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -123,25 +124,31 @@ public class CreateCertificate {
         // Initializing contentitem model
         CertificateModel cm = new CertificateModel();
 
-        // Calling the insert method for a module
-        if (cm.createCertificate(certificate)) {
-            // If succesvol show alert
-            Alert succesfullAlert = new Alert(AlertType.CONFIRMATION);
-            succesfullAlert.setContentText("Het certificaat is successvol toegewezen! :)");
-            succesfullAlert.show();
+        if(GradeValidation.validateGrade(certificate.getGrade())){
+            // Calling the insert method for a module
+            if (cm.createCertificate(certificate)) {
+                // If succesvol show alert
+                Alert succesfullAlert = new Alert(AlertType.CONFIRMATION);
+                succesfullAlert.setContentText("Het certificaat is successvol toegewezen! :)");
+                succesfullAlert.show();
 
-            // Going back to overview page
-            try {
-                stage.setScene(IndexCertificate.getView(stage));
-            } catch(Exception e){
-                e.printStackTrace();
+                // Going back to overview page
+                try {
+                    stage.setScene(IndexCertificate.getView(stage));
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+                
+            } else {
+                // If failed show alert
+                Alert succesfullAlert = new Alert(AlertType.WARNING);
+                succesfullAlert.setContentText("Er is iets fout gegaan bij het toewijzen van het certificaat :(");
+                succesfullAlert.show();
             }
-            
-        } else {
-            // If failed show alert
-            Alert succesfullAlert = new Alert(AlertType.WARNING);
-            succesfullAlert.setContentText("Er is iets fout gegaan bij het toewijzen van het certificaat :(");
-            succesfullAlert.show();
+        }else{
+            Alert warningAlert = new Alert(AlertType.WARNING);
+            warningAlert.setContentText("Het ingevulde cijfer is incorrect (1-10)");
+            warningAlert.show();
         }
     }
 }
