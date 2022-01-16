@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import GUI.Student.IndexStudent;
 import GUI.Course.IndexCourse;
+import GUI.Statistics.IndexStatistics;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -74,11 +75,11 @@ public class App extends Application {
         openStatistics.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size:15;");
 
         openStatistics.setOnAction((event) -> {
-            // try {
-            //     stage.setScene(IndexCourse.getView(stage));
-            // } catch (SQLException e) {
-            //     e.printStackTrace();
-            // }
+            try {
+                stage.setScene(IndexStatistics.getView(stage));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
 
 
