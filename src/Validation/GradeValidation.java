@@ -18,11 +18,11 @@ public class GradeValidation {
      */
     public static boolean validateGrade(int grade) {
         // Check if the grade is lower than 1 and higher than 10
-        if (grade < 1 && grade > 10) {
+        if (grade < 1 || grade > 10) {
             return false;
         }
 
         // If all conditions are met, return true
-        return false;
+        return true;
     }
 }
