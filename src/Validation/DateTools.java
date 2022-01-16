@@ -44,17 +44,19 @@ public class DateTools {
         if ((month == 4 || month == 6 || month == 9 || month == 11) && (day < 1 || day > 30)) {
             return false;
         }
-        // 29 days in month
+
+        // 29 days in month (leap year)
         if (month == 2 && (day < 1 || day > 29) && year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)) {
             return false;
         }
+
         // 28 days in month
         if (month == 2 && (day < 1 || day > 28) && (year % 4 != 0 || (year % 100 == 0 && year % 400 != 0))) {
             return false;
         } 
 
         // If all conditions are met
-        return false;
+        return true;
      }
  }
  

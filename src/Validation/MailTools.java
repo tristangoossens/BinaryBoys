@@ -48,17 +48,17 @@ public class MailTools {
         }
 
         // Subdomain-tld delimiter
-        if(mailAddress.split("@")[1].split(".").length > 2){
+        if(mailAddress.split("@")[1].split("\\.").length > 2){
             return false;
         }
 
         // No subdomain part
-        if(mailAddress.split("@")[1].split(".")[0].length() < 1){
+        if(mailAddress.split("@")[1].split("\\.")[0].length() < 1){
             return false;
         }
 
         // No tld part
-        if(mailAddress.split("@")[1].split(".")[1].length() < 1){
+        if(mailAddress.split("@")[1].split("\\.", -1)[1].length() < 1){
             return false;
         }
 

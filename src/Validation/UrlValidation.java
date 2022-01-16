@@ -6,7 +6,8 @@ public class UrlValidation {
      *       And will return false when entering an incorrect url.
      * 
      * @subcontract valid url
-     *   @requires !url.startsWith("https://") && !url.startsWith("http://") &&
+     *   @requires url.split(".").length < 3 &&
+     *             !url.startsWith("https://") && !url.startsWith("http://")
      *             url.split(".")[0].length() < 9 || url.split(".")[0].length() < 8 &&
      *             url.split(".")[1].length() < 1 &&
      *             url.split(".")[2].length() < 1;
