@@ -9,6 +9,7 @@ import Domain.Status;
 import Domain.Webcast;
 import Domain.WebcastSpeaker;
 import GUI.ContentItem.IndexContentItem;
+import Validation.UrlValidation;
 import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -142,25 +143,32 @@ public class EditWebcast {
         // Initializing contentitem model
         ContentItemModel contentItemModel = new ContentItemModel();
 
-        // Calling the insert method for a module
-        if (contentItemModel.updateWebcast(webcast)) {
-            // If succesvol show alert
-            Alert succesfullAlert = new Alert(AlertType.CONFIRMATION);
-            succesfullAlert.setContentText("Module is succesvol aangepast");
-            succesfullAlert.show();
+        if(UrlValidation.validateUrl(webcast.getUrl())){
+            // Calling the insert method for a module
+            if (contentItemModel.updateWebcast(webcast)) {
+                // If succesvol show alert
+                Alert succesfullAlert = new Alert(AlertType.CONFIRMATION);
+                succesfullAlert.setContentText("Module is succesvol aangepast");
+                succesfullAlert.show();
 
-            // Going back to overview page
-            try {
-                stage.setScene(IndexContentItem.getView(stage, course));
-            } catch(SQLException e){
-                e.printStackTrace();
+                // Going back to overview page
+                try {
+                    stage.setScene(IndexContentItem.getView(stage, course));
+                } catch(SQLException e){
+                    e.printStackTrace();
+                }
+                
+            } else {
+                // If failed show alert
+                Alert succesfullAlert = new Alert(AlertType.WARNING);
+                succesfullAlert.setContentText("Er is iets fout gegaan bij het aanpassen van de module :(");
+                succesfullAlert.show();
             }
-            
-        } else {
+        }else{
             // If failed show alert
-            Alert succesfullAlert = new Alert(AlertType.WARNING);
-            succesfullAlert.setContentText("Er is iets fout gegaan bij het aanpassen van de module :(");
-            succesfullAlert.show();
+            Alert warningAlert = new Alert(AlertType.WARNING);
+            warningAlert.setContentText("De opgegeven url is niet in incorrect formaat!");
+            warningAlert.show();
         }
     }
 
