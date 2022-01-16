@@ -32,6 +32,6 @@ public class WebcastSpeaker {
     }
 
     public String getSpeakerAndCompany(){
-        return "Spreker: " + this.name + " Bedrijf:" + this.organisation;
+        return String.format("%d:%s->%s", this.getID(), this.getName(), this.getOrganisation());
     }
 }
