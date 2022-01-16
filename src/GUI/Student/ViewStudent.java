@@ -2,7 +2,10 @@ package GUI.Student;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import Database.CertificateModel;
 import Database.ProgressModel;
+import Domain.Certificate;
 import Domain.Progress;
 import Domain.Student;
 import javafx.beans.property.SimpleStringProperty;
@@ -32,16 +35,20 @@ public class ViewStudent {
         TabPane tabPane = new TabPane();
 
         // Create tab for modules + filling with tableview
-        Tab modulesTab = new Tab("Modules", getTabContent(progressModel, student, stage, 'm'));
+        Tab modulesTab = new Tab("Ingeschreven modules", getTabContent(progressModel, student, stage, 'm'));
         modulesTab.setClosable(false);
         
         // Create tab for webcasts + filling with tableview
-        Tab webcastsTab = new Tab("Webcasts", getTabContent(progressModel, student, stage, 'w'));
+        Tab webcastsTab = new Tab("Ingeschreven webcasts", getTabContent(progressModel, student, stage, 'w'));
         webcastsTab.setClosable(false);
+
+        Tab certificateTab = new Tab("Behaalde certificaten", getCertificatesStudent( student, stage));
+        certificateTab.setClosable(false);
 
         // Add tabs to tabpane children
         tabPane.getTabs().add(modulesTab);
         tabPane.getTabs().add(webcastsTab);
+        tabPane.getTabs().add(certificateTab);
 
         // Creating back button + setting event handler
         Button backButton = new Button("Ga terug");
@@ -61,6 +68,44 @@ public class ViewStudent {
         // Returning scene
         Scene scene = new Scene(vbox, 1200, 500);
         return scene;
+    }
+
+    private VBox getCertificatesStudent(Student student, Stage stage) {
+        // Creating table view
+        TableView<Certificate> tableView = new TableView<>();
+
+        // Setting data table view
+        TableColumn<Certificate, String> column1 = new TableColumn<>("Cursusnaam");
+        column1.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getEnrollment().getCourse().getName()));
+
+        TableColumn<Certificate, String> column2 = new TableColumn<>("Werknemersnaam");
+        column2.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getEmployee().getName()));
+
+        TableColumn<Certificate, Integer> column3 = new TableColumn<>("Grade");
+        column3.setCellValueFactory(new PropertyValueFactory<>("Grade"));
+
+        // Setting columns for data table view
+        tableView.getColumns().add(column1);
+        tableView.getColumns().add(column2);
+        tableView.getColumns().add(column3);
+
+        CertificateModel certificateModel = new CertificateModel();
+
+        // Creating arrayList to store progress
+        ArrayList<Certificate> certificates = certificateModel.getCertificatesStudent(student);
+
+        // Looping through all contentitems from student
+        for (Certificate item : certificates) {
+            tableView.getItems().add(item);
+        }
+
+        // Creating Hbox with tableview
+        VBox vbox = new VBox(tableView);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setSpacing(10);
+
+        // Returing HBox with tableview
+        return vbox;
     }
 
     private VBox getTabContent(ProgressModel progressModel, Student student, Stage stage, char typeOfContent) {

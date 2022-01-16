@@ -69,6 +69,7 @@ public class CertificateModel extends Conn{
             }
 
             // Return certificates
+            certificates.toString();
             return certificates;
         }
         catch(Exception e){
