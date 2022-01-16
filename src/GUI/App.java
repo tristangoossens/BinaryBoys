@@ -21,11 +21,13 @@ import javafx.stage.Stage;
 public class App extends Application {
 
     @Override
+    // Start the application
     public void start(Stage window) {
         window.setScene(getView(window));
         window.show();
     }
 
+    // Return a Scene for this view
     public static Scene getView(Stage stage){
         stage.setTitle("CodeCademy | Home");
 
@@ -100,6 +102,7 @@ public class App extends Application {
         return scene;
     }
 
+    // Main class to run application (entry point)
     public static void main(String[] args) {
         launch(App.class);
     }
