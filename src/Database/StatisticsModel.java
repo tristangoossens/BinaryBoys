@@ -175,7 +175,7 @@ public class StatisticsModel extends Conn {
             ArrayList<String> result = new ArrayList<>();
 
             while(rs.next()){
-                result.add(String.format("%s:%d", rs.getString("Course_Name"), rs.getString("Sub_Course_Name")));
+                result.add(String.format("%s:%s", rs.getString("Course_Name"), rs.getString("Sub_Course_Name")));
             }
 
             // Return arraylist on succes
