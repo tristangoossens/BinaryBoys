@@ -176,7 +176,7 @@ public class EditStudent {
     public static void saveButton(Event event, Stage stage, Student student) {
         try{
             // Validate postalcode
-            PostalCode.formatPostalCode(student.getPostalCode());
+            student.setPostalCode(PostalCode.formatPostalCode(student.getPostalCode()));
             
             // Creating student model
             StudentModel studentModel = new StudentModel();
