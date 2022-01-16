@@ -84,7 +84,7 @@ public class IndexContentItem {
         column1.setCellValueFactory(new PropertyValueFactory<>("title"));
 
         TableColumn<Webcast, String> column2 = new TableColumn<>("Status");
-        column2.setCellValueFactory(new PropertyValueFactory<>("status"));
+        column2.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getStatus().getValue()));
 
         TableColumn<Webcast, String> column3 = new TableColumn<>("Beschrijving");
         column3.setCellValueFactory(new PropertyValueFactory<>("description"));
@@ -173,7 +173,7 @@ public class IndexContentItem {
         column1.setCellValueFactory(new PropertyValueFactory<>("title"));
 
         TableColumn<Module, String> column2 = new TableColumn<>("Status");
-        column2.setCellValueFactory(new PropertyValueFactory<>("status"));
+        column2.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getStatus().getValue()));
 
         TableColumn<Module, String> column3 = new TableColumn<>("Beschrijving");
         column3.setCellValueFactory(new PropertyValueFactory<>("description"));
