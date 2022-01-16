@@ -12,11 +12,12 @@ import Domain.ContentItem;
 import Domain.Course;
 
 public class ContentItemModel extends Conn {
+    // Initialize super class where database connection is made
     public ContentItemModel() {
-        // Initialize super class where database connection is made
         super();
     }
 
+    // Retrieve a list of contactpersons
     public ArrayList<ModuleContactPerson> getContactPersons() {
         // Create prepared statement
         String query = "SELECT * FROM Module_Person";
@@ -42,6 +43,7 @@ public class ContentItemModel extends Conn {
         return null;
     }
 
+    // Retrieve a list of webcast speakers
     public ArrayList<String> getWebcastSpeakers() {
         // Create statement
         String query = "SELECT * FROM Webcast_Speaker";
@@ -67,6 +69,7 @@ public class ContentItemModel extends Conn {
         return null;
     }
 
+    // Retrieve a singular module contact person by email
     public ModuleContactPerson getContactPersonWithEmail(String email) {
         // Create prepared statement
         String query = "SELECT * FROM Module_Person WHERE Email = ?";
@@ -81,13 +84,14 @@ public class ContentItemModel extends Conn {
                 return new ModuleContactPerson(rs.getString("Name"), rs.getString("Email"));
             }
         } catch (Exception e) {
-            System.out.format("Error while retrieving contact person emails names (getCourseNames): %s", e.toString());
+            System.out.format("Error while retrieving contact person emails names (getContactPersonWithEmail): %s", e.toString());
         }
 
         // return false on error (nothing is yet returned)
         return null;
     }
 
+    // Insert a module and a content item into the database with their domain objects
     public boolean createModule(Module module, Course course) {
         String contentItemQuery = "INSERT INTO Content_Item VALUES(?, ?, ? ,?, ?)";
         String moduleQuery = "INSERT INTO Module VALUES(?, ? ,?, ?)";
@@ -144,6 +148,7 @@ public class ContentItemModel extends Conn {
         return false;
     }
 
+    // Insert a webcast and a content item with their given domain objects
     public boolean createWebcast(Webcast webcast, String courseName) {
         String contentItemQuery = "INSERT INTO Content_Item VALUES(?, ?, ? ,?, ?)";
         String webcastQuery = "INSERT INTO Webcast VALUES(?, ? ,?, ?)";
@@ -200,6 +205,8 @@ public class ContentItemModel extends Conn {
         return false;
     }
 
+
+    // Retrieve a list of modules for a given course
     public ArrayList<Module> getModulesForCourse(String courseName) {
         // Query to retrieve all content items for a course
         String query = "SELECT * FROM Content_Item AS CI INNER JOIN Module AS M ON CI.ID = M.Content_Item_ID INNER JOIN Module_Person AS MP ON M.Module_Person_Email = MP.Email WHERE CI.Course_Name = ?";
@@ -237,6 +244,7 @@ public class ContentItemModel extends Conn {
         return null;
     }
 
+    // Retrieve a list of webcasts for a given course
     public ArrayList<Webcast> getWebcastsForCourse(String courseName) {
         // Query to retrieve all webcasts for a course
         String query = "SELECT * FROM Content_Item AS CI INNER JOIN Webcast AS W ON CI.ID = W.Content_Item_ID INNER JOIN Webcast_Speaker AS WS ON W.Webcast_Speaker_ID = WS.ID WHERE CI.Course_Name = ?";
@@ -275,6 +283,7 @@ public class ContentItemModel extends Conn {
         return null;
     }
 
+    // Retrieve a list of contentitems for a course
     public ArrayList<ContentItem> getContentItemsForCourse(String courseName) {
         ArrayList<ContentItem> cItems = new ArrayList<>();
         cItems.addAll(getModulesForCourse(courseName));
@@ -283,6 +292,7 @@ public class ContentItemModel extends Conn {
         return cItems;
     }
 
+    // Update a module with the given domain object
     public boolean updateModule(Module module) {
         String contentItemQuery = "UPDATE Content_Item SET Title = ?, Status = ?, Publication_Date = ?, Description = ? WHERE ID = ?";
         String moduleQuery = "UPDATE Module SET Module_Person_Email = ?, Sequence_Number = ?, Version = ? WHERE Content_Item_ID = ?";
@@ -333,6 +343,7 @@ public class ContentItemModel extends Conn {
         return false;
     }
 
+    // Update a webcast with a given domain object
     public boolean updateWebcast(Webcast webcast){
         String contentItemQuery = "UPDATE Content_Item SET Title = ?, Status = ?, Publication_Date = ?, Description = ? WHERE ID = ?";
         String webcastQuery = "UPDATE Webcast SET Webcast_Speaker_ID = ?, URL = ?, Duration = ? WHERE Content_Item_ID = ?";
@@ -383,6 +394,7 @@ public class ContentItemModel extends Conn {
         return false;
     }
 
+    // Delete a content item by ID
     public boolean deleteContentItem(int ID) {
         // Creating contentitem model
         ProgressModel progressModel = new ProgressModel();
@@ -408,6 +420,7 @@ public class ContentItemModel extends Conn {
         return false;
     }
 
+    // Retrieve a singular content item by ID
     public ContentItem getContentItem(int ID) {
         // Create prepared statement
         String query = "SELECT * FROM Content_Item WHERE ID = ?";

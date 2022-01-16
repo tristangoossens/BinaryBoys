@@ -1,6 +1,5 @@
 package Database;
 
-import Domain.ContentItem;
 import Domain.Course;
 import Domain.Level;
 
@@ -11,10 +10,12 @@ public class CourseModel extends Conn {
 
     private ContentItemModel contentItemModel = new ContentItemModel();
 
+    // Initialize super class conn to create a database connection
     public CourseModel() {
         super();
     }
 
+    // Create a course with the given domain object
     public boolean createCourse(Course course) {
         // Create prepared statement
         String query = "INSERT INTO Course VALUES(?, ?, ?, ?)";
@@ -37,16 +38,17 @@ public class CourseModel extends Conn {
         return false;
     }
 
+    // Retrieve a singular course with its name
     public Course readCourse(String name) {
         String query = "SELECT * FROM Course WHERE Name = ?";
 
+        // Initialize a prepared statement to prevent SQL injections
         try (PreparedStatement stmt = super.conn.prepareStatement(query)) {
+            // Set variable data
             stmt.setString(1, name);
 
+            // Execute prepared statement
             ResultSet rs = stmt.executeQuery();
-
-            // Creating content item model to retrieve content item
-
             if (rs.next()) {
                 return new Course(
                         rs.getString("Name"),
@@ -60,9 +62,11 @@ public class CourseModel extends Conn {
             System.out.format("Error while retrieving course (readcourse): %s", e.toString());
         }
 
+        // Return null on error (nothing is yet returned)
         return null;
     }
 
+    // Retrieve a list of courses
     public ArrayList<Course> getCourses() {
 
         String query = "SELECT * FROM Course";
@@ -89,6 +93,7 @@ public class CourseModel extends Conn {
         return null;
     }
 
+    // Update a course with the given domain object
     public boolean updateCourse(Course course) {
         String query = "UPDATE Course SET Subject = ?, Introduction = ?, Course_Level = ? WHERE Name = ?";
 
@@ -106,18 +111,8 @@ public class CourseModel extends Conn {
         return false;
     }
 
+    // Delete course with the given domain object
     public boolean deleteCourse(Course course) {
-        // Creating contentitem model 
-        ContentItemModel contentItemModel = new ContentItemModel();
-
-        // Retrieving all contentitems linked to the course
-        ArrayList<ContentItem> contentItems = contentItemModel.getContentItemsForCourse(course.getName());
-
-        // Deleting contentitem
-        for (ContentItem contentItem : contentItems) {
-            contentItemModel.deleteContentItem(contentItem.getID());
-        }
-
         // Making query to delete course
         String query = "DELETE FROM Course WHERE Name = ?";
 

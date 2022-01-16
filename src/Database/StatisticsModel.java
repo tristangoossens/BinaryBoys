@@ -11,7 +11,7 @@ public class StatisticsModel extends Conn {
         super();
     }
 
-    // Statistiek 1: Voor een geselecteerd geslacht, geef aan voor hoeveel procent van de cursussen waarvoor ingeschreven is, het certificaat behaald is.
+    // Statistic 1
     public HashMap<String, HashMap<String, Integer>> getGenderCompletionData() {
         String graduatedInfoQuery = "SELECT S.Gender, COUNT(*) AS 'Graduated' FROM Enrollment AS E INNER JOIN Student AS S on E.Student_Email = S.Email WHERE E.ID IN (SELECT Enrollment_ID FROM Certificate) GROUP BY S.Gender";
         String enrolledStudentsInfo = "SELECT S.Gender, COUNT(*) AS 'Amount' FROM Enrollment AS E INNER JOIN Student AS S on E.Student_Email = S.Email GROUP BY S.Gender";
@@ -50,6 +50,7 @@ public class StatisticsModel extends Conn {
         return null;
     }
 
+    // Statistic 2
     public ArrayList<String> getAverageModuleProgress(){
         String averageModuleProgressQuery = "SELECT S.Email, C.Name, AVG(P.Percentage) AS 'Average' FROM Progress AS P INNER JOIN Student AS S ON S.Email = P.Student_Email INNER JOIN Content_Item AS CI ON P.Content_Item_ID = CI.ID INNER JOIN Course AS C ON CI.Course_Name = C.Name INNER JOIN Module AS M ON M.Content_Item_ID = CI.ID GROUP BY S.Email, C.Name";
 
@@ -72,6 +73,7 @@ public class StatisticsModel extends Conn {
         return null;
     }
 
+    // Statistic 3
     public ArrayList<String> getStudentCourseModuleProgresses(){
         String studentCourseModuleProgressesQuery = "SELECT S.Email, C.Name, CI.Title, P.Percentage FROM Student AS S INNER JOIN Enrollment AS E ON E.Student_Email = S.Email INNER JOIN Course AS C ON E.Course_Name = C.Name INNER JOIN Content_Item AS CI ON C.Name = CI.Course_Name INNER JOIN Module AS M ON CI.ID = M.Content_Item_ID INNER JOIN Progress AS P ON P.Content_Item_ID = CI.ID ORDER BY S.Email, C.Name";
 
@@ -94,6 +96,7 @@ public class StatisticsModel extends Conn {
         return null;
     }
 
+    // Statistic 4
     public ArrayList<String> getStudentCertificates(){
         String studentCertificateQuery = "SELECT S.Email, CS.Name, C.Grade FROM Enrollment AS E INNER JOIN Student AS S ON E.Student_Email = S.Email INNER JOIN Certificate AS C ON E.ID = C.Enrollment_ID INNER JOIN Course AS CS ON E.Course_Name = CS.Name";
 
@@ -116,6 +119,7 @@ public class StatisticsModel extends Conn {
         return null;
     }
 
+    // Statistic 5
     public ArrayList<String> getTop3Webcasts(){
         String top3WebcastsQuery = "SELECT TOP 3 CI.Title, COUNT(*) AS 'Aantal bezocht' FROM Progress AS P INNER JOIN Content_Item AS CI ON P.Content_Item_ID = CI.ID INNER JOIN Webcast AS W ON P.Content_Item_ID = W.Content_Item_ID WHERE P.Percentage > 0 GROUP BY CI.Title ORDER BY 'Aantal bezocht' DESC";
 
@@ -138,6 +142,7 @@ public class StatisticsModel extends Conn {
         return null;
     }
 
+    // Statistic 6
     public ArrayList<String> getTop3CoursesWithMostCertificates(){
         String top3MostCertifiedCoursesQuery = "SELECT TOP 3 E.Course_Name, COUNT(*) 'Aantal certificaten' FROM Certificate AS C INNER JOIN Enrollment AS E ON C.Enrollment_ID = E.ID GROUP BY E.Course_Name ORDER BY 'Aantal certificaten' DESC";
 
@@ -160,6 +165,7 @@ public class StatisticsModel extends Conn {
         return null;
     }
 
+    // Statistic 7
     public ArrayList<String> getCoursesWithRelatedCourses(){
         String relatedCoursesQuery = "SELECT * FROM Related_Course ORDER BY Course_Name ASC";
 
@@ -182,6 +188,7 @@ public class StatisticsModel extends Conn {
         return null;
     }
 
+    // Statistic 8
     public ArrayList<String> getCourseCompletionCount(){
         String courseCompletionCountQuery = "SELECT Course_Name, COUNT(*) AS 'Certificaten' FROM Enrollment AS E  INNER JOIN Certificate AS C ON E.ID = C.Enrollment_ID GROUP BY Course_Name";
 

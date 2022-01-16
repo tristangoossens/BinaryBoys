@@ -6,6 +6,7 @@ public class Conn {
     // Protected attribute so it can be accessed within the package
     protected Connection conn;
 
+    // Initialize a connection to the database
     public Conn() {
         String connURL = "jdbc:sqlserver://localhost;databaseName=CodeCademy;integratedSecurity=true;";
 

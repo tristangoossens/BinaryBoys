@@ -6,11 +6,12 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class StudentModel extends Conn {
+    // Initialize super class conn
     public StudentModel(){
-        // Initialize super class conn
         super();
     }
 
+    // Create a student with the given domain object
     public boolean createStudent(Student student){
         // Create prepared statement
         String query = "INSERT INTO Student VALUES(?, ?, ? ,?, ?, ?, ?, ?)";
@@ -38,6 +39,7 @@ public class StudentModel extends Conn {
         return false;
     }
 
+    // Retrieve a singular student with the given email
     public Student readStudent(String email){
         // Create prepared statement
         String query = "SELECT * FROM Student WHERE Email = ?";
@@ -70,6 +72,7 @@ public class StudentModel extends Conn {
         return null;
     }
 
+    // Retrieve a list of students
     public ArrayList<Student> getStudents() {
         // Set query to exectute
         String query = "SELECT * FROM Student";
@@ -104,6 +107,7 @@ public class StudentModel extends Conn {
         return null;
     }
 
+    // Update a student with the given domain object
     public boolean updateStudent(Student student){
         // Set query to exectute
         String query = "UPDATE Student SET Email = ?, Name = ?, Birthdate = ?, Gender = ?, Address = ?, City = ?, PostalCode = ?, Country = ? WHERE Email = ?";
@@ -133,6 +137,7 @@ public class StudentModel extends Conn {
         return false;
     }
 
+    // Delete a student with the given email
     public boolean deleteStudent(String email){
         String query = "DELETE FROM Student WHERE Email = ?";
         try(PreparedStatement stmt = super.conn.prepareStatement(query)){

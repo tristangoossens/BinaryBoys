@@ -11,11 +11,12 @@ public class EnrollmentModel extends Conn {
     private StudentModel studentModel = new StudentModel();
     private CourseModel courseModel = new CourseModel();
 
+    // Initialize super class conn to set database connection
     public EnrollmentModel() {
-        // Initialize super class conn
         super();
     }
 
+    // Create a enrollment with the given domain object
     public boolean createEnrollment(Enrollment enrollment) {
         String query = "INSERT INTO Enrollment VALUES(?, ?, ?)";
         try (PreparedStatement stmt = super.conn.prepareStatement(query)) {
@@ -37,6 +38,7 @@ public class EnrollmentModel extends Conn {
         return false;
     }
 
+    // Retrieve a single enrollment with the given domain objects
     public Enrollment readEnrollment(Enrollment enrollment, Student student, Course course) {
         // Create prepared statement
         String query = "SELECT Enrollment.Enrollment_Date FROM Enrollment WHERE ID = ?";
@@ -64,6 +66,7 @@ public class EnrollmentModel extends Conn {
         return null;
     }
 
+    // Retrieve a list of enrollments
     public ArrayList<Enrollment> getEnrollments() {
         // Set query to exectute
         String query = "SELECT * FROM Enrollment";
@@ -94,6 +97,7 @@ public class EnrollmentModel extends Conn {
         return null;
     }
 
+    // Update an enrollment with the given domain object
     public boolean updateEnrollment(Enrollment enrollment) {
         // Set query to exectute
         String query = "UPDATE Enrollment SET Course_Name = ?, Student_Email = ?, Enrollment_Date = ? WHERE ID = ?";
@@ -117,6 +121,7 @@ public class EnrollmentModel extends Conn {
         return false;
     }
 
+    // Delete an enrollment with the given domain object
     public boolean deleteEnrollment(Enrollment enrollment) {
         String query = "DELETE FROM Enrollment WHERE ID = ?";
         try (PreparedStatement stmt = super.conn.prepareStatement(query)) {

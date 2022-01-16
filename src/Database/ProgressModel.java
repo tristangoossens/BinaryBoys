@@ -12,11 +12,12 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class ProgressModel extends Conn{
+    // Initialize super class conn
     public ProgressModel(){
-        // Initialize super class conn
         super();
     }
 
+    // Insert progress with the given 
     public boolean createProgress(Progress progress){
         // Create prepared statement
         String query = "INSERT INTO Progress VALUES(?, ?, ?)";
@@ -39,6 +40,7 @@ public class ProgressModel extends Conn{
         return false;
     }
 
+    // Retrieve a list of a students progress using its domain object
     public ArrayList<Progress> readProgresStudent(Student student, char webcastOrModule){
         // Query to retrieve all content items for a course
         String query = "SELECT * FROM Progress WHERE Student_Email = ?";
@@ -81,6 +83,7 @@ public class ProgressModel extends Conn{
         return null;
     }
 
+    // Update progress for a student
     public boolean updateProgressStudent(Progress progress){
         // Set query to exectute
         String query = "UPDATE Progress SET Percentage = ? WHERE Content_Item_ID = ? AND Student_Email = ?";
@@ -104,6 +107,7 @@ public class ProgressModel extends Conn{
         return false;
     }
 
+    // Delete progress for a student
     public boolean deleteProgressStudent(Progress progress){
         String query = "DELETE FROM Progress WHERE Email_Student = ?";
         try(PreparedStatement stmt = super.conn.prepareStatement(query)){
@@ -124,6 +128,7 @@ public class ProgressModel extends Conn{
         return false;
     }
 
+    // Get a singular webcast progress with the given id
     public Webcast getWebcastForProgress(Integer content_Item_ID){
         // Query to retrieve all webcasts for a course
         String query = "SELECT * FROM Content_Item AS CI INNER JOIN Webcast AS W ON CI.ID = W.Content_Item_ID INNER JOIN Webcast_Speaker AS WS ON W.Webcast_Speaker_ID = WS.ID WHERE CI.ID = ?";
@@ -158,6 +163,7 @@ public class ProgressModel extends Conn{
     }
     
 
+    // Get a singular module progress with the given id
     public Module getModuleForProgress(Integer content_Item_ID){
         // Query to retrieve all content items for a course
         String query = "SELECT * FROM Content_Item AS CI INNER JOIN Module AS M ON CI.ID = M.Content_Item_ID INNER JOIN Module_Person AS MP ON M.Module_Person_Email = MP.Email WHERE CI.ID = ?";
@@ -191,6 +197,7 @@ public class ProgressModel extends Conn{
         return null;
     }
 
+    // Delete progress with the given id
     public boolean deleteProgressContentItem(Integer content_Item_ID){
         String query = "DELETE FROM Progress WHERE Content_Item_ID = ?";
         try(PreparedStatement stmt = super.conn.prepareStatement(query)){
