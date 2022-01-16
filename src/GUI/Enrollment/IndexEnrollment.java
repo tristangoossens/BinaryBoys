@@ -74,11 +74,6 @@ public class IndexEnrollment {
         backButton.setStyle("-fx-background-color: #343a40; -fx-text-fill: white;");
         backButton.setOnAction((event) -> stage.setScene(App.getView(stage)));
 
-        // Creating edit button + setting event handler
-        Button editButton = new Button("Aanpassen");
-        editButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white;");
-        editButton.setOnAction((event) -> editRowFromTable(event, tableView, stage));
-
         // Creating create button + setting event handler
         Button createButton = new Button("Inschrijven");
         createButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
@@ -90,7 +85,7 @@ public class IndexEnrollment {
         deleteButton.setOnAction((event) -> deleteRowFromTable(event, tableView, enrollmentModel));
 
         // Creating HBox for buttons
-        HBox buttonBox = new HBox(backButton, editButton, createButton, deleteButton);
+        HBox buttonBox = new HBox(backButton, createButton, deleteButton);
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setSpacing(10);
 
@@ -137,32 +132,6 @@ public class IndexEnrollment {
                 succesfullAlert.show();
             }
 
-        }
-    }
-
-    private static void editRowFromTable(ActionEvent event, TableView<Enrollment> tableView, Stage stage) {
-
-        // Check if row is selected
-        if (tableView.getSelectionModel().getSelectedItem() == null) {
-
-            // Send alert, no row selected
-            Alert warningAlert = new Alert(AlertType.WARNING);
-            warningAlert.setContentText("Selecteer een record die je wilt aanpassen");
-            warningAlert.show();
-        } else {
-
-            // Retrieving enrollment object from table
-            Enrollment selectedEnrollment = (Enrollment) tableView.getSelectionModel().getSelectedItem();
-
-            // Edit page
-            EditEnrollment editEnrollment = new EditEnrollment();
-
-            // Try to open new page
-            try {
-                stage.setScene(editEnrollment.getView(stage, selectedEnrollment));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
 
