@@ -1,6 +1,5 @@
 package GUI.Enrollment;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
 import Database.CourseModel;
 import Database.EnrollmentModel;
@@ -8,8 +7,6 @@ import Database.StudentModel;
 import Domain.Course;
 import Domain.Enrollment;
 import Domain.Student;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -33,6 +30,10 @@ public class EditEnrollment {
 
         stage.setTitle("CodeCademy | Enrollment aanpassen");
 
+        // Initializing models
+        CourseModel courseModel = new CourseModel();
+        StudentModel studentmodel = new StudentModel();
+
         // Creating grid to put in form
         GridPane formGrid = new GridPane();
         formGrid.setAlignment(Pos.CENTER);
@@ -45,28 +46,25 @@ public class EditEnrollment {
         scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         formGrid.add(scenetitle, 0, 0);
 
-        // getting Courses
-        CourseModel courseModel = new CourseModel();
-        ArrayList<Course> courses = courseModel.getCourses();
-
-        //getting Students
-        StudentModel studentmodel = new StudentModel();
-        ArrayList<Student> students = studentmodel.getStudents();
-
-
         // Course
         Label courseLabel = new Label("Course:");
         formGrid.add(courseLabel, 0, 1);
-        ObservableList<Course> courseOptions = FXCollections.observableArrayList(courses);
-        ComboBox<Course> courseCombo = new ComboBox<Course>(courseOptions);
+        ComboBox<String> courseCombo = new ComboBox<>();
+        for(Course course : courseModel.getCourses()){
+            courseCombo.getItems().add(course.getName());
+        }
+        courseCombo.setValue(enrollment.getCourse().getName());
         formGrid.add(courseCombo, 1, 1);
 
 
         // Student
         Label studentLabel = new Label("Student:");
         formGrid.add(studentLabel, 0, 2);
-        ObservableList<Student> studentOptions = FXCollections.observableArrayList(students);
-        ComboBox<Student> studentCombo = new ComboBox<Student>(studentOptions);
+        ComboBox<String> studentCombo = new ComboBox<>();
+        for(Student student : studentmodel.getStudents()){
+            studentCombo.getItems().add(student.getEmail());
+        }
+        studentCombo.setValue(enrollment.getStudent().getEmail());
         formGrid.add(studentCombo, 1, 2);
 
 
@@ -81,14 +79,11 @@ public class EditEnrollment {
 
             // Setting event handler save button
         saveButton.setOnAction((event) -> {
-
-            Date dateNow = new Date();
-
             // Creating enrollment obj
             Enrollment enrollmentObj = new Enrollment(
-                studentCombo.getSelectionModel().getSelectedItem(),
-                courseCombo.getSelectionModel().getSelectedItem(),
-                dateNow,
+                studentmodel.readStudent(studentCombo.getValue()),
+                courseModel.readCourse(courseCombo.getValue()),
+                new Date(),
                 enrollment.getID()
             );
 

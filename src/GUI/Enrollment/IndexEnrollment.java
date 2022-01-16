@@ -9,7 +9,7 @@ import Database.EnrollmentModel;
 import Domain.Enrollment;
 
 import GUI.App;
-
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -43,19 +43,23 @@ public class IndexEnrollment {
         TableView<Enrollment> tableView = new TableView<Enrollment>();
 
         // Setting data table view
-        TableColumn<Enrollment, String> column1 = new TableColumn<>("Student");
-        column1.setCellValueFactory(new PropertyValueFactory<>("student"));
+        TableColumn<Enrollment, String> column1 = new TableColumn<>("Naam student");
+        column1.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getStudent().getEmail()));
 
-        TableColumn<Enrollment, String> column2 = new TableColumn<>("Cursus");
-        column2.setCellValueFactory(new PropertyValueFactory<>("course"));
+        TableColumn<Enrollment, String> column2 = new TableColumn<>("Email student");
+        column2.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getStudent().getName()));
 
-        TableColumn<Enrollment, Date> column3 = new TableColumn<>("Datum");
-        column3.setCellValueFactory(new PropertyValueFactory<>("date"));
+        TableColumn<Enrollment, String> column3 = new TableColumn<>("Naam cursus");
+        column3.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getCourse().getName()));
+
+        TableColumn<Enrollment, Date> column4 = new TableColumn<>("Inschrijfdatum");
+        column4.setCellValueFactory(new PropertyValueFactory<>("date"));
 
         // Setting columns for data table view
         tableView.getColumns().add(column1);
         tableView.getColumns().add(column2);
         tableView.getColumns().add(column3);
+        tableView.getColumns().add(column4);
 
         // Retrieving all students
         ArrayList<Enrollment> enrollments = enrollmentModel.getEnrollments();
@@ -70,18 +74,13 @@ public class IndexEnrollment {
         backButton.setStyle("-fx-background-color: #343a40; -fx-text-fill: white;");
         backButton.setOnAction((event) -> stage.setScene(App.getView(stage)));
 
-        // Creating index button + setting event handler
-        Button detailButton = new Button("Bekijken");
-        detailButton.setStyle("-fx-background-color: #17a2b8; -fx-text-fill: white;");
-        detailButton.setOnAction((event) -> viewEnrollment(event, tableView, enrollmentModel, stage));
-
         // Creating edit button + setting event handler
         Button editButton = new Button("Aanpassen");
         editButton.setStyle("-fx-background-color: #007bff; -fx-text-fill: white;");
         editButton.setOnAction((event) -> editRowFromTable(event, tableView, stage));
 
         // Creating create button + setting event handler
-        Button createButton = new Button("Aanmaken");
+        Button createButton = new Button("Inschrijven");
         createButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white;");
         createButton.setOnAction((event) -> createEnrollment(event, stage));
 
@@ -91,7 +90,7 @@ public class IndexEnrollment {
         deleteButton.setOnAction((event) -> deleteRowFromTable(event, tableView, enrollmentModel));
 
         // Creating HBox for buttons
-        HBox buttonBox = new HBox(backButton, detailButton, editButton, createButton, deleteButton);
+        HBox buttonBox = new HBox(backButton, editButton, createButton, deleteButton);
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setSpacing(10);
 
@@ -179,31 +178,4 @@ public class IndexEnrollment {
             e.printStackTrace();
         }
     }
-
-    private static void viewEnrollment(ActionEvent event, TableView<Enrollment> tableView, EnrollmentModel enrollmentModel, Stage stage) {
-
-        // Check if row is selected
-        if (tableView.getSelectionModel().getSelectedItem() == null) {
-
-            // Send alert, no row selected
-            Alert warningAlert = new Alert(AlertType.WARNING);
-            warningAlert.setContentText("Selecteer een student die je wilt bekijken");
-            warningAlert.show();
-        } else {
-
-            // Retrieving Enrollment object from table
-            Enrollment selectedEnrollment = (Enrollment) tableView.getSelectionModel().getSelectedItem();
-
-            // Edit page
-            ViewEnrollment viewEnrollment = new ViewEnrollment();
-
-            // Try to open new page
-            try {
-                stage.setScene(viewEnrollment.getView(enrollmentModel, selectedEnrollment, stage));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
 }

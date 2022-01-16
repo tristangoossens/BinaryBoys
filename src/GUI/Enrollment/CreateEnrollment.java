@@ -53,10 +53,9 @@ public class CreateEnrollment{
         // Course
         Label courseLabel = new Label("Course:");
         formGrid.add(courseLabel, 0, 1);
-        //ObservableList<Course> courseOptions = FXCollections.observableArrayList(courses);
-        ComboBox<Course> courseCombo = new ComboBox<Course>();
+        ComboBox<String> courseCombo = new ComboBox<>();
         for(Course course : courses){
-            courseCombo.getItems().add(course);
+            courseCombo.getItems().add(course.getName());
         }
         formGrid.add(courseCombo, 1, 1);
 
@@ -67,9 +66,9 @@ public class CreateEnrollment{
         // Student
         Label studentLabel = new Label("Student:");
         formGrid.add(studentLabel, 0, 2);
-        ComboBox<Student> studentCombo = new ComboBox<Student>();
+        ComboBox<String> studentCombo = new ComboBox<>();
         for(Student student : students){
-            studentCombo.getItems().add(student);
+            studentCombo.getItems().add(student.getEmail());
         }
         formGrid.add(studentCombo, 1, 2);
 
@@ -91,8 +90,8 @@ public class CreateEnrollment{
 
             // Creating enrollment obj
             Enrollment enrollment = new Enrollment(
-                studentCombo.getSelectionModel().getSelectedItem(),
-                courseCombo.getSelectionModel().getSelectedItem(),
+                studentmodel.readStudent(studentCombo.getValue()),
+                courseModel.readCourse(courseCombo.getValue()),
                 dateObj,
                 -1
             );
