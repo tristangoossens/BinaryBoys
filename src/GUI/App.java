@@ -86,15 +86,17 @@ public class App extends Application {
             }
         });
 
-
         Text homeScreenTitle = new Text("Welkom op het CodeCademy portaal");
         homeScreenTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 30));
+
+        Text namesText = new Text("Sybrand Bos (2183391)\nTristan Goossens (2188507)\nSem van Elteren (2189013)\nFlorian Burg (2183770)");
+        namesText.setFont(Font.font("Tahoma", FontWeight.SEMI_BOLD, 15));
 
         HBox buttonBox = new HBox(openStudentWindow, openCourseWindow, openCertificates, openEnrollemnts, openStatistics);
         buttonBox.setSpacing(40);
         buttonBox.setAlignment(Pos.CENTER);
 
-        VBox mainBox = new VBox(homeScreenTitle, buttonBox);
+        VBox mainBox = new VBox(homeScreenTitle, namesText, buttonBox);
         mainBox.setSpacing(60);
         mainBox.setAlignment(Pos.CENTER);
         Scene scene = new Scene(mainBox, 1200, 500);
