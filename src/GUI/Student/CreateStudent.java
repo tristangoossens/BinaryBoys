@@ -6,6 +6,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import Validation.DateTools;
+import Validation.MailTools;
 import Validation.PostalCode;
 
 import Database.StudentModel;
@@ -178,23 +180,30 @@ public class CreateStudent {
             // Creating student model
             StudentModel studentModel = new StudentModel();
 
-            // Calling the student create method
-            if (studentModel.createStudent(student)) {
-                // If succesvol show alert
-                Alert succesfullAlert = new Alert(AlertType.CONFIRMATION);
-                succesfullAlert.setContentText("Student is succesvol toegevoegd");
-                succesfullAlert.show();
-                // Going back to student index
-                try {
-                    stage.setScene(IndexStudent.getView(stage));
-                } catch (SQLException e) {
-                    e.printStackTrace();
+            if(MailTools.validateMailAddress(student.getEmail())){
+                // Calling the student create method
+                if (studentModel.createStudent(student)) {
+                    // If succesvol show alert
+                    Alert succesfullAlert = new Alert(AlertType.CONFIRMATION);
+                    succesfullAlert.setContentText("Student is succesvol toegevoegd");
+                    succesfullAlert.show();
+                    // Going back to student index
+                    try {
+                        stage.setScene(IndexStudent.getView(stage));
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    // If failed show alert
+                    Alert succesfullAlert = new Alert(AlertType.WARNING);
+                    succesfullAlert.setContentText("Er is iets fout gegaan bij het aanmaken van de student :(");
+                    succesfullAlert.show();
                 }
-            } else {
+            }else{
                 // If failed show alert
-                Alert succesfullAlert = new Alert(AlertType.WARNING);
-                succesfullAlert.setContentText("Er is iets fout gegaan bij het aanmaken van de student :(");
-                succesfullAlert.show();
+                Alert warningAlert = new Alert(AlertType.WARNING);
+                warningAlert.setContentText("Het opgegeven e-mail adres is niet geldig");
+                warningAlert.show();
             }
         } catch (Exception nullpointerException) {
             // If failed show alert
@@ -205,14 +214,23 @@ public class CreateStudent {
     }
 
     public static Date validateAndFormatDate(String day, String month, String year) {
-        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-        String str_date = String.format("%s-%s-%s", day, month, year);
-        try {
-            Date date = formatter.parse(str_date);
-            return date;
-        } catch (ParseException e) {
-            return null;
+        if(DateTools.validateDate(Integer.parseInt(day), Integer.parseInt(month), Integer.parseInt(year))){
+            DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            String str_date = String.format("%s-%s-%s", day, month, year);
+            try {
+                Date date = formatter.parse(str_date);
+                return date;
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }else{
+            // If failed show alert
+            Alert warningAlert = new Alert(AlertType.WARNING);
+            warningAlert.setContentText("De gegeven geboortedatum is in incorrect formaat");
+            warningAlert.show();
         }
 
+        // Error! returning null
+        return null;
     }
 }
