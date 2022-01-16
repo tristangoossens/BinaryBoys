@@ -1,6 +1,7 @@
 package Database;
 
 import Domain.Progress;
+import Domain.Status;
 import Domain.Student;
 import Domain.Webcast;
 import Domain.WebcastSpeaker;
@@ -141,7 +142,7 @@ public class ProgressModel extends Conn{
                     rs.getInt("ID"),
                     rs.getString("Title"),
                     rs.getDate("Publication_Date"),
-                    rs.getString("Status"),
+                    Status.convertToEnum(rs.getString("Status")),
                     rs.getString("Description"),
                     new WebcastSpeaker(rs.getInt("Webcast_Speaker_ID"), rs.getString("Name"), rs.getString("Organisation")),
                     rs.getInt("Duration"), 
@@ -175,7 +176,7 @@ public class ProgressModel extends Conn{
                     rs.getInt("ID"),
                     rs.getString("Title"),
                     rs.getDate("Publication_Date"),
-                    rs.getString("Status"),
+                    Status.convertToEnum(rs.getString("Status")),
                     rs.getString("Description"),
                     rs.getDouble("Version"), 
                     rs.getInt("Sequence_Number"), 
