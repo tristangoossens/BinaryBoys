@@ -3,7 +3,9 @@ package GUI;
 import java.sql.SQLException;
 
 import GUI.Student.IndexStudent;
+import GUI.Certificate.IndexCertificate;
 import GUI.Course.IndexCourse;
+import GUI.Enrollment.IndexEnrollment;
 import GUI.Statistics.IndexStatistics;
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -49,26 +51,26 @@ public class App extends Application {
             }
         });
 
-        Button openCertificates = new Button("✅ Bekijk certificaten");
+        Button openCertificates = new Button("✅ Toewijzen certificaten");
         openCertificates.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size:15;");
 
         openCertificates.setOnAction((event) -> {
-            // try {
-            //     stage.setScene(IndexCourse.getView(stage));
-            // } catch (SQLException e) {
-            //     e.printStackTrace();
-            // }
+            try {
+                stage.setScene(IndexCertificate.getView(stage));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
 
         Button openEnrollemnts = new Button("💻 Bekijk inschrijvingen");
         openEnrollemnts.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size:15;");
 
         openEnrollemnts.setOnAction((event) -> {
-            // try {
-            //     stage.setScene(IndexCourse.getView(stage));
-            // } catch (SQLException e) {
-            //     e.printStackTrace();
-            // }
+            try {
+                stage.setScene(IndexEnrollment.getView(stage));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         });
 
         Button openStatistics = new Button("📈 Bekijk overzichten");
