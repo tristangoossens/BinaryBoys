@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import Database.ContentItemModel;
 import Domain.Course;
 import Domain.Webcast;
+import Domain.WebcastSpeaker;
 import GUI.ContentItem.IndexContentItem;
 import javafx.event.Event;
 import javafx.geometry.Insets;
@@ -99,17 +100,17 @@ public class EditWebcast {
 
         // Setting event handler save button
         saveButton.setOnAction((event) -> {
-        // Integer webcastSpeakerID = Integer.parseInt(cbSpeaker.getValue().split(":")[0]);
-        // String webcastSpeakerName = cbSpeaker.getValue().split("->")[0];
-        // String webcastSpeakerOrg = cbSpeaker.getValue().split("->")[0];
+
+        Integer webcastSpeakerID = Integer.parseInt(cbSpeaker.getValue().split(":")[0]);
+        String webcastSpeakerName = cbSpeaker.getValue().split("->")[0];
+        String webcastSpeakerOrg = cbSpeaker.getValue().split("->")[0];
 
         // Updating object
         webcast.setTitle(nameTextfield.getText()); 
         webcast.setPublicationDate(new Date()); 
         webcast.setStatus(statusTextField.getText()); 
         webcast.setDescription(descriptionTextField.getText()); 
-        // REMOVE: Tristan hier moet nog een webcast speaker worden geupdate
-        // new WebcastSpeaker(webcastSpeakerID, webcastSpeakerName, webcastSpeakerOrg),
+        webcast.setSpeaker(new WebcastSpeaker(webcastSpeakerID, webcastSpeakerName, webcastSpeakerOrg));
         webcast.setDuration(Integer.parseInt(durationTextfield.getText())); 
         webcast.setUrl(urlTextField.getText());
         
