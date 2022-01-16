@@ -21,6 +21,9 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class IndexEnrollment {
@@ -31,6 +34,10 @@ public class IndexEnrollment {
 
         // Settimg stage title
         stage.setTitle("CodeCademy | Studenten");
+
+        // Title text
+        Text titleText = new Text("Inchrijvingen");
+        titleText.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
         // Creating table view
         TableView<Enrollment> tableView = new TableView<Enrollment>();
@@ -89,7 +96,7 @@ public class IndexEnrollment {
         buttonBox.setSpacing(10);
 
         // Creatoing VBox for all components
-        VBox vbox = new VBox(tableView, buttonBox);
+        VBox vbox = new VBox(titleText, tableView, buttonBox);
         vbox.setAlignment(Pos.CENTER);
         vbox.setSpacing(20);
 

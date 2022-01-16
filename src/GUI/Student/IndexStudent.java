@@ -19,6 +19,9 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class IndexStudent {
@@ -29,6 +32,10 @@ public class IndexStudent {
 
         // Settimg stage title
         stage.setTitle("CodeCademy | Studenten");
+
+        // Title tab
+        Text titleText = new Text("Studenten");
+        titleText.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
         // Creating table view
         TableView<Student> tableView = new TableView<>();
@@ -82,7 +89,7 @@ public class IndexStudent {
         backButton.setOnAction((event) -> stage.setScene(App.getView(stage)));
 
         // Creating index button + setting event handler
-        Button detailButton = new Button("Bekijken");
+        Button detailButton = new Button("Voortgang");
         detailButton.setStyle("-fx-background-color: #17a2b8; -fx-text-fill: white;");
         detailButton.setOnAction((event) -> viewStudent(event, tableView, stage));
 
@@ -107,7 +114,7 @@ public class IndexStudent {
         buttonBox.setSpacing(10);
 
         // Creatoing VBox for all components
-        VBox vbox = new VBox(tableView, buttonBox);
+        VBox vbox = new VBox(titleText, tableView, buttonBox);
         vbox.setAlignment(Pos.CENTER);
         vbox.setSpacing(20);
 
