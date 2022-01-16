@@ -9,11 +9,11 @@ public class Enrollment {
     private Date date;
 
 
-    public Enrollment(Student student, Course course, Date date) {
+    public Enrollment(Student student, Course course, Date date, int ID) {
         this.student = student;
         this.course = course;
         this.date = date;
-        this.ID = -1;
+        this.ID = ID;
     }
 
     public Student getStudent() {
