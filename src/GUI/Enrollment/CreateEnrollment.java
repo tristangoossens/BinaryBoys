@@ -93,7 +93,8 @@ public class CreateEnrollment{
             Enrollment enrollment = new Enrollment(
                 studentCombo.getSelectionModel().getSelectedItem(),
                 courseCombo.getSelectionModel().getSelectedItem(),
-                dateObj
+                dateObj,
+                -1
             );
 
             // Calling the save method

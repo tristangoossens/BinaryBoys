@@ -88,7 +88,8 @@ public class EditEnrollment {
             Enrollment enrollmentObj = new Enrollment(
                 studentCombo.getSelectionModel().getSelectedItem(),
                 courseCombo.getSelectionModel().getSelectedItem(),
-                dateNow
+                dateNow,
+                enrollment.getID()
             );
 
             // Calling the save method
