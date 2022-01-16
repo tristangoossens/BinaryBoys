@@ -6,7 +6,11 @@ import java.sql.*;
 
 
 import Domain.Certificate;
+import Domain.ContentItem;
+import Domain.Course;
+import Domain.Employee;
 import Domain.Enrollment;
+import Domain.Level;
 import Domain.Student;
 
 public class CertificateModel extends Conn{
@@ -39,7 +43,7 @@ public class CertificateModel extends Conn{
 
     public ArrayList<Certificate> getCertificatesStudent(Student student){
         // Create prepared statement
-        String query = "SELECT * FROM Enrollment INNER JOIN Certificate ON Enrollment.ID = Certificate.Enrollment_ID WHERE Enrollment.Student_Email = ?";
+        String query = "SELECT Course.Name as CName, Course.Subject as CSubject, Course.Introduction as CIntroduction, Course.Course_Level as CLevel, Enrollment.Enrollment_Date as EDate, Enrollment.ID as EID, Employee.Number as ENumber, Employee.Name as EName, Certificate.ID as CFID, Certificate.Grade as CFGrade FROM Enrollment INNER JOIN Certificate ON Enrollment.ID = Certificate.Enrollment_ID INNER JOIN Employee ON Certificate.Employee_ID = Employee.Number INNER JOIN Course ON Enrollment.Course_Name = Course.Name WHERE Enrollment.Student_Email = ?";
         try(PreparedStatement stmt = super.conn.prepareStatement(query)){
             // Set data in prepared statement
             stmt.setString(1, student.getEmail());
@@ -49,16 +53,23 @@ public class CertificateModel extends Conn{
 
             // Create arraylist certificates
             ArrayList<Certificate> certificates = new ArrayList<>();
-
             // Check if there is a result in the set
             while(rs.next()){
-                new Certificate(
-                    rs.getInt("ID"),
-                    new Enrollment(rs.getString(""))
+                ContentItemModel contentItemModel = new ContentItemModel();
+                ArrayList<ContentItem> contentItems = contentItemModel.getContentItemsForCourse(rs.getString("CName"));
+                
+                Course course = new Course(rs.getString("CName"), rs.getString("CSubject"), rs.getString("CIntroduction"), Level.convertToEnum(rs.getString("CLevel")), contentItems);
+                
+                Enrollment enrollment = new Enrollment(student, course, rs.getDate("EDate"), rs.getInt("EID"));
+                
+                Employee employee = new Employee(rs.getInt("ENumber"), rs.getString("EName"));
+                
+                certificates.add(new Certificate(rs.getInt("CFID"), enrollment, employee, rs.getInt("CFGrade"))
                 );
             }
 
             // Return certificates
+            certificates.toString();
             return certificates;
         }
         catch(Exception e){
