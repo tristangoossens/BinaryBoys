@@ -61,6 +61,7 @@ public class EditWebcast {
         cbStatus.getItems().add(Status.CONCEPT.getValue());
         cbStatus.getItems().add(Status.ACTIVE.getValue());
         cbStatus.getItems().add(Status.ARCHIVED.getValue());
+        cbStatus.setValue(webcast.getStatus().getValue());
         formGrid.add(cbStatus, 1, 2);
 
 
@@ -112,7 +113,7 @@ public class EditWebcast {
         // Updating object
         webcast.setTitle(nameTextfield.getText()); 
         webcast.setPublicationDate(new Date()); 
-        webcast.setStatus(Status.convertToEnum(cbSpeaker.getValue())); 
+        webcast.setStatus(Status.convertToEnum(cbStatus.getValue())); 
         webcast.setDescription(descriptionTextField.getText()); 
         webcast.setSpeaker(new WebcastSpeaker(webcastSpeakerID, webcastSpeakerName, webcastSpeakerOrg));
         webcast.setDuration(Integer.parseInt(durationTextfield.getText())); 
