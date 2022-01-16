@@ -13,6 +13,7 @@ public class Enrollment {
         this.student = student;
         this.course = course;
         this.date = date;
+        this.ID = -1;
     }
 
     public Student getStudent() {
@@ -42,5 +43,4 @@ public class Enrollment {
     public int getID(){
         return this.ID;
     }
-
 }
