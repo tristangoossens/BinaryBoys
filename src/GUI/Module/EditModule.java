@@ -63,6 +63,7 @@ public class EditModule {
         cbStatus.getItems().add(Status.CONCEPT.getValue());
         cbStatus.getItems().add(Status.ACTIVE.getValue());
         cbStatus.getItems().add(Status.ARCHIVED.getValue());
+        cbStatus.setValue(module.getStatus().getValue());
         formGrid.add(cbStatus, 1, 2);
 
 
