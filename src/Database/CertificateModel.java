@@ -19,6 +19,76 @@ public class CertificateModel extends Conn{
         super();
     }
 
+    public ArrayList<Enrollment> getCertifiableEnrollments(){
+        String certifiableEnrollmentsQuery = "SELECT E.ID, E.Student_Email, E.Course_Name, E.Enrollment_Date FROM Enrollment AS E  INNER JOIN Course AS C ON E.Course_Name = C.Name INNER JOIN Content_Item AS CI ON C.Name = CI.Course_Name INNER JOIN Progress AS P ON CI.ID = P.Content_Item_ID WHERE E.Student_Email IN ( SELECT Student_Email FROM Progress AS PR INNER JOIN Content_Item AS CIT ON CIT.ID = PR.Content_Item_ID WHERE CIT.Course_Name = E.Course_Name AND PR.Percentage = 100) AND E.ID NOT IN (SELECT EN.ID FROM Enrollment AS EN) GROUP BY E.ID, E.Student_Email, E.Course_Name, E.Enrollment_Date";
+
+        StudentModel studentModel = new StudentModel();
+        CourseModel courseModel = new CourseModel();
+
+        try(PreparedStatement stmt = super.conn.prepareStatement(certifiableEnrollmentsQuery)) {
+            // Execute statement
+            ResultSet rs = stmt.executeQuery();
+
+            // Init list
+            ArrayList<Enrollment> enrollments = new ArrayList<>();
+
+            while(rs.next()){
+                enrollments.add(new Enrollment(
+                    studentModel.readStudent(rs.getString("Student_Email")),
+                    courseModel.readCourse(rs.getString("Course_Name")),
+                    rs.getDate("Enrollment_Date"), 
+                    rs.getInt("ID"))
+                );
+            }
+
+            // return list on success
+            return enrollments;
+        } catch(Exception e) {
+            System.out.format("Error while creating certificate (createCertificate): %s", e.toString());
+        }
+
+        // Return null on error ( nothing is yet returned)
+        return null;
+    }
+
+    public ArrayList<Employee> getEmployees(){
+        String query = "SELECT * FROM Employee;";
+
+        try(PreparedStatement stmt = super.conn.prepareStatement(query)) {
+            ResultSet rs = stmt.executeQuery();
+            ArrayList<Employee> employees = new ArrayList<>();
+
+            while(rs.next()){
+                employees.add(new Employee(rs.getInt("Number"), rs.getString("Name")));
+            }
+
+            return employees;
+        } catch(Exception e) {
+            System.out.format("Error while retrieving employees (getEmployees): %s", e.toString());
+        }
+
+        // Return null on error ( nothing is yet returned)
+        return null;
+    }
+
+    public Employee getEmployeeByNumber(int number){
+        String query = "SELECT * FROM Employee WHERE Number = ?;";
+
+        try(PreparedStatement stmt = super.conn.prepareStatement(query)) {
+            stmt.setInt(1, number);
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()){
+                return new Employee(rs.getInt("Number"), rs.getString("Name"));
+            }
+        } catch(Exception e) {
+            System.out.format("Error while retrieving employees (getEmployees): %s", e.toString());
+        }
+
+        // Return null on error ( nothing is yet returned)
+        return null;
+    }
+
     public boolean createCertificate(Certificate certificate){
         // Create prepared statement
         String query = "INSERT INTO Certificate VALUES(?, ?, ?)";
