@@ -37,13 +37,12 @@ public class EnrollmentModel extends Conn {
         return false;
     }
 
-    public Enrollment readEnrollment(Student student, Course course) {
+    public Enrollment readEnrollment(Enrollment enrollment, Student student, Course course) {
         // Create prepared statement
-        String query = "SELECT Enrollment.Enrollment_Date FROM Enrollment WHERE Course_Name = ? AND Student_Email = ?";
+        String query = "SELECT Enrollment.Enrollment_Date FROM Enrollment WHERE ID = ?";
         try (PreparedStatement stmt = super.conn.prepareStatement(query)) {
             // Set data in prepared statement
-            stmt.setString(1, course.getName());
-            stmt.setString(2, student.getEmail());
+            stmt.setInt(1, enrollment.getID());
 
             // Execute statement
             ResultSet rs = stmt.executeQuery();
@@ -53,7 +52,9 @@ public class EnrollmentModel extends Conn {
                 return new Enrollment(
                         student,
                         course,
-                        rs.getDate("Enrollment_Date"));
+                        rs.getDate("Enrollment_Date"),
+                        rs.getInt("ID")
+                        );
             }
         } catch (Exception e) {
             System.out.format("Error while retrieving enrollment (readEnrollment): %s", e.toString());
@@ -78,7 +79,9 @@ public class EnrollmentModel extends Conn {
                 enrollments.add(new Enrollment(
                         studentModel.readStudent(rs.getString("Student_Email")),
                         courseModel.readCourse(rs.getString("Course_Name")),
-                        rs.getDate("Enrollment_Date")));
+                        rs.getDate("Enrollment_Date"),
+                        rs.getInt("ID")
+                        ));
             }
 
             // Return list of enrollments
